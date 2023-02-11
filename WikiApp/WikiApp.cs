@@ -25,8 +25,8 @@ namespace WikiApp
 
         #region Variables
         // 9.1 Create a global 2D string array, use static variables for the dimensions (row = 4, column = 12),
-        private const int Row = 4;
-        private const int Col = 12;
+        private const int Row = 12;
+        private const int Col = 4;
         string[,] WikiArray = new string[Row, Col];
 
         private const string StatusStripItemFound = "Item found";
@@ -82,17 +82,17 @@ namespace WikiApp
         
         private void ButtonSort_MouseClick(object sender, MouseEventArgs e)
         {
-            BubbleSortFunction();
+            BubbleSort();
             // ADD CODE
         }
         #endregion
 
-        #region Methods & Functions
+        #region Functions
         // 9.6 Write the code for a Bubble Sort method to sort the 2D array by Name ascending, ensure you use a separate swap method that passes the array element to be swapped (do not use any built-in array methods)
         /// <summary>
         /// Bubble sort function
         /// </summary>
-        private void BubbleSortFunction()
+        private void BubbleSort()
         {
             // ADD CODE
         }
@@ -112,7 +112,7 @@ namespace WikiApp
         /// <summary>
         /// Display function
         /// </summary>
-        private void DisplayFunction()
+        private void Display()
         {
             // ADD CODE
         }
@@ -121,7 +121,7 @@ namespace WikiApp
         /// <summary>
         /// Select function
         /// </summary>
-        private void SelectFunction()
+        private void Select()
         {
             // ADD CODE
         }
@@ -129,7 +129,7 @@ namespace WikiApp
         /// <summary>
         /// Update list box function
         /// </summary>
-        private void UpdateListDataStructure()
+        private void UpdateList()
         {
             // ADD CODE
         }
