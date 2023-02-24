@@ -42,7 +42,7 @@ namespace WikiApp
         // 9.2 Create an ADD button that will store the information from the 4 text boxes into the 2D array
         private void ButtonAdd_MouseClick(object sender, MouseEventArgs e)
         {
-            // ADD CODE
+            AddItem();
         }
 
         // 9.3 Create and EDIT button that will allow the user to modify any information from the 4 text boxes into the 2D array
@@ -71,6 +71,7 @@ namespace WikiApp
         }
 
         // 9.11 Create a LOAD button that will read the information from a binary file called definitions.dat into the 2D array, ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task
+        // CHECK NEED TO LOAD BINARY FILE USING BINARY READER
         private void ButtonLoad_MouseClick(object sender, MouseEventArgs e)
         {
             LoadData();
@@ -86,23 +87,28 @@ namespace WikiApp
             else
             {
                 SortTable();
-                if (TextboxSearch.Text == "")
+                if (TextBoxSearch.Text == "")
                 {
                     UpdateStatusStrip("No text in search box");
+                   
                 }
                 else
                 {
-                    var target = Int32.Parse(TextboxSearch.Text);
+                    var target = Int32.Parse(TextBoxSearch.Text);
                     var result = BinarySearch(target);
 
                     if (result == 0)
                     {
                         UpdateStatusStrip("Item not found");
+                        ClearTextBox();
                     }
                     else
                     {
                         UpdateStatusStrip("Item found");
                         SelectItem(result);
+                        DisplayTextBox(target.ToString());
+                        ClearTextBox();
+                        FocusTextBox();
                     }
                 }
             }
@@ -127,14 +133,14 @@ namespace WikiApp
         /// <summary>
         /// Bubble sort function
         /// </summary>
-        private void BubbleSort(int indx)
+        private void BubbleSort(int index)
         {
             string temp;
             for (int z = 0; z < Col; z++)
             {
-                temp = WikiArray[indx, z];
-                WikiArray[indx, z] = WikiArray[indx + 1, z];
-                WikiArray[indx + 1, z] = temp;
+                temp = WikiArray[index, z];
+                WikiArray[index, z] = WikiArray[index + 1, z];
+                WikiArray[index + 1, z] = temp;
             }
         }
 
@@ -167,7 +173,7 @@ namespace WikiApp
             int lastIndex = Row - 1;
             int firstIndex = 0;
             int searchIndex;
-
+            // CHECK WILL NEED TO UPDATE THIS TO SEARCH BY ARRAY INDEX NOT ARRAY VALUE
             while (firstIndex <= lastIndex)
             {
                 searchIndex = (firstIndex + lastIndex) / 2;
@@ -227,6 +233,7 @@ namespace WikiApp
         /// </summary>
         private void LoadData()
         {
+            // CHECK THIS NEEDS TO BE UPDATED TO LOAD BINARY FILE
             Random random = new Random();
             for (int x = 0; x < Row; x++)
             {
@@ -264,6 +271,34 @@ namespace WikiApp
             StatusLabel.Text = message;
         }
 
+        private void AddItem()
+        {
+            var selectedItem = ListViewDataStructure.SelectedItems;
+            int rowNumber = ListViewDataStructure.FocusedItem.Index;
+
+            for (int i = 0; i < Col; i++)
+            {
+                selectedItem.Clear();
+                WikiArray[rowNumber, i] = "~";
+                DisplayData();
+            }
+            FocusTextBox();
+        }
+
+        private void EditItem()
+        {
+            var selectedItem = ListViewDataStructure.SelectedItems;
+            int rowNumber = ListViewDataStructure.FocusedItem.Index;
+
+            for (int i = 0; i < Col; i++)
+            {
+                selectedItem.Clear();
+                WikiArray[rowNumber, i] = "~";
+                DisplayData();
+            }
+            FocusTextBox();
+        }
+
         private void DeleteItem()
         {
             var selectedItem = ListViewDataStructure.SelectedItems;
@@ -281,10 +316,8 @@ namespace WikiApp
                     WikiArray[rowNumber, i] = "~";
                     DisplayData();
                 }
-              
-                
             }
-            ClearFocusTextBox();
+            FocusTextBox();
         }
 
         private bool DeleteConfirmationMessage(object selectedItem)
@@ -295,10 +328,25 @@ namespace WikiApp
                     == DialogResult.Yes;
         }
 
-        private void ClearFocusTextBox()
+        private void DisplayTextBox(string item)
         {
-            TextboxSearch.Clear();
-            TextboxSearch.Focus();
+            TextBoxAdd.Text = item;
+            TextBoxDelete.Text = item;
+            TextBoxEdit.Text = item;
+            TextBoxSearch.Text = item;
+        }
+
+        private void ClearTextBox()
+        {
+            TextBoxAdd.Clear();
+            TextBoxDelete.Clear();
+            TextBoxEdit.Clear();
+            TextBoxSearch.Clear();
+        }
+
+        private void FocusTextBox()
+        {
+            TextBoxSearch.Focus();
         }
         #endregion
     }
