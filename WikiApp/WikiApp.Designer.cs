@@ -28,23 +28,25 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("");
             this.TextboxSearch = new System.Windows.Forms.TextBox();
-            this.StatusLabel = new System.Windows.Forms.StatusStrip();
+            this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.ListViewDataStructure = new System.Windows.Forms.ListView();
-            this.ButtonAdd = new System.Windows.Forms.Button();
-            this.ButtonSort = new System.Windows.Forms.Button();
-            this.ButtonLoad = new System.Windows.Forms.Button();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ButtonAdd = new System.Windows.Forms.Button();
+            this.ButtonSort = new System.Windows.Forms.Button();
+            this.ButtonLoad = new System.Windows.Forms.Button();
             this.ButtonClear = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.StatusProgressBar = new System.Windows.Forms.ProgressBar();
+            this.ButtonSearch = new System.Windows.Forms.Button();
+            this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.StatusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // TextboxSearch
@@ -54,13 +56,15 @@
             this.TextboxSearch.Size = new System.Drawing.Size(100, 20);
             this.TextboxSearch.TabIndex = 0;
             // 
-            // StatusLabel
+            // StatusStrip
             // 
-            this.StatusLabel.Location = new System.Drawing.Point(0, 428);
-            this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(800, 22);
-            this.StatusLabel.TabIndex = 1;
-            this.StatusLabel.Text = "Status";
+            this.StatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.StatusLabel});
+            this.StatusStrip.Location = new System.Drawing.Point(0, 428);
+            this.StatusStrip.Name = "StatusStrip";
+            this.StatusStrip.Size = new System.Drawing.Size(800, 22);
+            this.StatusStrip.TabIndex = 1;
+            this.StatusStrip.Text = "Status";
             // 
             // ListViewDataStructure
             // 
@@ -71,10 +75,10 @@
             this.columnHeader4});
             this.ListViewDataStructure.HideSelection = false;
             this.ListViewDataStructure.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4});
+            listViewItem5,
+            listViewItem6,
+            listViewItem7,
+            listViewItem8});
             this.ListViewDataStructure.Location = new System.Drawing.Point(355, 103);
             this.ListViewDataStructure.Name = "ListViewDataStructure";
             this.ListViewDataStructure.Size = new System.Drawing.Size(362, 226);
@@ -120,6 +124,7 @@
             this.ButtonClear.TabIndex = 6;
             this.ButtonClear.Text = "Clear Data";
             this.ButtonClear.UseVisualStyleBackColor = true;
+            this.ButtonClear.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonClear_MouseClick);
             // 
             // toolStrip1
             // 
@@ -129,29 +134,39 @@
             this.toolStrip1.TabIndex = 7;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // StatusProgressBar
+            // ButtonSearch
             // 
-            this.StatusProgressBar.Location = new System.Drawing.Point(459, 426);
-            this.StatusProgressBar.Name = "StatusProgressBar";
-            this.StatusProgressBar.Size = new System.Drawing.Size(289, 23);
-            this.StatusProgressBar.TabIndex = 8;
+            this.ButtonSearch.Location = new System.Drawing.Point(268, 58);
+            this.ButtonSearch.Name = "ButtonSearch";
+            this.ButtonSearch.Size = new System.Drawing.Size(75, 23);
+            this.ButtonSearch.TabIndex = 9;
+            this.ButtonSearch.Text = "Search";
+            this.ButtonSearch.UseVisualStyleBackColor = true;
+            this.ButtonSearch.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonBinarySearch_MouseClick);
+            // 
+            // StatusLabel
+            // 
+            this.StatusLabel.Name = "StatusLabel";
+            this.StatusLabel.Size = new System.Drawing.Size(0, 17);
             // 
             // WikiApp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.StatusProgressBar);
+            this.Controls.Add(this.ButtonSearch);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.ButtonClear);
             this.Controls.Add(this.ButtonLoad);
             this.Controls.Add(this.ButtonSort);
             this.Controls.Add(this.ButtonAdd);
             this.Controls.Add(this.ListViewDataStructure);
-            this.Controls.Add(this.StatusLabel);
+            this.Controls.Add(this.StatusStrip);
             this.Controls.Add(this.TextboxSearch);
             this.Name = "WikiApp";
             this.Text = "Data Structures Wiki";
+            this.StatusStrip.ResumeLayout(false);
+            this.StatusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -160,7 +175,7 @@
         #endregion
 
         private System.Windows.Forms.TextBox TextboxSearch;
-        private System.Windows.Forms.StatusStrip StatusLabel;
+        private System.Windows.Forms.StatusStrip StatusStrip;
         private System.Windows.Forms.ListView ListViewDataStructure;
         private System.Windows.Forms.Button ButtonAdd;
         private System.Windows.Forms.Button ButtonSort;
@@ -171,7 +186,8 @@
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.Button ButtonClear;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ProgressBar StatusProgressBar;
+        private System.Windows.Forms.Button ButtonSearch;
+        private System.Windows.Forms.ToolStripStatusLabel StatusLabel;
     }
 }
 

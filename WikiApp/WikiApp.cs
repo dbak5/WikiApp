@@ -31,11 +31,13 @@ namespace WikiApp
         private const int Col = 4;
         string[,] WikiArray = new string[Row, Col];
         bool sorted = false;
-        bool filled = false;
+        //bool filled = false;
+        //bool found = false;
 
         #endregion
 
         #region Events & Buttons
+
         // 9.2 Create an ADD button that will store the information from the 4 text boxes into the 2D array
         private void ButtonAdd_MouseClick(object sender, MouseEventArgs e)
         {
@@ -57,7 +59,8 @@ namespace WikiApp
         // 9.5 Create a CLEAR method to clear the four text boxes so a new definition can be added
         private void ButtonClear_MouseClick(object sender, MouseEventArgs e)
         {
-            // ADD CODE
+            ClearData();
+            UpdateStatusStrip("Data cleared");
         }
 
         // 9.10 Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat which is sorted by Name, ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter to create the file
@@ -74,8 +77,34 @@ namespace WikiApp
 
         private void ButtonBinarySearch_MouseClick(object sender, MouseEventArgs e)
         {
-            BinarySearch();
-            // ADD CODE
+            
+            if (WikiArray == null || ListViewDataStructure == null)
+            {
+                UpdateStatusStrip("No data to search");
+            }
+            else
+            {
+                SortTable();
+                if (TextboxSearch.Text == "")
+                {
+                    UpdateStatusStrip("No text in search box");
+                }
+                else
+                {
+                    var target = Int32.Parse(TextboxSearch.Text);
+                    var result = BinarySearch(target);
+
+                    if (result == 0)
+                    {
+                        UpdateStatusStrip("Item not found");
+                    }
+                    else
+                    {
+                        UpdateStatusStrip("Item found");
+                        SelectItem(result);
+                    }
+                }
+            }
         }
         
         private void ButtonSort_MouseClick(object sender, MouseEventArgs e)
@@ -126,7 +155,7 @@ namespace WikiApp
         /// <returns></returns>
         private int BinarySearch(int searchValue)
         {
-     
+
             int lastIndex = Row - 1;
             int firstIndex = 0;
             int searchIndex;
@@ -134,14 +163,14 @@ namespace WikiApp
             while (firstIndex <= lastIndex)
             {
                 searchIndex = (firstIndex + lastIndex) / 2;
-
+                int arrayValue = Int32.Parse(WikiArray[searchIndex, 0]);
                 // if searched value equals to the search index, then its a matched and its index will return
-                if (WikiArray[searchIndex, 0] == searchValue.ToString())
+                if (arrayValue == searchValue)
                 {
                     return searchIndex;
                 }
                 // if the searched value bigger than then current search index, then it will continue its search on the right hand of the array 
-                else if (WikiArray[searchIndex, 0] < searchValue.ToInt())
+                else if (arrayValue < searchValue)
                 {
                     firstIndex = searchIndex + 1;
                 }
@@ -150,10 +179,8 @@ namespace WikiApp
                 {
                     lastIndex = searchIndex - 1;
                 }
-
             }
-            return -1;
-
+            return 0;
         }
 
         // 9.8 Create a display method that will show the following information in a ListView: Name and Category
@@ -180,10 +207,11 @@ namespace WikiApp
         /// </summary>
         private void SelectItem(int index)
         {
-            //ListViewDataStructure.SelectedItems();
-                //(index, true);
-            TextboxSearch.Clear();
-            TextboxSearch.Text = ListViewDataStructure.SelectedItems.ToString();
+            //ListViewDataStructure.Select();
+            ListViewDataStructure.HideSelection = false;
+            ListViewDataStructure.FullRowSelect = true;
+            ListViewDataStructure.Items[index].Selected = true;
+
         }
 
         /// <summary>
@@ -216,22 +244,16 @@ namespace WikiApp
         /// </summary>
         private void ClearData()
         {
-            // ADD CODE
+            ListViewDataStructure.Items.Clear();
+            Array.Clear(WikiArray, 0, WikiArray.GetLength(0) * WikiArray.GetLength(1));
         }
 
         /// <summary>
         /// Update status strip
         /// </summary>
-        private void UpdateStatusStrip(string message, string status, MessageBoxIcon icon)
+        private void UpdateStatusStrip(string message)
         {
-            MessageBox.Show(message, status, MessageBoxButtons.OK, icon);
             StatusLabel.Text = message;
-            TextboxSearch.Focus();
-        }
-
-        private void UpdateProgressBar(int value)
-        {
-            StatusProgressBar.Value = value;
         }
 
         private bool DeleteConfirmationMessage(object selectedItem)
@@ -241,6 +263,7 @@ namespace WikiApp
             return MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Information)
                     == DialogResult.Yes;
         }
+
 
         #endregion
     }
