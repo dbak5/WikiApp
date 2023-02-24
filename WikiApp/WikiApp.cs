@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Reflection;
 
 // Author: DaHye Baker
 // Student ID: 30063368
@@ -53,7 +54,7 @@ namespace WikiApp
         // 9.4 Create a DELETE button that removes all the information from a single entry of the array; the user must be prompted before the final deletion occurs
         private void ButtonDelete_MouseClick(object sender, MouseEventArgs e)
         {
-            // ADD CODE
+            DeleteItem();
         }
 
         // 9.5 Create a CLEAR method to clear the four text boxes so a new definition can be added
@@ -77,8 +78,8 @@ namespace WikiApp
 
         private void ButtonBinarySearch_MouseClick(object sender, MouseEventArgs e)
         {
-            
-            if (WikiArray == null || ListViewDataStructure == null)
+            // NEED TO CHECK WHY CAN'T LOOK AT EMPTY ARRAY
+            if (WikiArray == null)
             {
                 UpdateStatusStrip("No data to search");
             }
@@ -109,7 +110,15 @@ namespace WikiApp
         
         private void ButtonSort_MouseClick(object sender, MouseEventArgs e)
         {
-            SortTable();
+            // NEED TO CHECK WHY CAN'T LOOK AT EMPTY ARRAY
+            if (WikiArray == null) 
+            {
+                UpdateStatusStrip("No data to search");
+            }
+            else 
+            { 
+                SortTable(); 
+            }
         }
         #endregion
 
@@ -155,7 +164,6 @@ namespace WikiApp
         /// <returns></returns>
         private int BinarySearch(int searchValue)
         {
-
             int lastIndex = Row - 1;
             int firstIndex = 0;
             int searchIndex;
@@ -256,6 +264,29 @@ namespace WikiApp
             StatusLabel.Text = message;
         }
 
+        private void DeleteItem()
+        {
+            var selectedItem = ListViewDataStructure.SelectedItems;
+            int rowNumber = ListViewDataStructure.FocusedItem.Index;
+        
+            // If nothing selected, do nothing
+            if (selectedItem == null)
+                return;
+
+            else
+            {
+               for (int i = 0; i < Col; i++)
+                {
+                    selectedItem.Clear();
+                    WikiArray[rowNumber, i] = "~";
+                    DisplayData();
+                }
+              
+                
+            }
+            ClearFocusTextBox();
+        }
+
         private bool DeleteConfirmationMessage(object selectedItem)
         {
             var message = $"Are you sure you want to delete {selectedItem}?";
@@ -264,7 +295,11 @@ namespace WikiApp
                     == DialogResult.Yes;
         }
 
-
+        private void ClearFocusTextBox()
+        {
+            TextboxSearch.Clear();
+            TextboxSearch.Focus();
+        }
         #endregion
     }
 }

@@ -46,6 +46,7 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.ButtonSearch = new System.Windows.Forms.Button();
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ButtonDelete = new System.Windows.Forms.Button();
             this.StatusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -149,11 +150,22 @@
             this.StatusLabel.Name = "StatusLabel";
             this.StatusLabel.Size = new System.Drawing.Size(0, 17);
             // 
+            // ButtonDelete
+            // 
+            this.ButtonDelete.Location = new System.Drawing.Point(254, 155);
+            this.ButtonDelete.Name = "ButtonDelete";
+            this.ButtonDelete.Size = new System.Drawing.Size(75, 23);
+            this.ButtonDelete.TabIndex = 10;
+            this.ButtonDelete.Text = "Delete Item";
+            this.ButtonDelete.UseVisualStyleBackColor = true;
+            this.ButtonDelete.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonDelete_MouseClick);
+            // 
             // WikiApp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.ButtonDelete);
             this.Controls.Add(this.ButtonSearch);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.ButtonClear);
@@ -188,6 +200,7 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.Button ButtonSearch;
         private System.Windows.Forms.ToolStripStatusLabel StatusLabel;
+        private System.Windows.Forms.Button ButtonDelete;
     }
 }
 
