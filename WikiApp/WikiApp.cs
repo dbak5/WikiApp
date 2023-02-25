@@ -25,17 +25,15 @@ namespace WikiApp
         public WikiApp()
         {
             InitializeComponent();
-            ListViewDataStructure.SelectedIndexChanged += ListViewDataStructure_MouseClick;
-            
         }
 
         #region Variables
         // 9.1 Create a global 2D string array, use static variables for the dimensions (row = 4, column = 12),
         private const int Row = 12;
         private const int Col = 4;
-        string[,] WikiArray = new string[Row, Col];
+        private string[,] _wikiArray = new string[Row, Col];
 
-        private int selectedIndex = -1;
+        private int _selectedIndex = -1;
         bool sorted = false;
         //bool filled = false;
         //bool found = false;
@@ -123,8 +121,8 @@ namespace WikiApp
         {
             if (ListViewDataStructure.SelectedItems.Count > 0)
             {
-                selectedIndex = ListViewDataStructure.SelectedIndices[0];
-                SelectItem(selectedIndex);
+                _selectedIndex = ListViewDataStructure.SelectedIndices[0];
+                SelectItem(_selectedIndex);
             }
         }
         #endregion
@@ -138,9 +136,9 @@ namespace WikiApp
         {
             for (var z = 0; z < Col; z++)
             {
-                var temp = WikiArray[index, z];
-                WikiArray[index, z] = WikiArray[index + 1, z];
-                WikiArray[index + 1, z] = temp;
+                var temp = _wikiArray[index, z];
+                _wikiArray[index, z] = _wikiArray[index + 1, z];
+                _wikiArray[index + 1, z] = temp;
             }
         }
 
@@ -153,7 +151,7 @@ namespace WikiApp
             {
                 for (var i = 0; i < Row - 1; i++)
                 {
-                    if (string.Compare(WikiArray[i, 0], WikiArray[i + 1, 0]) == 1)
+                    if (string.Compare(_wikiArray[i, 0], _wikiArray[i + 1, 0]) == 1)
                     {
                         BubbleSort(i);
                     }
@@ -173,13 +171,13 @@ namespace WikiApp
         {
             var lastIndex = Row - 1;
             var firstIndex = 0;
-            int searchIndex = selectedIndex;
+            int searchIndex = _selectedIndex;
             int returnValue = -1;
 
             while (firstIndex <= lastIndex)
             {
                 searchIndex = (firstIndex + lastIndex) / 2;
-                var search = WikiArray[searchIndex, 0];
+                var search = _wikiArray[searchIndex, 0];
 
                 if (search != null)
                 {
@@ -220,11 +218,11 @@ namespace WikiApp
             ListViewDataStructure.Items.Clear();
             for (var x = 0; x < Row; x++)
             {
-                var item = new ListViewItem(WikiArray[x, 0]);
-                item.SubItems.Add(WikiArray[x, 1]);
-                item.SubItems.Add(WikiArray[x, 2]);
-                item.SubItems.Add(WikiArray[x, 3]);
-                // item.SubItems.Add(WikiArray[x, 4]);
+                var item = new ListViewItem(_wikiArray[x, 0]);
+                item.SubItems.Add(_wikiArray[x, 1]);
+                item.SubItems.Add(_wikiArray[x, 2]);
+                item.SubItems.Add(_wikiArray[x, 3]);
+                // item.SubItems.Add(_wikiArray[x, 4]);
                 ListViewDataStructure.Items.Add(item);
             }
         }
@@ -251,7 +249,7 @@ namespace WikiApp
             {
                 for (var y = 0; y < Col; y++)
                 {
-                    WikiArray[x, y] = random.Next(10, 99).ToString();
+                    _wikiArray[x, y] = random.Next(10, 99).ToString();
                 }
             }
             DisplayData();
@@ -273,7 +271,7 @@ namespace WikiApp
         private void ClearData()
         {
             ListViewDataStructure.Items.Clear();
-            Array.Clear(WikiArray, 0, WikiArray.GetLength(0) * WikiArray.GetLength(1));
+            Array.Clear(_wikiArray, 0, _wikiArray.GetLength(0) * _wikiArray.GetLength(1));
             UpdateStatusStrip("Data cleared");
         }
 
@@ -287,10 +285,10 @@ namespace WikiApp
 
         private void AddItem()
         {
-            var action = "add";
-            var actioned = "added";
+            const string action = "add";
+            const string actioned = "added";
 
-            if (selectedIndex == -1)
+            if (_selectedIndex == -1)
             {
                 UpdateStatusStrip($"Nothing selected to {action}");
                 return;
@@ -298,12 +296,12 @@ namespace WikiApp
 
             else
             {
-                if (ConfirmationMessage(selectedIndex, action))
+                if (ConfirmationMessage(_selectedIndex, action))
                 {
-                    int index = selectedIndex;
-                    for (int i = 0; i < Col; i++)
+                    var index = _selectedIndex;
+                    for (var i = 0; i < Col; i++)
                     {
-                       // WikiArray[index, i] = "~";
+                       // _wikiArray[index, i] = "~";
                         DisplayData();
                     }
 
@@ -320,22 +318,22 @@ namespace WikiApp
 
         private void EditItem()
         {
-            var action = "edit";
-            var actioned = "edited";
+            const string action = "edit";
+            const string actioned = "edited";
 
-            if (selectedIndex == -1)
+            if (_selectedIndex == -1)
             {
                 UpdateStatusStrip($"Nothing selected to {action}");
-                return;
+          
             }
             else
             {
-                if (ConfirmationMessage(selectedIndex, action))
+                if (ConfirmationMessage(_selectedIndex, action))
                 {
-                    int index = selectedIndex;
-                    for (int i = 0; i < Col; i++)
+                    var index = _selectedIndex;
+                    for (var i = 0; i < Col; i++)
                     {
-                        //WikiArray[index, i] = "~";
+                        //_wikiArray[index, i] = "~";
                         DisplayData();
                     }
 
@@ -345,29 +343,29 @@ namespace WikiApp
                 else
                 {
                     UpdateStatusStrip($"Item not {actioned}");
-                    return;
+        
                 }
             }
         }
 
         private void DeleteItem()
         {
-            var action = "delete";
-            var actioned = "deleted";
+            const string action = "delete";
+            const string actioned = "deleted";
 
-            if (selectedIndex == -1)
+            if (_selectedIndex == -1)
             {
                 UpdateStatusStrip("Nothing selected to delete");
-                return;
+  
             }
             else
             {
-                if (ConfirmationMessage(selectedIndex, action))
+                if (ConfirmationMessage(_selectedIndex, action))
                 {
-                    int index = selectedIndex;
-                    for (int i = 0; i < Col; i++)
+                    var index = _selectedIndex;
+                    for (var i = 0; i < Col; i++)
                     {
-                        WikiArray[index, i] = "~";
+                        _wikiArray[index, i] = "~";
                         DisplayData();
                     }
 
@@ -377,12 +375,12 @@ namespace WikiApp
                 else
                 {
                     UpdateStatusStrip($"Item not {actioned}");
-                    return;
+ 
                 }
             }
         }
 
-        private bool ConfirmationMessage(object selectedItem, string action)
+        private static bool ConfirmationMessage(object selectedItem, string action)
         {
             var message = $"Are you sure you want to {action} this item?";
             var caption = $"Please confirm {action}";
@@ -445,7 +443,6 @@ namespace WikiApp
             if (TextBoxSearch.Text == "")
             {
                 UpdateStatusStrip("No text in search box");
-                return;
             }
         }
         #endregion
