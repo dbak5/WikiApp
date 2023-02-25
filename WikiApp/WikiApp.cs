@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 
 // Author: DaHye Baker
@@ -25,7 +26,8 @@ namespace WikiApp
         private int _selectedIndex = -1;
         private bool _sorted = false;
         //bool filled = false;
-        //bool found = false;
+        private bool _found = false;
+        private bool _dataLoaded = false;
 
         #endregion
 
@@ -42,14 +44,13 @@ namespace WikiApp
         private void ButtonEdit_MouseClick(object sender, MouseEventArgs e)
         {
             CheckTextBox();
-            CheckArrayData(EditItem, "No data");
+            CheckArrayData(EditItem, "No data to edit");
         }
 
         // 9.4 Create a DELETE button that removes all the information from a single entry of the array; the user must be prompted before the final deletion occurs
         private void ButtonDelete_MouseClick(object sender, MouseEventArgs e)
         {
             CheckArrayData(DeleteItem, "No data to delete");
-           
         }
 
         // 9.5 Create a CLEAR method to clear the four text boxes so a new definition can be added
@@ -69,40 +70,27 @@ namespace WikiApp
         private void ButtonLoad_MouseClick(object sender, MouseEventArgs e)
         {
             LoadData();
-            CheckArrayData(LoadData, "Data loaded");
+            //CheckArrayData(LoadData, "Data loaded");
         }
 
         private void ButtonBinarySearch_MouseClick(object sender, MouseEventArgs e)
         {
             CheckTextBox();
 
-            if (int.TryParse(TextBoxSearch.Text, out var searchNumber))
+            if (!_sorted)
             {
-                var result = BinarySearch(searchNumber);
-                if (result == -1)
-                {
-                    UpdateStatusStrip("No data to search");
-                }
-                else if (result == 0)
-                {
-                    UpdateStatusStrip("Item not found");
-                    ClearTextBox();
-                }
-                else
-                {
-                    UpdateStatusStrip("Item found");
-                    SelectItem(result);
-                    DisplayTextBox(searchNumber.ToString());
-                    ClearTextBox();
-                }
+                SortTable();
+                BinarySearch();
             }
-            FocusTextBox();
+            else
+            {
+                BinarySearch();
+            }
         }
 
         private void ButtonSort_MouseClick(object sender, MouseEventArgs e)
         {
             CheckArrayData(SortTable, "No data to sort");
-            UpdateStatusStrip("Data sorted");
         }
 
         private void ListViewDataStructure_MouseClick(object sender, System.EventArgs e)
@@ -113,6 +101,7 @@ namespace WikiApp
                 SelectItem(_selectedIndex);
             }
         }
+
         #endregion
 
         #region Functions
@@ -146,7 +135,6 @@ namespace WikiApp
                 }
             }
             DisplayData();
-           
             _sorted = true;
         }
 
@@ -155,48 +143,57 @@ namespace WikiApp
         /// Binary search function
         /// </summary>
         /// <returns> Returns -1 if the array contains null values, returns 0 if if the item cannot be found in the array </returns>
-        private int BinarySearch(int searchValue)
+        private int BinarySearch()
         {
-            var lastIndex = Row - 1;
-            var firstIndex = 0;
-            var searchIndex = _selectedIndex;
+
             var returnValue = -1;
-           
-                while (firstIndex <= lastIndex)
+            var searchItem = TextBoxSearch.Text;
+            //_selectedIndex = -1;
+
+            if (!string.IsNullOrEmpty(searchItem))
+            {
+                var min = 0;
+                var max = Row - 1; // max is one less than size
+
+                while (min <= max)
                 {
-                    searchIndex = (firstIndex + lastIndex) / 2;
-                    var search = _wikiArray[searchIndex, 0];
+
+                    var mid = ((min + max) / 2); // uses integer division
+                    var search = _wikiArray[mid, 0];
 
                     if (search != null)
                     {
-                        int.TryParse(search, out var arrayValue);
 
-                        returnValue = 0;
-
-                        // if searched value equals to the search index, then its a matched and its index will return
-                        if (arrayValue == searchValue)
+                        if (searchItem.CompareTo(search) == 0)
                         {
-                            return searchIndex;
+                            _found = true;
+                            //_selectedIndex = mid;
+                            _dataLoaded = true;
+                            UpdateStatusStrip("Item found");
+                            SelectItem(mid);
+                            FocusTextBox();
+                            break;
                         }
-                        // if the searched value bigger than then current search index, then it will continue its search on the right hand of the array 
-                        else if (arrayValue < searchValue)
+                        else if (searchItem.CompareTo(search) < 0)
                         {
-                            firstIndex = searchIndex + 1;
+                            max = mid - 1;
                         }
-                        // if the searched value is smaller than the current search index, then it will continue its search on the left hand of the array
                         else
                         {
-                            lastIndex = searchIndex - 1;
+                            min = mid + 1;
                         }
                     }
-                    else
-                    {
-                        lastIndex = searchIndex - 1;
-                    }
                 }
-                
-                return returnValue;
-            
+
+                if (!_found)
+                {
+                    UpdateStatusStrip("Item not found");
+
+                }
+            }
+
+            return returnValue;
+
         }
 
         // 9.8 Create a display method that will show the following information in a ListView: Name and Category
@@ -242,8 +239,9 @@ namespace WikiApp
                     _wikiArray[x, y] = random.Next(10, 99).ToString();
                 }
             }
+            UpdateStatusStrip("Data successfully loaded");
             DisplayData();
-
+            _dataLoaded = true;
         }
 
         /// <summary>
@@ -390,10 +388,7 @@ namespace WikiApp
 
         private void CheckArrayData(Action action, string message)
         {
-            var searchNumber = -1;
-            var result = BinarySearch(searchNumber);
-     
-            if (result == -1)
+            if (!_dataLoaded)
             {
                 UpdateStatusStrip(message);
                 ButtonAdd.Enabled = false;
@@ -402,7 +397,6 @@ namespace WikiApp
                 ButtonSearch.Enabled = false;
                 ButtonEdit.Enabled = false;
                 ButtonClear.Enabled = false;
-
             }
             else
             {
