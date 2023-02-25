@@ -79,41 +79,38 @@ namespace WikiApp
 
         private void ButtonBinarySearch_MouseClick(object sender, MouseEventArgs e)
         {
-            // NEED TO CHECK WHY CAN'T LOOK AT EMPTY ARRAY
-            if (WikiArray == null)
+            if (TextBoxSearch.Text == "")
             {
-                UpdateStatusStrip("No data to search");
+                UpdateStatusStrip("No text in search box");
+                return;
             }
-            else
+
+            // NEED TO CHECK WHY CAN'T LOOK AT EMPTY ARRAY
+            if (int.TryParse(TextBoxSearch.Text, out var searchNumber))
             {
-                SortTable();
-                if (TextBoxSearch.Text == "")
+
+                //var target = Int32.Parse(TextBoxSearch.Text);
+                var result = BinarySearch(searchNumber);
+                if (result == -1)
                 {
-                    UpdateStatusStrip("No text in search box");
-                   
+                    UpdateStatusStrip("No data to search");
+                }
+                else if (result == 0)
+                {
+                    UpdateStatusStrip("Item not found");
+                    ClearTextBox();
                 }
                 else
                 {
-                    var target = Int32.Parse(TextBoxSearch.Text);
-                    var result = BinarySearch(target);
-
-                    if (result == 0)
-                    {
-                        UpdateStatusStrip("Item not found");
-                        ClearTextBox();
-                    }
-                    else
-                    {
-                        UpdateStatusStrip("Item found");
-                        SelectItem(result);
-                        DisplayTextBox(target.ToString());
-                        ClearTextBox();
-                        FocusTextBox();
-                    }
+                    UpdateStatusStrip("Item found");
+                    SelectItem(result);
+                    DisplayTextBox(searchNumber.ToString());
+                    ClearTextBox();
+                    FocusTextBox();
                 }
             }
         }
-        
+
         private void ButtonSort_MouseClick(object sender, MouseEventArgs e)
         {
             // NEED TO CHECK WHY CAN'T LOOK AT EMPTY ARRAY
@@ -135,10 +132,9 @@ namespace WikiApp
         /// </summary>
         private void BubbleSort(int index)
         {
-            string temp;
-            for (int z = 0; z < Col; z++)
+            for (var z = 0; z < Col; z++)
             {
-                temp = WikiArray[index, z];
+                var temp = WikiArray[index, z];
                 WikiArray[index, z] = WikiArray[index + 1, z];
                 WikiArray[index + 1, z] = temp;
             }
@@ -149,9 +145,9 @@ namespace WikiApp
         /// </summary>
         private void SortTable()
         {
-            for (int x = 0; x < Row; x++)
+            for (var x = 0; x < Row; x++)
             {
-                for (int i = 0; i < Row - 1; i++)
+                for (var i = 0; i < Row - 1; i++)
                 {
                     if (string.Compare(WikiArray[i, 0], WikiArray[i + 1, 0]) == 1)
                     {
@@ -170,31 +166,45 @@ namespace WikiApp
         /// <returns></returns>
         private int BinarySearch(int searchValue)
         {
-            int lastIndex = Row - 1;
-            int firstIndex = 0;
+            var lastIndex = Row - 1;
+            var firstIndex = 0;
             int searchIndex;
-            // CHECK WILL NEED TO UPDATE THIS TO SEARCH BY ARRAY INDEX NOT ARRAY VALUE
+            int returnValue = -1;
+
+            SortTable();
+
             while (firstIndex <= lastIndex)
             {
                 searchIndex = (firstIndex + lastIndex) / 2;
-                int arrayValue = Int32.Parse(WikiArray[searchIndex, 0]);
-                // if searched value equals to the search index, then its a matched and its index will return
-                if (arrayValue == searchValue)
+                var search = WikiArray[searchIndex, 0];
+                
+                if (search != null)
                 {
-                    return searchIndex;
+                    var arrayValue = Int32.Parse(search);
+                    returnValue = 0;
+
+                    // if searched value equals to the search index, then its a matched and its index will return
+                    if (arrayValue == searchValue)
+                    {
+                        return searchIndex;
+                    }
+                    // if the searched value bigger than then current search index, then it will continue its search on the right hand of the array 
+                    else if (arrayValue < searchValue)
+                    {
+                        firstIndex = searchIndex + 1;
+                    }
+                    // if the searched value is smaller than the current search index, then it will continue its search on the left hand of the array
+                    else
+                    {
+                        lastIndex = searchIndex - 1;
+                    }
                 }
-                // if the searched value bigger than then current search index, then it will continue its search on the right hand of the array 
-                else if (arrayValue < searchValue)
-                {
-                    firstIndex = searchIndex + 1;
-                }
-                // if the searched value is smaller than the current search index, then it will continue its search on the left hand of the array
                 else
                 {
                     lastIndex = searchIndex - 1;
                 }
             }
-            return 0;
+            return returnValue;
         }
 
         // 9.8 Create a display method that will show the following information in a ListView: Name and Category
@@ -204,9 +214,9 @@ namespace WikiApp
         private void DisplayData()
         {
             ListViewDataStructure.Items.Clear();
-            for (int x = 0; x < Row; x++)
+            for (var x = 0; x < Row; x++)
             {
-                ListViewItem item = new ListViewItem(WikiArray[x, 0]);
+                var item = new ListViewItem(WikiArray[x, 0]);
                 item.SubItems.Add(WikiArray[x, 1]);
                 item.SubItems.Add(WikiArray[x, 2]);
                 item.SubItems.Add(WikiArray[x, 3]);
@@ -233,11 +243,12 @@ namespace WikiApp
         /// </summary>
         private void LoadData()
         {
+            
             // CHECK THIS NEEDS TO BE UPDATED TO LOAD BINARY FILE
-            Random random = new Random();
-            for (int x = 0; x < Row; x++)
+            var random = new Random();
+            for (var x = 0; x < Row; x++)
             {
-                for (int y = 0; y < Col; y++)
+                for (var y = 0; y < Col; y++)
                 {
                     WikiArray[x, y] = random.Next(10, 99).ToString();
                 }
@@ -274,9 +285,9 @@ namespace WikiApp
         private void AddItem()
         {
             var selectedItem = ListViewDataStructure.SelectedItems;
-            int rowNumber = ListViewDataStructure.FocusedItem.Index;
+            var rowNumber = ListViewDataStructure.FocusedItem.Index;
 
-            for (int i = 0; i < Col; i++)
+            for (var i = 0; i < Col; i++)
             {
                 selectedItem.Clear();
                 WikiArray[rowNumber, i] = "~";
@@ -288,9 +299,9 @@ namespace WikiApp
         private void EditItem()
         {
             var selectedItem = ListViewDataStructure.SelectedItems;
-            int rowNumber = ListViewDataStructure.FocusedItem.Index;
+            var rowNumber = ListViewDataStructure.FocusedItem.Index;
 
-            for (int i = 0; i < Col; i++)
+            for (var i = 0; i < Col; i++)
             {
                 selectedItem.Clear();
                 WikiArray[rowNumber, i] = "~";
@@ -302,28 +313,32 @@ namespace WikiApp
         private void DeleteItem()
         {
             var selectedItem = ListViewDataStructure.SelectedItems;
-            int rowNumber = ListViewDataStructure.FocusedItem.Index;
+            var rowNumber = ListViewDataStructure.FocusedItem.Index;
         
             // If nothing selected, do nothing
             if (selectedItem == null)
                 return;
-
             else
             {
-               for (int i = 0; i < Col; i++)
+                if (DeleteConfirmationMessage(selectedItem))
                 {
-                    selectedItem.Clear();
-                    WikiArray[rowNumber, i] = "~";
-                    DisplayData();
+                    for (var i = 0; i < Col; i++)
+                    {
+                        selectedItem.Clear();
+                        WikiArray[rowNumber, i] = "~";
+                        DisplayData();
+                    }
                 }
+                else 
+                    return;
             }
             FocusTextBox();
         }
 
         private bool DeleteConfirmationMessage(object selectedItem)
         {
-            var message = $"Are you sure you want to delete {selectedItem}?";
-            var caption = $"Delete {selectedItem}?";
+            var message = $"Are you sure you want to delete this item?";
+            var caption = $"Delete?";
             return MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Information)
                     == DialogResult.Yes;
         }
