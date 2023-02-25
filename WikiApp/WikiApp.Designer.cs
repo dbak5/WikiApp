@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("");
             this.TextBoxSearch = new System.Windows.Forms.TextBox();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -86,10 +86,10 @@
             this.columnHeader4});
             this.ListViewDataStructure.HideSelection = false;
             this.ListViewDataStructure.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4});
+            listViewItem9,
+            listViewItem10,
+            listViewItem11,
+            listViewItem12});
             this.ListViewDataStructure.Location = new System.Drawing.Point(355, 103);
             this.ListViewDataStructure.Name = "ListViewDataStructure";
             this.ListViewDataStructure.Size = new System.Drawing.Size(362, 226);
@@ -182,6 +182,7 @@
             this.ButtonSave.TabIndex = 11;
             this.ButtonSave.Text = "Save File";
             this.ButtonSave.UseVisualStyleBackColor = true;
+            this.ButtonSave.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonSave_MouseClick);
             // 
             // TextBoxEdit
             // 
@@ -212,6 +213,7 @@
             this.ButtonEdit.TabIndex = 15;
             this.ButtonEdit.Text = "Edit Item";
             this.ButtonEdit.UseVisualStyleBackColor = true;
+            this.ButtonEdit.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonEdit_MouseClick);
             // 
             // WikiApp
             // 
@@ -235,7 +237,6 @@
             this.Controls.Add(this.TextBoxSearch);
             this.Name = "WikiApp";
             this.Text = "Data Structures Wiki";
-            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonEdit_MouseClick);
             this.StatusStrip.ResumeLayout(false);
             this.StatusStrip.PerformLayout();
             this.ResumeLayout(false);

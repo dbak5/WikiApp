@@ -1,16 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Reflection;
-using ListView = System.Windows.Forms.ListView;
 
 // Author: DaHye Baker
 // Student ID: 30063368
@@ -34,7 +23,7 @@ namespace WikiApp
         private string[,] _wikiArray = new string[Row, Col];
 
         private int _selectedIndex = -1;
-        bool sorted = false;
+        private bool _sorted = false;
         //bool filled = false;
         //bool found = false;
 
@@ -69,11 +58,10 @@ namespace WikiApp
             CheckArrayData(ClearData, "No data to clear");
         }
 
-        // 9.10 Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat which is sorted by Name, ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter to create the file
+        // 9.10 Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat which is _sorted by Name, ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter to create the file
         private void ButtonSave_MouseClick(object sender, MouseEventArgs e)
         {
-            //CheckArrayData(EditItem, "No data to edit");
-            // ADD CODE
+            CheckArrayData(SaveFile, "No data to save");
         }
 
         // 9.11 Create a LOAD button that will read the information from a binary file called definitions.dat into the 2D array, ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task
@@ -159,7 +147,7 @@ namespace WikiApp
             }
             DisplayData();
            
-            sorted = true;
+            _sorted = true;
         }
 
         // 9.7 Write the code for a Binary Search for the Name in the 2D array and display the information in the other textboxes when found, add suitable feedback if the search in not successful and clear the search textbox (do not use any built-in array methods)
@@ -171,42 +159,44 @@ namespace WikiApp
         {
             var lastIndex = Row - 1;
             var firstIndex = 0;
-            int searchIndex = _selectedIndex;
-            int returnValue = -1;
-
-            while (firstIndex <= lastIndex)
-            {
-                searchIndex = (firstIndex + lastIndex) / 2;
-                var search = _wikiArray[searchIndex, 0];
-
-                if (search != null)
+            var searchIndex = _selectedIndex;
+            var returnValue = -1;
+           
+                while (firstIndex <= lastIndex)
                 {
-                    int.TryParse(search, out var arrayValue);
-                    
-                    returnValue = 0;
+                    searchIndex = (firstIndex + lastIndex) / 2;
+                    var search = _wikiArray[searchIndex, 0];
 
-                    // if searched value equals to the search index, then its a matched and its index will return
-                    if (arrayValue == searchValue)
+                    if (search != null)
                     {
-                        return searchIndex;
+                        int.TryParse(search, out var arrayValue);
+
+                        returnValue = 0;
+
+                        // if searched value equals to the search index, then its a matched and its index will return
+                        if (arrayValue == searchValue)
+                        {
+                            return searchIndex;
+                        }
+                        // if the searched value bigger than then current search index, then it will continue its search on the right hand of the array 
+                        else if (arrayValue < searchValue)
+                        {
+                            firstIndex = searchIndex + 1;
+                        }
+                        // if the searched value is smaller than the current search index, then it will continue its search on the left hand of the array
+                        else
+                        {
+                            lastIndex = searchIndex - 1;
+                        }
                     }
-                    // if the searched value bigger than then current search index, then it will continue its search on the right hand of the array 
-                    else if (arrayValue < searchValue)
-                    {
-                        firstIndex = searchIndex + 1;
-                    }
-                    // if the searched value is smaller than the current search index, then it will continue its search on the left hand of the array
                     else
                     {
                         lastIndex = searchIndex - 1;
                     }
                 }
-                else
-                {
-                    lastIndex = searchIndex - 1;
-                }
-            }
-            return returnValue;
+                
+                return returnValue;
+            
         }
 
         // 9.8 Create a display method that will show the following information in a ListView: Name and Category
@@ -291,14 +281,12 @@ namespace WikiApp
             if (_selectedIndex == -1)
             {
                 UpdateStatusStrip($"Nothing selected to {action}");
-                return;
             }
 
             else
             {
-                if (ConfirmationMessage(_selectedIndex, action))
+                if (ConfirmationMessage(action))
                 {
-                    var index = _selectedIndex;
                     for (var i = 0; i < Col; i++)
                     {
                        // _wikiArray[index, i] = "~";
@@ -311,7 +299,6 @@ namespace WikiApp
                 else
                 {
                     UpdateStatusStrip($"Item not {actioned}");
-                    return;
                 }
             }
         }
@@ -324,13 +311,11 @@ namespace WikiApp
             if (_selectedIndex == -1)
             {
                 UpdateStatusStrip($"Nothing selected to {action}");
-          
             }
             else
             {
-                if (ConfirmationMessage(_selectedIndex, action))
+                if (ConfirmationMessage(action))
                 {
-                    var index = _selectedIndex;
                     for (var i = 0; i < Col; i++)
                     {
                         //_wikiArray[index, i] = "~";
@@ -343,7 +328,6 @@ namespace WikiApp
                 else
                 {
                     UpdateStatusStrip($"Item not {actioned}");
-        
                 }
             }
         }
@@ -360,7 +344,7 @@ namespace WikiApp
             }
             else
             {
-                if (ConfirmationMessage(_selectedIndex, action))
+                if (ConfirmationMessage(action))
                 {
                     var index = _selectedIndex;
                     for (var i = 0; i < Col; i++)
@@ -380,7 +364,7 @@ namespace WikiApp
             }
         }
 
-        private static bool ConfirmationMessage(object selectedItem, string action)
+        private static bool ConfirmationMessage(string action)
         {
             var message = $"Are you sure you want to {action} this item?";
             var caption = $"Please confirm {action}";
