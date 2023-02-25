@@ -27,7 +27,7 @@ namespace WikiApp
         // 9.1 Create a global 2D string array, use static variables for the dimensions (row = 4, column = 12),
         private const int Row = 12;
         private const int Col = 4;
-        string[,] WikiArray = new string[Row, Col];
+        private string[,] _wikiArray = new string[Row, Col];
 
         private const string StatusStripItemFound = "Item found";
         private const string StatusStripItemNotFound = "Item not found";
