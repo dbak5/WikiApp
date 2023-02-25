@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Reflection;
+using ListView = System.Windows.Forms.ListView;
 
 // Author: DaHye Baker
 // Student ID: 30063368
@@ -24,6 +25,8 @@ namespace WikiApp
         public WikiApp()
         {
             InitializeComponent();
+            ListViewDataStructure.SelectedIndexChanged += ListViewDataStructure_MouseClick;
+            
         }
 
         #region Variables
@@ -31,6 +34,8 @@ namespace WikiApp
         private const int Row = 12;
         private const int Col = 4;
         string[,] WikiArray = new string[Row, Col];
+
+        private int selectedIndex = -1;
         bool sorted = false;
         //bool filled = false;
         //bool found = false;
@@ -42,31 +47,34 @@ namespace WikiApp
         // 9.2 Create an ADD button that will store the information from the 4 text boxes into the 2D array
         private void ButtonAdd_MouseClick(object sender, MouseEventArgs e)
         {
-            AddItem();
+            CheckTextBox();
+            CheckArrayData(AddItem, "No data");
         }
 
         // 9.3 Create and EDIT button that will allow the user to modify any information from the 4 text boxes into the 2D array
         private void ButtonEdit_MouseClick(object sender, MouseEventArgs e)
         {
-            // ADD CODE
+            CheckTextBox();
+            CheckArrayData(EditItem, "No data");
         }
 
         // 9.4 Create a DELETE button that removes all the information from a single entry of the array; the user must be prompted before the final deletion occurs
         private void ButtonDelete_MouseClick(object sender, MouseEventArgs e)
         {
-            DeleteItem();
+            CheckArrayData(DeleteItem, "No data to delete");
+           
         }
 
         // 9.5 Create a CLEAR method to clear the four text boxes so a new definition can be added
         private void ButtonClear_MouseClick(object sender, MouseEventArgs e)
         {
-            ClearData();
-            UpdateStatusStrip("Data cleared");
+            CheckArrayData(ClearData, "No data to clear");
         }
 
         // 9.10 Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat which is sorted by Name, ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter to create the file
         private void ButtonSave_MouseClick(object sender, MouseEventArgs e)
         {
+            //CheckArrayData(EditItem, "No data to edit");
             // ADD CODE
         }
 
@@ -75,21 +83,15 @@ namespace WikiApp
         private void ButtonLoad_MouseClick(object sender, MouseEventArgs e)
         {
             LoadData();
+            CheckArrayData(LoadData, "Data loaded");
         }
 
         private void ButtonBinarySearch_MouseClick(object sender, MouseEventArgs e)
         {
-            if (TextBoxSearch.Text == "")
-            {
-                UpdateStatusStrip("No text in search box");
-                return;
-            }
+            CheckTextBox();
 
-            // NEED TO CHECK WHY CAN'T LOOK AT EMPTY ARRAY
             if (int.TryParse(TextBoxSearch.Text, out var searchNumber))
             {
-
-                //var target = Int32.Parse(TextBoxSearch.Text);
                 var result = BinarySearch(searchNumber);
                 if (result == -1)
                 {
@@ -106,21 +108,23 @@ namespace WikiApp
                     SelectItem(result);
                     DisplayTextBox(searchNumber.ToString());
                     ClearTextBox();
-                    FocusTextBox();
                 }
             }
+            FocusTextBox();
         }
 
         private void ButtonSort_MouseClick(object sender, MouseEventArgs e)
         {
-            // NEED TO CHECK WHY CAN'T LOOK AT EMPTY ARRAY
-            if (WikiArray == null) 
+            CheckArrayData(SortTable, "No data to sort");
+            UpdateStatusStrip("Data sorted");
+        }
+
+        private void ListViewDataStructure_MouseClick(object sender, System.EventArgs e)
+        {
+            if (ListViewDataStructure.SelectedItems.Count > 0)
             {
-                UpdateStatusStrip("No data to search");
-            }
-            else 
-            { 
-                SortTable(); 
+                selectedIndex = ListViewDataStructure.SelectedIndices[0];
+                SelectItem(selectedIndex);
             }
         }
         #endregion
@@ -156,31 +160,31 @@ namespace WikiApp
                 }
             }
             DisplayData();
+           
             sorted = true;
         }
 
         // 9.7 Write the code for a Binary Search for the Name in the 2D array and display the information in the other textboxes when found, add suitable feedback if the search in not successful and clear the search textbox (do not use any built-in array methods)
         /// <summary>
-        /// Binary search function that would return a index
+        /// Binary search function
         /// </summary>
-        /// <returns></returns>
+        /// <returns> Returns -1 if the array contains null values, returns 0 if if the item cannot be found in the array </returns>
         private int BinarySearch(int searchValue)
         {
             var lastIndex = Row - 1;
             var firstIndex = 0;
-            int searchIndex;
+            int searchIndex = selectedIndex;
             int returnValue = -1;
-
-            SortTable();
 
             while (firstIndex <= lastIndex)
             {
                 searchIndex = (firstIndex + lastIndex) / 2;
                 var search = WikiArray[searchIndex, 0];
-                
+
                 if (search != null)
                 {
-                    var arrayValue = Int32.Parse(search);
+                    int.TryParse(search, out var arrayValue);
+                    
                     returnValue = 0;
 
                     // if searched value equals to the search index, then its a matched and its index will return
@@ -231,11 +235,9 @@ namespace WikiApp
         /// </summary>
         private void SelectItem(int index)
         {
-            //ListViewDataStructure.Select();
             ListViewDataStructure.HideSelection = false;
             ListViewDataStructure.FullRowSelect = true;
             ListViewDataStructure.Items[index].Selected = true;
-
         }
 
         /// <summary>
@@ -243,7 +245,6 @@ namespace WikiApp
         /// </summary>
         private void LoadData()
         {
-            
             // CHECK THIS NEEDS TO BE UPDATED TO LOAD BINARY FILE
             var random = new Random();
             for (var x = 0; x < Row; x++)
@@ -254,6 +255,7 @@ namespace WikiApp
                 }
             }
             DisplayData();
+
         }
 
         /// <summary>
@@ -272,6 +274,7 @@ namespace WikiApp
         {
             ListViewDataStructure.Items.Clear();
             Array.Clear(WikiArray, 0, WikiArray.GetLength(0) * WikiArray.GetLength(1));
+            UpdateStatusStrip("Data cleared");
         }
 
         /// <summary>
@@ -284,61 +287,105 @@ namespace WikiApp
 
         private void AddItem()
         {
-            var selectedItem = ListViewDataStructure.SelectedItems;
-            var rowNumber = ListViewDataStructure.FocusedItem.Index;
+            var action = "add";
+            var actioned = "added";
 
-            for (var i = 0; i < Col; i++)
+            if (selectedIndex == -1)
             {
-                selectedItem.Clear();
-                WikiArray[rowNumber, i] = "~";
-                DisplayData();
+                UpdateStatusStrip($"Nothing selected to {action}");
+                return;
             }
-            FocusTextBox();
+
+            else
+            {
+                if (ConfirmationMessage(selectedIndex, action))
+                {
+                    int index = selectedIndex;
+                    for (int i = 0; i < Col; i++)
+                    {
+                       // WikiArray[index, i] = "~";
+                        DisplayData();
+                    }
+
+                    UpdateStatusStrip($"Item {actioned}");
+                    FocusTextBox();
+                }
+                else
+                {
+                    UpdateStatusStrip($"Item not {actioned}");
+                    return;
+                }
+            }
         }
 
         private void EditItem()
         {
-            var selectedItem = ListViewDataStructure.SelectedItems;
-            var rowNumber = ListViewDataStructure.FocusedItem.Index;
+            var action = "edit";
+            var actioned = "edited";
 
-            for (var i = 0; i < Col; i++)
+            if (selectedIndex == -1)
             {
-                selectedItem.Clear();
-                WikiArray[rowNumber, i] = "~";
-                DisplayData();
+                UpdateStatusStrip($"Nothing selected to {action}");
+                return;
             }
-            FocusTextBox();
+            else
+            {
+                if (ConfirmationMessage(selectedIndex, action))
+                {
+                    int index = selectedIndex;
+                    for (int i = 0; i < Col; i++)
+                    {
+                        //WikiArray[index, i] = "~";
+                        DisplayData();
+                    }
+
+                    UpdateStatusStrip($"Item {actioned}");
+                    FocusTextBox();
+                }
+                else
+                {
+                    UpdateStatusStrip($"Item not {actioned}");
+                    return;
+                }
+            }
         }
 
         private void DeleteItem()
         {
-            var selectedItem = ListViewDataStructure.SelectedItems;
-            var rowNumber = ListViewDataStructure.FocusedItem.Index;
-        
-            // If nothing selected, do nothing
-            if (selectedItem == null)
+            var action = "delete";
+            var actioned = "deleted";
+
+            if (selectedIndex == -1)
+            {
+                UpdateStatusStrip("Nothing selected to delete");
                 return;
+            }
             else
             {
-                if (DeleteConfirmationMessage(selectedItem))
+                if (ConfirmationMessage(selectedIndex, action))
                 {
-                    for (var i = 0; i < Col; i++)
+                    int index = selectedIndex;
+                    for (int i = 0; i < Col; i++)
                     {
-                        selectedItem.Clear();
-                        WikiArray[rowNumber, i] = "~";
+                        WikiArray[index, i] = "~";
                         DisplayData();
                     }
+
+                    UpdateStatusStrip($"Item {actioned}");
+                    FocusTextBox();
                 }
-                else 
+                else
+                {
+                    UpdateStatusStrip($"Item not {actioned}");
                     return;
+                }
             }
-            FocusTextBox();
         }
 
-        private bool DeleteConfirmationMessage(object selectedItem)
+        private bool ConfirmationMessage(object selectedItem, string action)
         {
-            var message = $"Are you sure you want to delete this item?";
-            var caption = $"Delete?";
+            var message = $"Are you sure you want to {action} this item?";
+            var caption = $"Please confirm {action}";
             return MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Information)
                     == DialogResult.Yes;
         }
@@ -359,9 +406,47 @@ namespace WikiApp
             TextBoxSearch.Clear();
         }
 
+        private void CheckArrayData(Action action, string message)
+        {
+            var searchNumber = -1;
+            var result = BinarySearch(searchNumber);
+     
+            if (result == -1)
+            {
+                UpdateStatusStrip(message);
+                ButtonAdd.Enabled = false;
+                ButtonDelete.Enabled = false;
+                ButtonSort.Enabled = false;
+                ButtonSearch.Enabled = false;
+                ButtonEdit.Enabled = false;
+                ButtonClear.Enabled = false;
+
+            }
+            else
+            {
+                action();
+                ButtonAdd.Enabled = true;
+                ButtonDelete.Enabled = true;
+                ButtonSort.Enabled = true;
+                ButtonSearch.Enabled = true;
+                ButtonEdit.Enabled = true;
+                ButtonClear.Enabled = true;
+            }
+        }
+
         private void FocusTextBox()
         {
             TextBoxSearch.Focus();
+        }
+
+        //CHECK MIGHT BE ABLE TO PASS THE SPECIFIC TEXT BOX THROUGH
+        private void CheckTextBox()
+        {
+            if (TextBoxSearch.Text == "")
+            {
+                UpdateStatusStrip("No text in search box");
+                return;
+            }
         }
         #endregion
     }
