@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Windows.Forms;
 
 // Author: DaHye Baker
@@ -20,6 +21,7 @@ namespace WikiApp
 
         private WikiSortedArray _wikiArray;
         private int _selectedIndex = -1;
+        private bool _textChanged;
         private string _nameChangedText;
         private string _categoryChangedText;
         private string _structureChangedText;
@@ -57,19 +59,28 @@ namespace WikiApp
             if (!CheckArray()) return;
             if (!CheckSelected(action)) return;
             if (!CheckOutOfBound()) return;
-            if (ConfirmationMessage(action))
+            if (_textChanged)
             {
-                UpdateArray(_selectedIndex, 0, _nameChangedText);
-                UpdateArray(_selectedIndex, 1, _categoryChangedText);
-                UpdateArray(_selectedIndex, 2, _structureChangedText);
-                UpdateArray(_selectedIndex, 3, _definitionChangedText);
-                UpdateStatusStrip("Item edited");
-                DisplayListView();
-            }
+                if (ConfirmationMessage(action))
+                {
+                    _wikiArray.UpdateArray(_selectedIndex, 0, _nameChangedText);
+                    _wikiArray.UpdateArray(_selectedIndex, 1, _categoryChangedText);
+                    _wikiArray.UpdateArray(_selectedIndex, 2, _structureChangedText);
+                    _wikiArray.UpdateArray(_selectedIndex, 3, _definitionChangedText);
+                    UpdateStatusStrip("Item edited");
+                    DisplayListView();
+                    _textChanged = false;
+                }
 
+                else
+                {
+                    UpdateStatusStrip($"Item not {actioned}");
+    
+                }
+            }
             else
             {
-                UpdateStatusStrip($"Item not {actioned}");
+                UpdateStatusStrip("No changes made");
             }
         }
 
@@ -87,6 +98,7 @@ namespace WikiApp
                 _wikiArray.DeleteItem(_selectedIndex);
                 UpdateStatusStrip($"Item {actioned}");
                 ClearTextBoxes();
+                TextBoxSearch.Clear();
                 DisplayListView();
             }
 
@@ -100,7 +112,8 @@ namespace WikiApp
         private void ButtonClear_MouseClick(object sender, MouseEventArgs e)
         {
             ClearTextBoxes();
-            UnselectItem();
+            TextBoxSearch.Clear();
+            DeselectItem(_selectedIndex);
         }
 
         // 9.10 Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat which is _sorted by Name, ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter to create the file
@@ -133,6 +146,8 @@ namespace WikiApp
                 case 0:
                     UpdateStatusStrip("Item not found");
                     TextBoxSearch.Focus();
+                    ClearTextBoxes();
+                    DeselectItem(_selectedIndex);
                     break;
                 default:
                     SelectItem(searchResult);
@@ -143,33 +158,35 @@ namespace WikiApp
             }
         }
 
-        private void ListViewDataStructure_MouseClick(object sender, System.EventArgs e)
+        private void ListViewDataStructure_MouseClick(object sender, EventArgs e)
         {
             if (ListViewDataStructure.SelectedItems.Count <= 0) return;
             _selectedIndex = ListViewDataStructure.SelectedIndices[0];
             SelectItem(_selectedIndex);
         }
 
-        private void TextBoxNam_TextChanged(object sender, System.EventArgs e)
+        private void TextBoxNam_TextChanged(object sender, EventArgs e)
         {
             _nameChangedText = TextBoxNam.Text;
+            _textChanged = true;
         }
 
-        private void TextBoxStr_TextChanged(object sender, System.EventArgs e)
+        private void TextBoxStr_TextChanged(object sender, EventArgs e)
         {
             _structureChangedText = TextBoxStr.Text;
-     
+            _textChanged = true;
         }
 
-        private void TextBoxDef_TextChanged(object sender, System.EventArgs e)
+        private void TextBoxDef_TextChanged(object sender, EventArgs e)
         {
             _definitionChangedText = TextBoxDef.Text;
+            _textChanged = true;
         }
 
-        private void TextBoxCat_TextChanged(object sender, System.EventArgs e)
+        private void TextBoxCat_TextChanged(object sender, EventArgs e)
         {
             _categoryChangedText = TextBoxCat.Text;
-          
+            _textChanged = true;
         }
 
         #endregion
@@ -183,14 +200,11 @@ namespace WikiApp
             // ADD CODE
         }
 
-        private void UpdateArray(int row, int col, string changedText)
-        {
-            _wikiArray.EditItem(row, col, changedText);
-        }
         #endregion
 
         #region WORKING
 
+        #region Select and deselect items in the list view
         // 9.9 Create a method so the user can select a definition (Name) from the ListView and all the information is displayed in the appropriate Textboxes
         private void SelectItem(int index)
         {
@@ -200,6 +214,17 @@ namespace WikiApp
             DisplayTextBoxes(index);
         }
 
+        private void DeselectItem(int index)
+        {
+            if (_selectedIndex == -1) return;
+            ListViewDataStructure.HideSelection = false;
+            ListViewDataStructure.FullRowSelect = false;
+            ListViewDataStructure.Items[index].Selected = false;
+            _selectedIndex = -1;
+        }
+        #endregion
+
+        #region Display and clear items - listview and textboxes
         // 9.8 Create a display method that will show the following information in a ListView: Name and Category
         private void DisplayListView()
         {
@@ -223,19 +248,21 @@ namespace WikiApp
             TextBoxNam.Text = _wikiArray.Array[index, 0];
         }
 
-        private void UpdateStatusStrip(string message)
-        {
-            StatusLabel.Text = message;
-        }
-
         private void ClearTextBoxes()
         {
             TextBoxNam.Clear();
             TextBoxDef.Clear();
             TextBoxStr.Clear();
             TextBoxCat.Clear();
-            TextBoxSearch.Clear();
-            UnselectItem();
+            DeselectItem(_selectedIndex);
+        }
+
+        #endregion
+
+        #region User feedback and confirmations
+        private void UpdateStatusStrip(string message)
+        {
+            StatusLabel.Text = message;
         }
 
         private static bool ConfirmationMessage(string action)
@@ -245,7 +272,9 @@ namespace WikiApp
             return MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Information)
                    == DialogResult.Yes;
         }
+        #endregion
 
+        #region Error trapping
         private bool CheckTextBox()
         {
             if (string.IsNullOrEmpty(TextBoxSearch.Text))
@@ -276,6 +305,7 @@ namespace WikiApp
             {
                 UpdateStatusStrip("No data in the array");
                 ClearTextBoxes();
+                TextBoxSearch.Clear();
                 ButtonAdd.Enabled = false;
                 ButtonDelete.Enabled = false;
                 ButtonSearch.Enabled = false;
@@ -293,21 +323,16 @@ namespace WikiApp
                 return true;
             }
         }
-
-        private void UnselectItem()
-        {
-            _selectedIndex = -1;
-        }
         #endregion
 
-        #region REDUNDANT?
-        private void ClearArray()
-        {
-            UpdateStatusStrip("Data cleared");
-            ListViewDataStructure.Items.Clear();
-            Array.Clear(_wikiArray.Array, 0, _wikiArray.Array.GetLength(0) * _wikiArray.Array.GetLength(1));
-        }
         #endregion
+        
+        //private void ClearArray()
+        //{
+        //    UpdateStatusStrip("Data cleared");
+        //    ListViewDataStructure.Items.Clear();
+        //    Array.Clear(_wikiArray.Array, 0, _wikiArray.Array.GetLength(0) * _wikiArray.Array.GetLength(1));
+        //}
 
         #endregion
 
