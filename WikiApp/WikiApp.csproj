@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WikiSortedArray.cs" />
     <EmbeddedResource Include="WikiApp.resx">
       <DependentUpon>WikiApp.cs</DependentUpon>
     </EmbeddedResource>

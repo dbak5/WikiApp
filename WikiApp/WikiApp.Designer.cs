@@ -28,30 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem("");
             this.TextBoxSearch = new System.Windows.Forms.TextBox();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.ListViewDataStructure = new System.Windows.Forms.ListView();
-            this.ColumnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ColumnCategory = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColumnNam = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColumnCat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColumnStr = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ColumnDef = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ButtonAdd = new System.Windows.Forms.Button();
-            this.ButtonSort = new System.Windows.Forms.Button();
             this.ButtonLoad = new System.Windows.Forms.Button();
             this.ButtonClear = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.ButtonSearch = new System.Windows.Forms.Button();
             this.ButtonDelete = new System.Windows.Forms.Button();
             this.ButtonSave = new System.Windows.Forms.Button();
-            this.TextBoxEdit = new System.Windows.Forms.TextBox();
-            this.TextBoxDelete = new System.Windows.Forms.TextBox();
-            this.TextBoxAdd = new System.Windows.Forms.TextBox();
+            this.TextBoxCat = new System.Windows.Forms.TextBox();
+            this.TextBoxStr = new System.Windows.Forms.TextBox();
+            this.TextBoxDef = new System.Windows.Forms.TextBox();
             this.ButtonEdit = new System.Windows.Forms.Button();
+            this.TextBoxNam = new System.Windows.Forms.TextBox();
             this.StatusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -80,16 +80,16 @@
             // ListViewDataStructure
             // 
             this.ListViewDataStructure.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.ColumnName,
-            this.ColumnCategory,
-            this.columnHeader3,
-            this.columnHeader4});
+            this.ColumnNam,
+            this.ColumnCat,
+            this.ColumnStr,
+            this.ColumnDef});
             this.ListViewDataStructure.HideSelection = false;
             this.ListViewDataStructure.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem9,
-            listViewItem10,
-            listViewItem11,
-            listViewItem12});
+            listViewItem17,
+            listViewItem18,
+            listViewItem19,
+            listViewItem20});
             this.ListViewDataStructure.Location = new System.Drawing.Point(355, 103);
             this.ListViewDataStructure.Name = "ListViewDataStructure";
             this.ListViewDataStructure.Size = new System.Drawing.Size(362, 226);
@@ -98,13 +98,21 @@
             this.ListViewDataStructure.View = System.Windows.Forms.View.Details;
             this.ListViewDataStructure.SelectedIndexChanged += new System.EventHandler(this.ListViewDataStructure_MouseClick);
             // 
-            // ColumnName
+            // ColumnNam
             // 
-            this.ColumnName.Text = "Name";
+            this.ColumnNam.Text = "Name";
             // 
-            // ColumnCategory
+            // ColumnCat
             // 
-            this.ColumnCategory.Text = "Category";
+            this.ColumnCat.Text = "Category";
+            // 
+            // ColumnStr
+            // 
+            this.ColumnStr.Text = "Structure";
+            // 
+            // ColumnDef
+            // 
+            this.ColumnDef.Text = "Definition";
             // 
             // ButtonAdd
             // 
@@ -115,16 +123,6 @@
             this.ButtonAdd.Text = "Add New Record";
             this.ButtonAdd.UseVisualStyleBackColor = true;
             this.ButtonAdd.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonAdd_MouseClick);
-            // 
-            // ButtonSort
-            // 
-            this.ButtonSort.Location = new System.Drawing.Point(492, 49);
-            this.ButtonSort.Name = "ButtonSort";
-            this.ButtonSort.Size = new System.Drawing.Size(75, 23);
-            this.ButtonSort.TabIndex = 4;
-            this.ButtonSort.Text = "Sort Data";
-            this.ButtonSort.UseVisualStyleBackColor = true;
-            this.ButtonSort.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonSort_MouseClick);
             // 
             // ButtonLoad
             // 
@@ -138,11 +136,11 @@
             // 
             // ButtonClear
             // 
-            this.ButtonClear.Location = new System.Drawing.Point(606, 51);
+            this.ButtonClear.Location = new System.Drawing.Point(240, 237);
             this.ButtonClear.Name = "ButtonClear";
             this.ButtonClear.Size = new System.Drawing.Size(75, 23);
             this.ButtonClear.TabIndex = 6;
-            this.ButtonClear.Text = "Clear Data";
+            this.ButtonClear.Text = "ClearTextBoxes";
             this.ButtonClear.UseVisualStyleBackColor = true;
             this.ButtonClear.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonClear_MouseClick);
             // 
@@ -184,26 +182,29 @@
             this.ButtonSave.UseVisualStyleBackColor = true;
             this.ButtonSave.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonSave_MouseClick);
             // 
-            // TextBoxEdit
+            // TextBoxCat
             // 
-            this.TextBoxEdit.Location = new System.Drawing.Point(89, 103);
-            this.TextBoxEdit.Name = "TextBoxEdit";
-            this.TextBoxEdit.Size = new System.Drawing.Size(100, 20);
-            this.TextBoxEdit.TabIndex = 12;
+            this.TextBoxCat.Location = new System.Drawing.Point(89, 176);
+            this.TextBoxCat.Name = "TextBoxCat";
+            this.TextBoxCat.Size = new System.Drawing.Size(100, 20);
+            this.TextBoxCat.TabIndex = 12;
+            this.TextBoxCat.TextChanged += new System.EventHandler(this.TextBoxCat_TextChanged);
             // 
-            // TextBoxDelete
+            // TextBoxStr
             // 
-            this.TextBoxDelete.Location = new System.Drawing.Point(89, 147);
-            this.TextBoxDelete.Name = "TextBoxDelete";
-            this.TextBoxDelete.Size = new System.Drawing.Size(100, 20);
-            this.TextBoxDelete.TabIndex = 13;
+            this.TextBoxStr.Location = new System.Drawing.Point(89, 240);
+            this.TextBoxStr.Name = "TextBoxStr";
+            this.TextBoxStr.Size = new System.Drawing.Size(100, 20);
+            this.TextBoxStr.TabIndex = 13;
+            this.TextBoxStr.TextChanged += new System.EventHandler(this.TextBoxStr_TextChanged);
             // 
-            // TextBoxAdd
+            // TextBoxDef
             // 
-            this.TextBoxAdd.Location = new System.Drawing.Point(89, 189);
-            this.TextBoxAdd.Name = "TextBoxAdd";
-            this.TextBoxAdd.Size = new System.Drawing.Size(100, 20);
-            this.TextBoxAdd.TabIndex = 14;
+            this.TextBoxDef.Location = new System.Drawing.Point(89, 276);
+            this.TextBoxDef.Name = "TextBoxDef";
+            this.TextBoxDef.Size = new System.Drawing.Size(100, 20);
+            this.TextBoxDef.TabIndex = 14;
+            this.TextBoxDef.TextChanged += new System.EventHandler(this.TextBoxDef_TextChanged);
             // 
             // ButtonEdit
             // 
@@ -215,22 +216,30 @@
             this.ButtonEdit.UseVisualStyleBackColor = true;
             this.ButtonEdit.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonEdit_MouseClick);
             // 
+            // TextBoxNam
+            // 
+            this.TextBoxNam.Location = new System.Drawing.Point(89, 124);
+            this.TextBoxNam.Name = "TextBoxNam";
+            this.TextBoxNam.Size = new System.Drawing.Size(100, 20);
+            this.TextBoxNam.TabIndex = 16;
+            this.TextBoxNam.TextChanged += new System.EventHandler(this.TextBoxNam_TextChanged);
+            // 
             // WikiApp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.TextBoxNam);
             this.Controls.Add(this.ButtonEdit);
-            this.Controls.Add(this.TextBoxAdd);
-            this.Controls.Add(this.TextBoxDelete);
-            this.Controls.Add(this.TextBoxEdit);
+            this.Controls.Add(this.TextBoxDef);
+            this.Controls.Add(this.TextBoxStr);
+            this.Controls.Add(this.TextBoxCat);
             this.Controls.Add(this.ButtonSave);
             this.Controls.Add(this.ButtonDelete);
             this.Controls.Add(this.ButtonSearch);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.ButtonClear);
             this.Controls.Add(this.ButtonLoad);
-            this.Controls.Add(this.ButtonSort);
             this.Controls.Add(this.ButtonAdd);
             this.Controls.Add(this.ListViewDataStructure);
             this.Controls.Add(this.StatusStrip);
@@ -250,22 +259,22 @@
         private System.Windows.Forms.StatusStrip StatusStrip;
         private System.Windows.Forms.ListView ListViewDataStructure;
         private System.Windows.Forms.Button ButtonAdd;
-        private System.Windows.Forms.Button ButtonSort;
         private System.Windows.Forms.Button ButtonLoad;
-        private System.Windows.Forms.ColumnHeader ColumnName;
-        private System.Windows.Forms.ColumnHeader ColumnCategory;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
+        private System.Windows.Forms.ColumnHeader ColumnNam;
+        private System.Windows.Forms.ColumnHeader ColumnCat;
+        private System.Windows.Forms.ColumnHeader ColumnStr;
+        private System.Windows.Forms.ColumnHeader ColumnDef;
         private System.Windows.Forms.Button ButtonClear;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.Button ButtonSearch;
         private System.Windows.Forms.ToolStripStatusLabel StatusLabel;
         private System.Windows.Forms.Button ButtonDelete;
         private System.Windows.Forms.Button ButtonSave;
-        private System.Windows.Forms.TextBox TextBoxEdit;
-        private System.Windows.Forms.TextBox TextBoxDelete;
-        private System.Windows.Forms.TextBox TextBoxAdd;
+        private System.Windows.Forms.TextBox TextBoxCat;
+        private System.Windows.Forms.TextBox TextBoxStr;
+        private System.Windows.Forms.TextBox TextBoxDef;
         private System.Windows.Forms.Button ButtonEdit;
+        private System.Windows.Forms.TextBox TextBoxNam;
     }
 }
 
