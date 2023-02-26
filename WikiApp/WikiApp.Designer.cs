@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("");
             this.TextBoxSearch = new System.Windows.Forms.TextBox();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -86,17 +86,17 @@
             this.ColumnDef});
             this.ListViewDataStructure.HideSelection = false;
             this.ListViewDataStructure.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem17,
-            listViewItem18,
-            listViewItem19,
-            listViewItem20});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4});
             this.ListViewDataStructure.Location = new System.Drawing.Point(355, 103);
             this.ListViewDataStructure.Name = "ListViewDataStructure";
             this.ListViewDataStructure.Size = new System.Drawing.Size(362, 226);
             this.ListViewDataStructure.TabIndex = 2;
             this.ListViewDataStructure.UseCompatibleStateImageBehavior = false;
             this.ListViewDataStructure.View = System.Windows.Forms.View.Details;
-            this.ListViewDataStructure.SelectedIndexChanged += new System.EventHandler(this.ListViewDataStructure_MouseClick);
+            this.ListViewDataStructure.SelectedIndexChanged += new System.EventHandler(this.ListViewSelect_MouseClick);
             // 
             // ColumnNam
             // 
@@ -188,7 +188,7 @@
             this.TextBoxCat.Name = "TextBoxCat";
             this.TextBoxCat.Size = new System.Drawing.Size(100, 20);
             this.TextBoxCat.TabIndex = 12;
-            this.TextBoxCat.TextChanged += new System.EventHandler(this.TextBoxCat_TextChanged);
+            this.TextBoxCat.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxCat_KeyPress);
             // 
             // TextBoxStr
             // 
@@ -196,7 +196,7 @@
             this.TextBoxStr.Name = "TextBoxStr";
             this.TextBoxStr.Size = new System.Drawing.Size(100, 20);
             this.TextBoxStr.TabIndex = 13;
-            this.TextBoxStr.TextChanged += new System.EventHandler(this.TextBoxStr_TextChanged);
+            this.TextBoxStr.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxStr_KeyPress);
             // 
             // TextBoxDef
             // 
@@ -204,7 +204,7 @@
             this.TextBoxDef.Name = "TextBoxDef";
             this.TextBoxDef.Size = new System.Drawing.Size(100, 20);
             this.TextBoxDef.TabIndex = 14;
-            this.TextBoxDef.TextChanged += new System.EventHandler(this.TextBoxDef_TextChanged);
+            this.TextBoxDef.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDef_KeyPress);
             // 
             // ButtonEdit
             // 
@@ -222,7 +222,7 @@
             this.TextBoxNam.Name = "TextBoxNam";
             this.TextBoxNam.Size = new System.Drawing.Size(100, 20);
             this.TextBoxNam.TabIndex = 16;
-            this.TextBoxNam.TextChanged += new System.EventHandler(this.TextBoxNam_TextChanged);
+            this.TextBoxNam.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxNam_KeyPress);
             // 
             // WikiApp
             // 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using System.Windows.Forms;
 
 // Author: DaHye Baker
@@ -31,59 +30,7 @@ namespace WikiApp
 
         #region Events & Buttons
 
-        // 9.2 Create an ADD button that will store the information from the 4 text boxes into the 2D array
-        private void ButtonAdd_MouseClick(object sender, MouseEventArgs e)
-        {
-            const string action = "add";
-            const string actioned = "added";
-
-            if (!CheckArray()) return;
-            if (!CheckSelected(action)) return;
-            if (!CheckOutOfBound()) return;
-            if (ConfirmationMessage(action))
-            {
-                //add
-            }
-            else
-            {
-                UpdateStatusStrip($"Item not {actioned}");
-            }
-        }
-
-        // 9.3 Create and EDIT button that will allow the user to modify any information from the 4 text boxes into the 2D array
-        private void ButtonEdit_MouseClick(object sender, MouseEventArgs e)
-        {
-            const string action = "edit";
-            const string actioned = "edited";
-
-            if (!CheckArray()) return;
-            if (!CheckSelected(action)) return;
-            if (!CheckOutOfBound()) return;
-            if (_textChanged)
-            {
-                if (ConfirmationMessage(action))
-                {
-                    _wikiArray.UpdateArray(_selectedIndex, 0, _nameChangedText);
-                    _wikiArray.UpdateArray(_selectedIndex, 1, _categoryChangedText);
-                    _wikiArray.UpdateArray(_selectedIndex, 2, _structureChangedText);
-                    _wikiArray.UpdateArray(_selectedIndex, 3, _definitionChangedText);
-                    UpdateStatusStrip("Item edited");
-                    DisplayListView();
-                    _textChanged = false;
-                }
-
-                else
-                {
-                    UpdateStatusStrip($"Item not {actioned}");
-    
-                }
-            }
-            else
-            {
-                UpdateStatusStrip("No changes made");
-            }
-        }
-
+        #region Working
         // 9.4 Create a DELETE button that removes all the information from a single entry of the array; the user must be prompted before the final deletion occurs
         private void ButtonDelete_MouseClick(object sender, MouseEventArgs e)
         {
@@ -106,31 +53,6 @@ namespace WikiApp
             {
                 UpdateStatusStrip($"Item not {actioned}");
             }
-        }
-
-        // 9.5 Create a CLEAR method to clear the four text boxes so a new definition can be added
-        private void ButtonClear_MouseClick(object sender, MouseEventArgs e)
-        {
-            ClearTextBoxes();
-            TextBoxSearch.Clear();
-            DeselectItem(_selectedIndex);
-        }
-
-        // 9.10 Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat which is _sorted by Name, ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter to create the file
-        private void ButtonSave_MouseClick(object sender, MouseEventArgs e)
-        {
-          // add
-        }
-
-        // 9.11 Create a LOAD button that will read the information from a binary file called definitions.dat into the 2D array, ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task
-        // CHECK NEED TO LOAD BINARY FILE USING BINARY READER
-        private void ButtonLoad_MouseClick(object sender, MouseEventArgs e)
-        {
-            _wikiArray = new WikiSortedArray();
-            _wikiArray.LoadData();
-            UpdateStatusStrip("Data successfully loaded");
-            DisplayListView();
-            CheckArray();
         }
 
         private void ButtonBinarySearch_MouseClick(object sender, MouseEventArgs e)
@@ -158,51 +80,131 @@ namespace WikiApp
             }
         }
 
-        private void ListViewDataStructure_MouseClick(object sender, EventArgs e)
+        // 9.5 Create a CLEAR method to clear the four text boxes so a new definition can be added
+        private void ButtonClear_MouseClick(object sender, MouseEventArgs e)
+        {
+            ClearTextBoxes();
+            TextBoxSearch.Clear();
+            DeselectItem(_selectedIndex);
+        }
+
+        private void ListViewSelect_MouseClick(object sender, EventArgs e)
         {
             if (ListViewDataStructure.SelectedItems.Count <= 0) return;
             _selectedIndex = ListViewDataStructure.SelectedIndices[0];
             SelectItem(_selectedIndex);
         }
 
-        private void TextBoxNam_TextChanged(object sender, EventArgs e)
+        #endregion
+
+
+        // 9.2 Create an ADD button that will store the information from the 4 text boxes into the 2D array
+        private void ButtonAdd_MouseClick(object sender, MouseEventArgs e)
         {
-            _nameChangedText = TextBoxNam.Text;
+            const string action = "add";
+            const string actioned = "added";
+
+            if (!CheckArray()) return;
+            if (!CheckSelected(action)) return;
+            if (!CheckOutOfBound()) return;
+            if (ConfirmationMessage(action))
+            {
+                //add
+            }
+            else
+            {
+                UpdateStatusStrip($"Item not {actioned}");
+            }
+        }
+
+        // 9.3 Create and EDIT button that will allow the user to modify any information from the 4 text boxes into the 2D array
+        // CHECK WHY IT ISN'T SORTING
+        private void ButtonEdit_MouseClick(object sender, MouseEventArgs e)
+        {
+            const string action = "edit";
+            const string actioned = "edited";
+
+            if (!CheckArray()) return;
+            if (!CheckSelected(action)) return;
+            if (!CheckOutOfBound()) return;
+            if (_textChanged)
+            {
+                if (ConfirmationMessage(action))
+                {
+                    _wikiArray.EditItem(_selectedIndex, 0, _nameChangedText);
+                    _wikiArray.EditItem(_selectedIndex, 1, _categoryChangedText);
+                    _wikiArray.EditItem(_selectedIndex, 2, _structureChangedText);
+                    _wikiArray.EditItem(_selectedIndex, 3, _definitionChangedText);
+                    UpdateStatusStrip("Item edited");
+                    DisplayListView();
+                    _textChanged = false;
+                }
+
+                else
+                {
+                    UpdateStatusStrip($"Item not {actioned}");
+    
+                }
+            }
+            else
+            {
+                UpdateStatusStrip("No changes made in text box");
+            }
+        }
+
+        // 9.10 Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat which is _sorted by Name, ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter to create the file
+        private void ButtonSave_MouseClick(object sender, MouseEventArgs e)
+        {
+          // add
+        }
+
+        // 9.11 Create a LOAD button that will read the information from a binary file called definitions.dat into the 2D array, ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task
+        // CHECK NEED TO LOAD BINARY FILE USING BINARY READER
+        private void ButtonLoad_MouseClick(object sender, MouseEventArgs e)
+        {
+            _wikiArray = new WikiSortedArray();
+            _wikiArray.LoadData();
+            UpdateStatusStrip("Data successfully loaded");
+            DisplayListView();
+            CheckArray();
+        }
+
+        #region TEXTBOX CHANGE HAS ISSUES NEED TO FIX
+        private void TextBoxNam_KeyPress(object sender, KeyPressEventArgs e)
+        {
+           _nameChangedText = TextBoxNam.Text;
             _textChanged = true;
         }
 
-        private void TextBoxStr_TextChanged(object sender, EventArgs e)
-        {
-            _structureChangedText = TextBoxStr.Text;
-            _textChanged = true;
-        }
-
-        private void TextBoxDef_TextChanged(object sender, EventArgs e)
-        {
-            _definitionChangedText = TextBoxDef.Text;
-            _textChanged = true;
-        }
-
-        private void TextBoxCat_TextChanged(object sender, EventArgs e)
+        private void TextBoxCat_KeyPress(object sender, KeyPressEventArgs e)
         {
             _categoryChangedText = TextBoxCat.Text;
             _textChanged = true;
         }
 
+        private void TextBoxStr_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            _structureChangedText = TextBoxStr.Text;
+            _textChanged = true;
+        }
+
+        private void TextBoxDef_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            _definitionChangedText = TextBoxDef.Text;
+            _textChanged = true;
+        }
+
+    #endregion
+
         #endregion
 
         #region Functions
-
-        #region NOT WORKING
-
         private void SaveFile()
         {
             // ADD CODE
         }
 
-        #endregion
-
-        #region WORKING
+        #region Working
 
         #region Select and deselect items in the list view
         // 9.9 Create a method so the user can select a definition (Name) from the ListView and all the information is displayed in the appropriate Textboxes
@@ -306,6 +308,11 @@ namespace WikiApp
                 UpdateStatusStrip("No data in the array");
                 ClearTextBoxes();
                 TextBoxSearch.Clear();
+                TextBoxCat.Enabled = false;
+                TextBoxNam.Enabled = false;
+                TextBoxStr.Enabled = false;
+                TextBoxDef.Enabled = false;
+                TextBoxSearch.Enabled = false;
                 ButtonAdd.Enabled = false;
                 ButtonDelete.Enabled = false;
                 ButtonSearch.Enabled = false;
@@ -315,6 +322,11 @@ namespace WikiApp
             }
             else
             {
+                TextBoxCat.Enabled = true;
+                TextBoxNam.Enabled = true;
+                TextBoxStr.Enabled = true;
+                TextBoxDef.Enabled = true;
+                TextBoxSearch.Enabled = true;
                 ButtonAdd.Enabled = true;
                 ButtonDelete.Enabled = true;
                 ButtonSearch.Enabled = true;
@@ -323,18 +335,13 @@ namespace WikiApp
                 return true;
             }
         }
+
         #endregion
 
         #endregion
+
+        #endregion
+
         
-        //private void ClearArray()
-        //{
-        //    UpdateStatusStrip("Data cleared");
-        //    ListViewDataStructure.Items.Clear();
-        //    Array.Clear(_wikiArray.Array, 0, _wikiArray.Array.GetLength(0) * _wikiArray.Array.GetLength(1));
-        //}
-
-        #endregion
-
     } //class
 } //namespace

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace WikiApp
 {
@@ -29,9 +30,13 @@ namespace WikiApp
             SortArray();
         }
 
-        public void EditItem(int index1, int index2, string newText)
+        public void EditItem(int row, int col, string changedText)
         {
-            Array[index1, index2] = newText;
+            for (var i = 0; i < Col; i++)
+            {
+                Array[row, col] = changedText;
+            }
+            
             SortArray();
         }
 
@@ -39,14 +44,9 @@ namespace WikiApp
         {
             for (var i = 0; i < Col; i++)
             {
-                Array[index, i] = "~";
+                Array[index, i] = "";
             }
             SortArray();
-        }
-
-        public void UpdateArray(int row, int col, string changedText)
-        {
-            EditItem(row, col, changedText);
         }
 
         // 9.7 Write the code for a Binary Search for the Name in the 2D array and display the information in the other textboxes when found, add suitable feedback if the search in not successful and clear the search textbox (do not use any built-in array methods)
@@ -109,6 +109,14 @@ namespace WikiApp
                 }
             }
         }
+
+
+        //private void ClearArray()
+        //{
+        //    UpdateStatusStrip("Data cleared");
+        //    ListViewDataStructure.Items.Clear();
+        //    Array.Clear(_wikiArray.Array, 0, _wikiArray.Array.GetLength(0) * _wikiArray.Array.GetLength(1));
+        //}
 
     } //class
 
