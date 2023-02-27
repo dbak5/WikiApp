@@ -28,10 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("");
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("");
             this.TextBoxSearch = new System.Windows.Forms.TextBox();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -43,7 +44,6 @@
             this.ButtonAdd = new System.Windows.Forms.Button();
             this.ButtonLoad = new System.Windows.Forms.Button();
             this.ButtonClear = new System.Windows.Forms.Button();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.ButtonSearch = new System.Windows.Forms.Button();
             this.ButtonDelete = new System.Windows.Forms.Button();
             this.ButtonSave = new System.Windows.Forms.Button();
@@ -54,6 +54,8 @@
             this.TextBoxNam = new System.Windows.Forms.TextBox();
             this.GroupChangeData = new System.Windows.Forms.GroupBox();
             this.GroupSearch = new System.Windows.Forms.GroupBox();
+            this.ToolTipButtons = new System.Windows.Forms.ToolTip(this.components);
+            this.ToolTipTextBox = new System.Windows.Forms.ToolTip(this.components);
             this.StatusStrip.SuspendLayout();
             this.GroupChangeData.SuspendLayout();
             this.GroupSearch.SuspendLayout();
@@ -65,6 +67,7 @@
             this.TextBoxSearch.Name = "TextBoxSearch";
             this.TextBoxSearch.Size = new System.Drawing.Size(130, 20);
             this.TextBoxSearch.TabIndex = 0;
+            this.TextBoxSearch.MouseHover += new System.EventHandler(this.TextBoxSearch_MouseHover);
             // 
             // StatusStrip
             // 
@@ -90,10 +93,10 @@
             this.ColumnDef});
             this.ListViewDataStructure.HideSelection = false;
             this.ListViewDataStructure.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem5,
-            listViewItem6,
-            listViewItem7,
-            listViewItem8});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4});
             this.ListViewDataStructure.Location = new System.Drawing.Point(31, 74);
             this.ListViewDataStructure.Name = "ListViewDataStructure";
             this.ListViewDataStructure.Size = new System.Drawing.Size(243, 202);
@@ -101,6 +104,7 @@
             this.ListViewDataStructure.UseCompatibleStateImageBehavior = false;
             this.ListViewDataStructure.View = System.Windows.Forms.View.Details;
             this.ListViewDataStructure.SelectedIndexChanged += new System.EventHandler(this.ListViewSelect_MouseClick);
+            this.ListViewDataStructure.MouseHover += new System.EventHandler(this.ListViewDataStructure_MouseHover);
             // 
             // ColumnNam
             // 
@@ -129,6 +133,7 @@
             this.ButtonAdd.Text = "Add New Record";
             this.ButtonAdd.UseVisualStyleBackColor = true;
             this.ButtonAdd.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonAdd_MouseClick);
+            this.ButtonAdd.MouseHover += new System.EventHandler(this.ButtonAdd_MouseHover);
             // 
             // ButtonLoad
             // 
@@ -139,6 +144,7 @@
             this.ButtonLoad.Text = "Load Data";
             this.ButtonLoad.UseVisualStyleBackColor = true;
             this.ButtonLoad.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonLoad_MouseClick);
+            this.ButtonLoad.MouseHover += new System.EventHandler(this.ButtonLoad_MouseHover);
             // 
             // ButtonClear
             // 
@@ -149,14 +155,7 @@
             this.ButtonClear.Text = "ClearTextBoxes";
             this.ButtonClear.UseVisualStyleBackColor = true;
             this.ButtonClear.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonClear_MouseClick);
-            // 
-            // toolStrip1
-            // 
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(789, 25);
-            this.toolStrip1.TabIndex = 7;
-            this.toolStrip1.Text = "toolStrip1";
+            this.ButtonClear.MouseHover += new System.EventHandler(this.ButtonClear_MouseHover);
             // 
             // ButtonSearch
             // 
@@ -167,6 +166,7 @@
             this.ButtonSearch.Text = "Search";
             this.ButtonSearch.UseVisualStyleBackColor = true;
             this.ButtonSearch.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonBinarySearch_MouseClick);
+            this.ButtonSearch.MouseHover += new System.EventHandler(this.ButtonSearch_MouseHover);
             // 
             // ButtonDelete
             // 
@@ -177,6 +177,7 @@
             this.ButtonDelete.Text = "Delete Item";
             this.ButtonDelete.UseVisualStyleBackColor = true;
             this.ButtonDelete.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonDelete_MouseClick);
+            this.ButtonDelete.MouseHover += new System.EventHandler(this.ButtonDelete_MouseHover);
             // 
             // ButtonSave
             // 
@@ -187,6 +188,7 @@
             this.ButtonSave.Text = "Save File";
             this.ButtonSave.UseVisualStyleBackColor = true;
             this.ButtonSave.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonSave_MouseClick);
+            this.ButtonSave.MouseHover += new System.EventHandler(this.ButtonSave_MouseHover);
             // 
             // TextBoxCat
             // 
@@ -195,6 +197,7 @@
             this.TextBoxCat.Size = new System.Drawing.Size(100, 20);
             this.TextBoxCat.TabIndex = 12;
             this.TextBoxCat.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxCat_KeyPress);
+            this.TextBoxCat.MouseHover += new System.EventHandler(this.TextBoxCat_MouseHover);
             // 
             // TextBoxStr
             // 
@@ -203,6 +206,7 @@
             this.TextBoxStr.Size = new System.Drawing.Size(100, 20);
             this.TextBoxStr.TabIndex = 13;
             this.TextBoxStr.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxStr_KeyPress);
+            this.TextBoxStr.MouseHover += new System.EventHandler(this.TextBoxStr_MouseHover);
             // 
             // TextBoxDef
             // 
@@ -212,6 +216,7 @@
             this.TextBoxDef.Size = new System.Drawing.Size(226, 189);
             this.TextBoxDef.TabIndex = 14;
             this.TextBoxDef.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDef_KeyPress);
+            this.TextBoxDef.MouseHover += new System.EventHandler(this.TextBoxDef_MouseHover);
             // 
             // ButtonEdit
             // 
@@ -222,6 +227,7 @@
             this.ButtonEdit.Text = "Edit Item";
             this.ButtonEdit.UseVisualStyleBackColor = true;
             this.ButtonEdit.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonEdit_MouseClick);
+            this.ButtonEdit.MouseHover += new System.EventHandler(this.ButtonEdit_MouseHover);
             // 
             // TextBoxNam
             // 
@@ -230,6 +236,7 @@
             this.TextBoxNam.Size = new System.Drawing.Size(100, 20);
             this.TextBoxNam.TabIndex = 16;
             this.TextBoxNam.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxNam_KeyPress);
+            this.TextBoxNam.MouseHover += new System.EventHandler(this.TextBoxNam_MouseHover);
             // 
             // GroupChangeData
             // 
@@ -260,6 +267,14 @@
             this.GroupSearch.TabStop = false;
             this.GroupSearch.Text = "Search";
             // 
+            // ToolTipButtons
+            // 
+            this.ToolTipButtons.ToolTipTitle = "Button";
+            // 
+            // ToolTipTextBox
+            // 
+            this.ToolTipTextBox.ToolTipTitle = "Text box";
+            // 
             // WikiApp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -268,7 +283,6 @@
             this.Controls.Add(this.GroupSearch);
             this.Controls.Add(this.GroupChangeData);
             this.Controls.Add(this.ButtonSave);
-            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.ButtonLoad);
             this.Controls.Add(this.StatusStrip);
             this.Name = "WikiApp";
@@ -296,7 +310,6 @@
         private System.Windows.Forms.ColumnHeader ColumnStr;
         private System.Windows.Forms.ColumnHeader ColumnDef;
         private System.Windows.Forms.Button ButtonClear;
-        private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.Button ButtonSearch;
         private System.Windows.Forms.ToolStripStatusLabel StatusLabel;
         private System.Windows.Forms.Button ButtonDelete;
@@ -308,6 +321,8 @@
         private System.Windows.Forms.TextBox TextBoxNam;
         private System.Windows.Forms.GroupBox GroupChangeData;
         private System.Windows.Forms.GroupBox GroupSearch;
+        private System.Windows.Forms.ToolTip ToolTipButtons;
+        private System.Windows.Forms.ToolTip ToolTipTextBox;
     }
 }
 

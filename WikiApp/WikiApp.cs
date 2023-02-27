@@ -37,8 +37,10 @@ namespace WikiApp
         {
             const string action = "delete";
             const string actioned = "deleted";
+            var array = _wikiArray.Array;
 
-            if (!CheckArray()) return;
+            if (CheckArrayFull(array)) return;
+            if (!CheckArrayNull()) return;
             if (!CheckSelected(action)) return;
             if (!CheckOutOfBound()) return;
             if (ConfirmationMessage(action))
@@ -59,7 +61,8 @@ namespace WikiApp
 
         private void ButtonBinarySearch_MouseClick(object sender, MouseEventArgs e)
         {
-            if (!CheckArray()) return;
+
+            if (!CheckArrayNull()) return;
             if (!CheckTextBox()) return;
             var searchResult = _wikiArray.BinarySearch(TextBoxSearch.Text);
             switch (searchResult)
@@ -74,8 +77,8 @@ namespace WikiApp
                     DeselectItem(_selectedIndex);
                     break;
                 default:
-                    SelectItem(searchResult);
                     UpdateStatusStrip("Item found");
+                    SelectItem(searchResult);
                     TextBoxSearch.Focus();
                     TextBoxSearch.Clear();
                     break;
@@ -97,6 +100,74 @@ namespace WikiApp
             SelectItem(_selectedIndex);
         }
 
+        #region Tooltips
+        private void ButtonSearch_MouseHover(object sender, EventArgs e)
+        {
+            ToolTipButtons.SetToolTip(ButtonSearch, "Search for an item in the data");
+        }
+
+        private void ButtonAdd_MouseHover(object sender, EventArgs e)
+        {
+            ToolTipButtons.SetToolTip(ButtonAdd, "Add item to data");
+        }
+
+        private void ButtonEdit_MouseHover(object sender, EventArgs e)
+        {
+            ToolTipButtons.SetToolTip(ButtonEdit, "Edit item in data");
+        }
+
+        private void ButtonDelete_MouseHover(object sender, EventArgs e)
+        {
+            ToolTipButtons.SetToolTip(ButtonDelete, "Delete item from data");
+        }
+
+        private void ButtonClear_MouseHover(object sender, EventArgs e)
+        {
+            ToolTipButtons.SetToolTip(ButtonClear, "Clear items from text boxes");
+        }
+
+        private void ButtonLoad_MouseHover(object sender, EventArgs e)
+        {
+            ToolTipButtons.SetToolTip(ButtonLoad, "Load data into the tables");
+        }
+
+        private void ButtonSave_MouseHover(object sender, EventArgs e)
+        {
+            ToolTipButtons.SetToolTip(ButtonSave, "Save data from tables into a file");
+        }
+
+        private void TextBoxSearch_MouseHover(object sender, EventArgs e)
+        {
+            ToolTipTextBox.SetToolTip(TextBoxSearch, "Enter text to search for");
+        }
+
+        private void TextBoxNam_MouseHover(object sender, EventArgs e)
+        {
+            ToolTipTextBox.SetToolTip(TextBoxNam, "Data name, update to edit item");
+        }
+
+        private void TextBoxCat_MouseHover(object sender, EventArgs e)
+        {
+            ToolTipTextBox.SetToolTip(TextBoxCat, "Data category, update to edit item");
+        }
+
+        private void TextBoxStr_MouseHover(object sender, EventArgs e)
+        {
+            ToolTipTextBox.SetToolTip(TextBoxStr, "Data structure, update to edit item");
+        }
+
+        private void TextBoxDef_MouseHover(object sender, EventArgs e)
+        {
+            ToolTipTextBox.SetToolTip(TextBoxDef, "Data description, update to edit item");
+        }
+
+        private void ListViewDataStructure_MouseHover(object sender, EventArgs e)
+        {
+            ToolTipTextBox.SetToolTip(TextBoxDef, "Data description, update to edit item");
+        }
+
+        #endregion
+
         #endregion
 
         // 9.2 Create an ADD button that will store the information from the 4 text boxes into the 2D array
@@ -104,8 +175,10 @@ namespace WikiApp
         {
             const string action = "add";
             const string actioned = "added";
+            var array = _wikiArray.Array;
 
-            if (!CheckArray()) return;
+            if (CheckArrayFull(array)) return;
+            if (!CheckArrayNull()) return;
             if (!CheckSelected(action)) return;
             if (!CheckOutOfBound()) return;
             if (ConfirmationMessage(action))
@@ -124,8 +197,10 @@ namespace WikiApp
         {
             const string action = "edit";
             const string actioned = "edited";
+            var array = _wikiArray.Array;
 
-            if (!CheckArray()) return;
+            if (CheckArrayFull(array)) return;
+            if (!CheckArrayNull()) return;
             if (!CheckSelected(action)) return;
             if (!CheckOutOfBound()) return;
             if (_textChanged)
@@ -150,8 +225,8 @@ namespace WikiApp
                     }
 
                     UpdateStatusStrip("Item edited");
-                    DisplayListView();
                     _wikiArray.SortArray();
+                    DisplayListView();
                     _textChanged = false;
                 }
 
@@ -169,12 +244,16 @@ namespace WikiApp
         // 9.10 Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat which is _sorted by Name, ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter to create the file
         private void ButtonSave_MouseClick(object sender, MouseEventArgs e)
         {
+            var array = _wikiArray.Array;
+
+            if (CheckArrayFull(array)) return;
             SaveFile();
             //add
         }
 
         // 9.11 Create a LOAD button that will read the information from a binary file called definitions.dat into the 2D array, ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task
         // CHECK NEED TO LOAD BINARY FILE USING BINARY READER
+        // CREATE FUNCTION TO OPEN FILE DIALOGUE BOX
         private void ButtonLoad_MouseClick(object sender, MouseEventArgs e)
         {
             const string filterLimits = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
@@ -186,17 +265,17 @@ namespace WikiApp
                 RestoreDirectory = true
             };
             var result = openFileDialog1.ShowDialog();
-            
+
             if (result != DialogResult.OK) return;
             _wikiArray = new WikiSortedArray();
             _wikiArray.LoadData(openFileDialog1.FileName);
             UpdateStatusStrip("Data successfully loaded");
             _wikiArray.SortArray();
             DisplayListView();
-            CheckArray();
+            CheckArrayNull();
         }
 
-        #region CHECK TEXTBOX CHANGE HAS ISSUES NEED TO FIX
+        #region CHECK TEXTBOX CHANGE ON KEYPRESS HAS ISSUES NEED TO FIX - CAN'T EDIT PROPERLY
         private void TextBoxNam_KeyPress(object sender, KeyPressEventArgs e)
         {
            _nameChangedText = TextBoxNam.Text;
@@ -226,6 +305,7 @@ namespace WikiApp
         #endregion
 
         #region Functions
+        // CHECK NEED TO CREATE FUNCTION
         private void SaveFile()
         {
             // ADD CODE
@@ -328,7 +408,7 @@ namespace WikiApp
             return false;
         }
 
-        private bool CheckArray()
+        private bool CheckArrayNull()
         {
             if (_wikiArray == null)
             {
@@ -363,12 +443,19 @@ namespace WikiApp
             }
         }
 
-        #endregion
+        private bool CheckArrayFull(Array array)
+        {
+            if (array.Length != (4 * 12)) return false;
+            ButtonAdd.Enabled = false;
+            return true;
+        }
 
         #endregion
 
         #endregion
 
-      
+        #endregion
+
+
     } //class
 } //namespace
