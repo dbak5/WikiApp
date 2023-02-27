@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 
 // Author: DaHye Baker
@@ -46,6 +47,7 @@ namespace WikiApp
                 UpdateStatusStrip($"Item {actioned}");
                 ClearTextBoxes();
                 TextBoxSearch.Clear();
+                _wikiArray.SortArray();
                 DisplayListView();
             }
 
@@ -97,7 +99,6 @@ namespace WikiApp
 
         #endregion
 
-
         // 9.2 Create an ADD button that will store the information from the 4 text boxes into the 2D array
         private void ButtonAdd_MouseClick(object sender, MouseEventArgs e)
         {
@@ -118,7 +119,7 @@ namespace WikiApp
         }
 
         // 9.3 Create and EDIT button that will allow the user to modify any information from the 4 text boxes into the 2D array
-        // CHECK WHY IT ISN'T SORTING
+        // CHECK WHY IT ISN'T SORTING AFTER EDIT
         private void ButtonEdit_MouseClick(object sender, MouseEventArgs e)
         {
             const string action = "edit";
@@ -131,19 +132,32 @@ namespace WikiApp
             {
                 if (ConfirmationMessage(action))
                 {
-                    _wikiArray.EditItem(_selectedIndex, 0, _nameChangedText);
-                    _wikiArray.EditItem(_selectedIndex, 1, _categoryChangedText);
-                    _wikiArray.EditItem(_selectedIndex, 2, _structureChangedText);
-                    _wikiArray.EditItem(_selectedIndex, 3, _definitionChangedText);
+                    if (_nameChangedText != null)
+                    {
+                        _wikiArray.EditItem(_selectedIndex, 0, _nameChangedText);
+                    }
+                    if (_categoryChangedText != null)
+                    {
+                        _wikiArray.EditItem(_selectedIndex, 1, _categoryChangedText);
+                    }
+                    if (_structureChangedText != null)
+                    {
+                        _wikiArray.EditItem(_selectedIndex, 2, _structureChangedText);
+                    }
+                    if (_definitionChangedText != null)
+                    {
+                        _wikiArray.EditItem(_selectedIndex, 3, _definitionChangedText);
+                    }
+
                     UpdateStatusStrip("Item edited");
                     DisplayListView();
+                    _wikiArray.SortArray();
                     _textChanged = false;
                 }
 
                 else
                 {
                     UpdateStatusStrip($"Item not {actioned}");
-    
                 }
             }
             else
@@ -155,21 +169,34 @@ namespace WikiApp
         // 9.10 Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat which is _sorted by Name, ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter to create the file
         private void ButtonSave_MouseClick(object sender, MouseEventArgs e)
         {
-          // add
+            SaveFile();
+            //add
         }
 
         // 9.11 Create a LOAD button that will read the information from a binary file called definitions.dat into the 2D array, ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task
         // CHECK NEED TO LOAD BINARY FILE USING BINARY READER
         private void ButtonLoad_MouseClick(object sender, MouseEventArgs e)
         {
+            const string filterLimits = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            var openFileDialog1 = new OpenFileDialog
+            {
+                InitialDirectory = Directory.GetCurrentDirectory(),
+                Filter = filterLimits,
+                FilterIndex = 2,
+                RestoreDirectory = true
+            };
+            var result = openFileDialog1.ShowDialog();
+            
+            if (result != DialogResult.OK) return;
             _wikiArray = new WikiSortedArray();
-            _wikiArray.LoadData();
+            _wikiArray.LoadData(openFileDialog1.FileName);
             UpdateStatusStrip("Data successfully loaded");
+            _wikiArray.SortArray();
             DisplayListView();
             CheckArray();
         }
 
-        #region TEXTBOX CHANGE HAS ISSUES NEED TO FIX
+        #region CHECK TEXTBOX CHANGE HAS ISSUES NEED TO FIX
         private void TextBoxNam_KeyPress(object sender, KeyPressEventArgs e)
         {
            _nameChangedText = TextBoxNam.Text;
@@ -342,6 +369,6 @@ namespace WikiApp
 
         #endregion
 
-        
+      
     } //class
 } //namespace

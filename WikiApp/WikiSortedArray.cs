@@ -1,5 +1,8 @@
 ﻿using System;
-using System.Reflection;
+using System.Collections;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Windows.Forms;
 
 namespace WikiApp
 {
@@ -11,17 +14,21 @@ namespace WikiApp
         public string[,] Array = new string[Row, Col];
         
         // CHECK THIS NEEDS TO BE UPDATED TO LOAD BINARY FILE
-        public void LoadData()
+        public void LoadData(string fileName)
         {
-            var random = new Random();
-            for (var x = 0; x < Row; x++)
+            var fileText = File.ReadAllLines(fileName);
+            var i = 0;
+
+            foreach (var line in fileText)
             {
-                for (var y = 0; y < Col; y++)
+                var parts = line.Split('|');
+                for (var x = 0; x < parts.Length; x++)
                 {
-                    Array[x, y] = random.Next(10, 99).ToString();
+                    Array[i, x] = parts[x];
+
                 }
+                i++;
             }
-            SortArray();
         }
 
         public void AddItem()
@@ -30,14 +37,10 @@ namespace WikiApp
             SortArray();
         }
 
+        // CHECK WHY NOT EDITING CORRECTLY (ON CHANGE KEYPRESS)
         public void EditItem(int row, int col, string changedText)
         {
-            for (var i = 0; i < Col; i++)
-            {
-                Array[row, col] = changedText;
-            }
-            
-            SortArray();
+            Array[row, col] = changedText;
         }
 
         public void DeleteItem(int index)
@@ -46,7 +49,6 @@ namespace WikiApp
             {
                 Array[index, i] = "";
             }
-            SortArray();
         }
 
         // 9.7 Write the code for a Binary Search for the Name in the 2D array and display the information in the other textboxes when found, add suitable feedback if the search in not successful and clear the search textbox (do not use any built-in array methods)
@@ -96,7 +98,7 @@ namespace WikiApp
             }
         }
 
-        private void SortArray()
+        public void SortArray()
         {
             for (var x = 0; x < Row; x++)
             {
@@ -110,7 +112,6 @@ namespace WikiApp
             }
         }
 
-
         //private void ClearArray()
         //{
         //    UpdateStatusStrip("Data cleared");
@@ -119,5 +120,4 @@ namespace WikiApp
         //}
 
     } //class
-
 } //namespace

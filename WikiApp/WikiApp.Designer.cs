@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("");
             this.TextBoxSearch = new System.Windows.Forms.TextBox();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -52,23 +52,27 @@
             this.TextBoxDef = new System.Windows.Forms.TextBox();
             this.ButtonEdit = new System.Windows.Forms.Button();
             this.TextBoxNam = new System.Windows.Forms.TextBox();
+            this.GroupChangeData = new System.Windows.Forms.GroupBox();
+            this.GroupSearch = new System.Windows.Forms.GroupBox();
             this.StatusStrip.SuspendLayout();
+            this.GroupChangeData.SuspendLayout();
+            this.GroupSearch.SuspendLayout();
             this.SuspendLayout();
             // 
             // TextBoxSearch
             // 
-            this.TextBoxSearch.Location = new System.Drawing.Point(89, 51);
+            this.TextBoxSearch.Location = new System.Drawing.Point(31, 27);
             this.TextBoxSearch.Name = "TextBoxSearch";
-            this.TextBoxSearch.Size = new System.Drawing.Size(100, 20);
+            this.TextBoxSearch.Size = new System.Drawing.Size(130, 20);
             this.TextBoxSearch.TabIndex = 0;
             // 
             // StatusStrip
             // 
             this.StatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.StatusLabel});
-            this.StatusStrip.Location = new System.Drawing.Point(0, 428);
+            this.StatusStrip.Location = new System.Drawing.Point(0, 382);
             this.StatusStrip.Name = "StatusStrip";
-            this.StatusStrip.Size = new System.Drawing.Size(800, 22);
+            this.StatusStrip.Size = new System.Drawing.Size(789, 22);
             this.StatusStrip.TabIndex = 1;
             this.StatusStrip.Text = "Status";
             // 
@@ -86,13 +90,13 @@
             this.ColumnDef});
             this.ListViewDataStructure.HideSelection = false;
             this.ListViewDataStructure.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4});
-            this.ListViewDataStructure.Location = new System.Drawing.Point(355, 103);
+            listViewItem5,
+            listViewItem6,
+            listViewItem7,
+            listViewItem8});
+            this.ListViewDataStructure.Location = new System.Drawing.Point(31, 74);
             this.ListViewDataStructure.Name = "ListViewDataStructure";
-            this.ListViewDataStructure.Size = new System.Drawing.Size(362, 226);
+            this.ListViewDataStructure.Size = new System.Drawing.Size(243, 202);
             this.ListViewDataStructure.TabIndex = 2;
             this.ListViewDataStructure.UseCompatibleStateImageBehavior = false;
             this.ListViewDataStructure.View = System.Windows.Forms.View.Details;
@@ -101,6 +105,7 @@
             // ColumnNam
             // 
             this.ColumnNam.Text = "Name";
+            this.ColumnNam.Width = 48;
             // 
             // ColumnCat
             // 
@@ -113,10 +118,11 @@
             // ColumnDef
             // 
             this.ColumnDef.Text = "Definition";
+            this.ColumnDef.Width = 101;
             // 
             // ButtonAdd
             // 
-            this.ButtonAdd.Location = new System.Drawing.Point(240, 189);
+            this.ButtonAdd.Location = new System.Drawing.Point(17, 27);
             this.ButtonAdd.Name = "ButtonAdd";
             this.ButtonAdd.Size = new System.Drawing.Size(75, 23);
             this.ButtonAdd.TabIndex = 3;
@@ -126,7 +132,7 @@
             // 
             // ButtonLoad
             // 
-            this.ButtonLoad.Location = new System.Drawing.Point(374, 51);
+            this.ButtonLoad.Location = new System.Drawing.Point(544, 344);
             this.ButtonLoad.Name = "ButtonLoad";
             this.ButtonLoad.Size = new System.Drawing.Size(75, 23);
             this.ButtonLoad.TabIndex = 5;
@@ -136,7 +142,7 @@
             // 
             // ButtonClear
             // 
-            this.ButtonClear.Location = new System.Drawing.Point(240, 237);
+            this.ButtonClear.Location = new System.Drawing.Point(307, 27);
             this.ButtonClear.Name = "ButtonClear";
             this.ButtonClear.Size = new System.Drawing.Size(75, 23);
             this.ButtonClear.TabIndex = 6;
@@ -148,13 +154,13 @@
             // 
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(800, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(789, 25);
             this.toolStrip1.TabIndex = 7;
             this.toolStrip1.Text = "toolStrip1";
             // 
             // ButtonSearch
             // 
-            this.ButtonSearch.Location = new System.Drawing.Point(240, 51);
+            this.ButtonSearch.Location = new System.Drawing.Point(199, 27);
             this.ButtonSearch.Name = "ButtonSearch";
             this.ButtonSearch.Size = new System.Drawing.Size(75, 23);
             this.ButtonSearch.TabIndex = 9;
@@ -164,7 +170,7 @@
             // 
             // ButtonDelete
             // 
-            this.ButtonDelete.Location = new System.Drawing.Point(240, 147);
+            this.ButtonDelete.Location = new System.Drawing.Point(214, 27);
             this.ButtonDelete.Name = "ButtonDelete";
             this.ButtonDelete.Size = new System.Drawing.Size(75, 23);
             this.ButtonDelete.TabIndex = 10;
@@ -174,7 +180,7 @@
             // 
             // ButtonSave
             // 
-            this.ButtonSave.Location = new System.Drawing.Point(631, 382);
+            this.ButtonSave.Location = new System.Drawing.Point(661, 344);
             this.ButtonSave.Name = "ButtonSave";
             this.ButtonSave.Size = new System.Drawing.Size(75, 23);
             this.ButtonSave.TabIndex = 11;
@@ -184,7 +190,7 @@
             // 
             // TextBoxCat
             // 
-            this.TextBoxCat.Location = new System.Drawing.Point(89, 176);
+            this.TextBoxCat.Location = new System.Drawing.Point(27, 131);
             this.TextBoxCat.Name = "TextBoxCat";
             this.TextBoxCat.Size = new System.Drawing.Size(100, 20);
             this.TextBoxCat.TabIndex = 12;
@@ -192,7 +198,7 @@
             // 
             // TextBoxStr
             // 
-            this.TextBoxStr.Location = new System.Drawing.Point(89, 240);
+            this.TextBoxStr.Location = new System.Drawing.Point(27, 173);
             this.TextBoxStr.Name = "TextBoxStr";
             this.TextBoxStr.Size = new System.Drawing.Size(100, 20);
             this.TextBoxStr.TabIndex = 13;
@@ -200,15 +206,16 @@
             // 
             // TextBoxDef
             // 
-            this.TextBoxDef.Location = new System.Drawing.Point(89, 276);
+            this.TextBoxDef.Location = new System.Drawing.Point(156, 87);
+            this.TextBoxDef.Multiline = true;
             this.TextBoxDef.Name = "TextBoxDef";
-            this.TextBoxDef.Size = new System.Drawing.Size(100, 20);
+            this.TextBoxDef.Size = new System.Drawing.Size(226, 189);
             this.TextBoxDef.TabIndex = 14;
             this.TextBoxDef.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDef_KeyPress);
             // 
             // ButtonEdit
             // 
-            this.ButtonEdit.Location = new System.Drawing.Point(240, 103);
+            this.ButtonEdit.Location = new System.Drawing.Point(116, 27);
             this.ButtonEdit.Name = "ButtonEdit";
             this.ButtonEdit.Size = new System.Drawing.Size(75, 23);
             this.ButtonEdit.TabIndex = 15;
@@ -218,36 +225,60 @@
             // 
             // TextBoxNam
             // 
-            this.TextBoxNam.Location = new System.Drawing.Point(89, 124);
+            this.TextBoxNam.Location = new System.Drawing.Point(27, 87);
             this.TextBoxNam.Name = "TextBoxNam";
             this.TextBoxNam.Size = new System.Drawing.Size(100, 20);
             this.TextBoxNam.TabIndex = 16;
             this.TextBoxNam.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxNam_KeyPress);
             // 
+            // GroupChangeData
+            // 
+            this.GroupChangeData.Controls.Add(this.ButtonAdd);
+            this.GroupChangeData.Controls.Add(this.TextBoxDef);
+            this.GroupChangeData.Controls.Add(this.TextBoxNam);
+            this.GroupChangeData.Controls.Add(this.TextBoxStr);
+            this.GroupChangeData.Controls.Add(this.ButtonEdit);
+            this.GroupChangeData.Controls.Add(this.TextBoxCat);
+            this.GroupChangeData.Controls.Add(this.ButtonDelete);
+            this.GroupChangeData.Controls.Add(this.ButtonClear);
+            this.GroupChangeData.Location = new System.Drawing.Point(354, 28);
+            this.GroupChangeData.Name = "GroupChangeData";
+            this.GroupChangeData.Size = new System.Drawing.Size(411, 301);
+            this.GroupChangeData.TabIndex = 17;
+            this.GroupChangeData.TabStop = false;
+            this.GroupChangeData.Text = "Change the data";
+            // 
+            // GroupSearch
+            // 
+            this.GroupSearch.Controls.Add(this.TextBoxSearch);
+            this.GroupSearch.Controls.Add(this.ButtonSearch);
+            this.GroupSearch.Controls.Add(this.ListViewDataStructure);
+            this.GroupSearch.Location = new System.Drawing.Point(25, 28);
+            this.GroupSearch.Name = "GroupSearch";
+            this.GroupSearch.Size = new System.Drawing.Size(301, 301);
+            this.GroupSearch.TabIndex = 18;
+            this.GroupSearch.TabStop = false;
+            this.GroupSearch.Text = "Search";
+            // 
             // WikiApp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.TextBoxNam);
-            this.Controls.Add(this.ButtonEdit);
-            this.Controls.Add(this.TextBoxDef);
-            this.Controls.Add(this.TextBoxStr);
-            this.Controls.Add(this.TextBoxCat);
+            this.ClientSize = new System.Drawing.Size(789, 404);
+            this.Controls.Add(this.GroupSearch);
+            this.Controls.Add(this.GroupChangeData);
             this.Controls.Add(this.ButtonSave);
-            this.Controls.Add(this.ButtonDelete);
-            this.Controls.Add(this.ButtonSearch);
             this.Controls.Add(this.toolStrip1);
-            this.Controls.Add(this.ButtonClear);
             this.Controls.Add(this.ButtonLoad);
-            this.Controls.Add(this.ButtonAdd);
-            this.Controls.Add(this.ListViewDataStructure);
             this.Controls.Add(this.StatusStrip);
-            this.Controls.Add(this.TextBoxSearch);
             this.Name = "WikiApp";
             this.Text = "Data Structures Wiki";
             this.StatusStrip.ResumeLayout(false);
             this.StatusStrip.PerformLayout();
+            this.GroupChangeData.ResumeLayout(false);
+            this.GroupChangeData.PerformLayout();
+            this.GroupSearch.ResumeLayout(false);
+            this.GroupSearch.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -275,6 +306,8 @@
         private System.Windows.Forms.TextBox TextBoxDef;
         private System.Windows.Forms.Button ButtonEdit;
         private System.Windows.Forms.TextBox TextBoxNam;
+        private System.Windows.Forms.GroupBox GroupChangeData;
+        private System.Windows.Forms.GroupBox GroupSearch;
     }
 }
 
