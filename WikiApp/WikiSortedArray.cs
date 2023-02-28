@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.IO;
-using System.Runtime.CompilerServices;
-using System.Windows.Forms;
 
 namespace WikiApp
 {
@@ -33,52 +30,43 @@ namespace WikiApp
             }
         }
 
-        // CHECK HAVENT STARTED
+        // CHECK HAVEN'T STARTED
         public void AddItem()
         {
             //add
             SortArray();
         }
-
-        // CHECK WHY NOT EDITING CORRECTLY (ON CHANGE KEYPRESS)
-        public void EditItem(int row, int col, string changedText)
-        {
-            Array[row, col] = changedText;
-        }
-
-
+        
         #region WORKING
         // 9.7 Write the code for a Binary Search for the Name in the 2D array and display the information in the other textboxes when found, add suitable feedback if the search in not successful and clear the search textbox (do not use any built-in array methods)
         // -1 = no data
-        // 0 = search item not found 
+        // -2 = search item not found 
         // any other number = index number of search item
-        public int BinarySearch(string searchItem)
+        public int BinarySearch(string searchTextBoxItem)
         {
             var searchResult = -1;
             var min = 0;
-            var max = Row - 1;
+            var max = Row-1;
 
             while (min <= max)
             {
                 var mid = ((min + max) / 2);
-                var search = Array[mid, 0];
+                var searchArrayItem = Array[mid, 0];
 
-                if (search != null)
+                if (searchArrayItem == null) continue;
+                searchResult = -2;
+                if (string.Compare(searchTextBoxItem, searchArrayItem, StringComparison.Ordinal) == 0)
                 {
-                    searchResult = 0;
-                    if (searchItem.CompareTo(search) == 0)
-                    {
-                        searchResult = mid;
-                        break;
-                    }
-                    if (searchItem.CompareTo(search) < 0)
-                    {
-                        max = mid - 1;
-                    }
-                    else
-                    {
-                        min = mid + 1;
-                    }
+                    searchResult = mid;
+                    break;
+                }
+                if (string.Compare(searchTextBoxItem, searchArrayItem, StringComparison.Ordinal) < 0)
+                {
+                    max = mid - 1;
+                }
+                else
+                {
+                    min = mid + 1;
                 }
             }
             return searchResult;
@@ -101,7 +89,7 @@ namespace WikiApp
             {
                 for (var i = 0; i < Row - 1; i++)
                 {
-                    if (string.Compare(Array[i, 0], Array[i + 1, 0]) == 1)
+                    if (string.Compare(Array[i, 0], Array[i + 1, 0], StringComparison.OrdinalIgnoreCase ) > 0)
                     {
                         BubbleSort(i);
                     }
@@ -115,6 +103,11 @@ namespace WikiApp
             {
                 Array[index, i] = "";
             }
+        }
+
+        public void EditItem(int row, int col, string changedText)
+        {
+            Array[row, col] = changedText;
         }
 
         #endregion

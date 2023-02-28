@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem21 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem22 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem23 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem24 = new System.Windows.Forms.ListViewItem("");
             this.TextBoxSearch = new System.Windows.Forms.TextBox();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -93,10 +93,10 @@
             this.ColumnDef});
             this.ListViewDataStructure.HideSelection = false;
             this.ListViewDataStructure.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4});
+            listViewItem21,
+            listViewItem22,
+            listViewItem23,
+            listViewItem24});
             this.ListViewDataStructure.Location = new System.Drawing.Point(31, 74);
             this.ListViewDataStructure.Name = "ListViewDataStructure";
             this.ListViewDataStructure.Size = new System.Drawing.Size(243, 202);
@@ -196,6 +196,7 @@
             this.TextBoxCat.Name = "TextBoxCat";
             this.TextBoxCat.Size = new System.Drawing.Size(100, 20);
             this.TextBoxCat.TabIndex = 12;
+            this.TextBoxCat.TextChanged += new System.EventHandler(this.TextBoxCat_TextChanged);
             this.TextBoxCat.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxCat_KeyPress);
             this.TextBoxCat.MouseHover += new System.EventHandler(this.TextBoxCat_MouseHover);
             // 
@@ -205,6 +206,7 @@
             this.TextBoxStr.Name = "TextBoxStr";
             this.TextBoxStr.Size = new System.Drawing.Size(100, 20);
             this.TextBoxStr.TabIndex = 13;
+            this.TextBoxStr.TextChanged += new System.EventHandler(this.TextBoxStr_TextChanged);
             this.TextBoxStr.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxStr_KeyPress);
             this.TextBoxStr.MouseHover += new System.EventHandler(this.TextBoxStr_MouseHover);
             // 
@@ -215,6 +217,7 @@
             this.TextBoxDef.Name = "TextBoxDef";
             this.TextBoxDef.Size = new System.Drawing.Size(226, 189);
             this.TextBoxDef.TabIndex = 14;
+            this.TextBoxDef.TextChanged += new System.EventHandler(this.TextBoxDef_TextChanged);
             this.TextBoxDef.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDef_KeyPress);
             this.TextBoxDef.MouseHover += new System.EventHandler(this.TextBoxDef_MouseHover);
             // 
@@ -235,6 +238,7 @@
             this.TextBoxNam.Name = "TextBoxNam";
             this.TextBoxNam.Size = new System.Drawing.Size(100, 20);
             this.TextBoxNam.TabIndex = 16;
+            this.TextBoxNam.TextChanged += new System.EventHandler(this.TextBoxNam_TextChanged);
             this.TextBoxNam.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxNam_KeyPress);
             this.TextBoxNam.MouseHover += new System.EventHandler(this.TextBoxNam_MouseHover);
             // 

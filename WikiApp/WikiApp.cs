@@ -32,6 +32,60 @@ namespace WikiApp
         #region Events & Buttons
 
         #region Working
+
+        // 9.3 Create and EDIT button that will allow the user to modify any information from the 4 text boxes into the 2D array
+        private void ButtonEdit_MouseClick(object sender, MouseEventArgs e)
+        {
+            const string action = "edit";
+            const string actioned = "edited";
+            //var array = _wikiArray.Array;
+
+            // if (CheckArrayFull(array)) return;
+            if (!CheckArrayNull()) return;
+            if (!CheckSelected(action)) return;
+            if (!CheckOutOfBound()) return;
+            if (_textChanged)
+            {
+                if (ConfirmationMessage(action))
+                {
+                    if (_nameChangedText != null)
+                    {
+                        _wikiArray.EditItem(_selectedIndex, 0, _nameChangedText);
+                    }
+
+                    if (_categoryChangedText != null)
+                    {
+                        _wikiArray.EditItem(_selectedIndex, 1, _categoryChangedText);
+                    }
+
+                    if (_structureChangedText != null)
+                    {
+                        _wikiArray.EditItem(_selectedIndex, 2, _structureChangedText);
+                    }
+
+                    if (_definitionChangedText != null)
+                    {
+                        _wikiArray.EditItem(_selectedIndex, 3, _definitionChangedText);
+                    }
+
+                    UpdateStatusStrip($"Item {actioned}");
+                    _wikiArray.SortArray();
+                    DisplayListView();
+                    _textChanged = false;
+                }
+
+                else
+                {
+                    UpdateStatusStrip($"Item not {actioned}");
+                    _textChanged = false;
+                }
+            }
+            else
+            {
+                UpdateStatusStrip($"No changes to {action}");
+            }
+        }
+
         // 9.4 Create a DELETE button that removes all the information from a single entry of the array; the user must be prompted before the final deletion occurs
         private void ButtonDelete_MouseClick(object sender, MouseEventArgs e)
         {
@@ -70,7 +124,7 @@ namespace WikiApp
                 case -1:
                     UpdateStatusStrip("No data in the array");
                     return;
-                case 0:
+                case -2:
                     UpdateStatusStrip("Item not found");
                     TextBoxSearch.Focus();
                     ClearTextBoxes();
@@ -99,6 +153,50 @@ namespace WikiApp
             _selectedIndex = ListViewDataStructure.SelectedIndices[0];
             SelectItem(_selectedIndex);
         }
+
+        #region Events for TextChanged in TextBoxes for Edit Button
+
+        private void TextBoxNam_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            _textChanged = true;
+        }
+
+        private void TextBoxCat_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            _textChanged = true;
+        }
+
+        private void TextBoxStr_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            _textChanged = true;
+        }
+
+        private void TextBoxDef_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            _textChanged = true;
+        }
+
+        private void TextBoxNam_TextChanged(object sender, EventArgs e)
+        {
+            _nameChangedText = TextBoxNam.Text;
+        }
+
+        private void TextBoxCat_TextChanged(object sender, EventArgs e)
+        {
+            _categoryChangedText = TextBoxCat.Text;
+        }
+
+        private void TextBoxStr_TextChanged(object sender, EventArgs e)
+        {
+            _structureChangedText = TextBoxStr.Text;
+        }
+
+        private void TextBoxDef_TextChanged(object sender, EventArgs e)
+        {
+            _definitionChangedText = TextBoxDef.Text;
+        }
+
+        #endregion
 
         #region Tooltips
         private void ButtonSearch_MouseHover(object sender, EventArgs e)
@@ -183,61 +281,11 @@ namespace WikiApp
             if (!CheckOutOfBound()) return;
             if (ConfirmationMessage(action))
             {
-                //add
+                _wikiArray.AddItem();
             }
             else
             {
                 UpdateStatusStrip($"Item not {actioned}");
-            }
-        }
-
-        // 9.3 Create and EDIT button that will allow the user to modify any information from the 4 text boxes into the 2D array
-        // CHECK WHY IT ISN'T SORTING AFTER EDIT
-        private void ButtonEdit_MouseClick(object sender, MouseEventArgs e)
-        {
-            const string action = "edit";
-            const string actioned = "edited";
-            var array = _wikiArray.Array;
-
-            if (CheckArrayFull(array)) return;
-            if (!CheckArrayNull()) return;
-            if (!CheckSelected(action)) return;
-            if (!CheckOutOfBound()) return;
-            if (_textChanged)
-            {
-                if (ConfirmationMessage(action))
-                {
-                    if (_nameChangedText != null)
-                    {
-                        _wikiArray.EditItem(_selectedIndex, 0, _nameChangedText);
-                    }
-                    if (_categoryChangedText != null)
-                    {
-                        _wikiArray.EditItem(_selectedIndex, 1, _categoryChangedText);
-                    }
-                    if (_structureChangedText != null)
-                    {
-                        _wikiArray.EditItem(_selectedIndex, 2, _structureChangedText);
-                    }
-                    if (_definitionChangedText != null)
-                    {
-                        _wikiArray.EditItem(_selectedIndex, 3, _definitionChangedText);
-                    }
-
-                    UpdateStatusStrip("Item edited");
-                    _wikiArray.SortArray();
-                    DisplayListView();
-                    _textChanged = false;
-                }
-
-                else
-                {
-                    UpdateStatusStrip($"Item not {actioned}");
-                }
-            }
-            else
-            {
-                UpdateStatusStrip("No changes made in text box");
             }
         }
 
@@ -254,6 +302,7 @@ namespace WikiApp
         // 9.11 Create a LOAD button that will read the information from a binary file called definitions.dat into the 2D array, ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task
         // CHECK NEED TO LOAD BINARY FILE USING BINARY READER
         // CREATE FUNCTION TO OPEN FILE DIALOGUE BOX
+        // FIX FILTER LIMITS
         private void ButtonLoad_MouseClick(object sender, MouseEventArgs e)
         {
             const string filterLimits = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
@@ -274,33 +323,6 @@ namespace WikiApp
             DisplayListView();
             CheckArrayNull();
         }
-
-        #region CHECK TEXTBOX CHANGE ON KEYPRESS HAS ISSUES NEED TO FIX - CAN'T EDIT PROPERLY
-        private void TextBoxNam_KeyPress(object sender, KeyPressEventArgs e)
-        {
-           _nameChangedText = TextBoxNam.Text;
-            _textChanged = true;
-        }
-
-        private void TextBoxCat_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            _categoryChangedText = TextBoxCat.Text;
-            _textChanged = true;
-        }
-
-        private void TextBoxStr_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            _structureChangedText = TextBoxStr.Text;
-            _textChanged = true;
-        }
-
-        private void TextBoxDef_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            _definitionChangedText = TextBoxDef.Text;
-            _textChanged = true;
-        }
-
-    #endregion
 
         #endregion
 
@@ -455,7 +477,6 @@ namespace WikiApp
         #endregion
 
         #endregion
-
 
     } //class
 } //namespace
