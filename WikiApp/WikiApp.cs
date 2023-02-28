@@ -21,11 +21,13 @@ namespace WikiApp
 
         private WikiSortedArray _wikiArray;
         private int _selectedIndex = -1;
+        private bool _textChangedSearch;
         private bool _textChanged;
         private string _nameChangedText;
         private string _categoryChangedText;
         private string _structureChangedText;
         private string _definitionChangedText;
+        private string _searchChangedText;
 
         #endregion
 
@@ -42,33 +44,76 @@ namespace WikiApp
 
             // if (CheckArrayFull(array)) return;
             if (!CheckArrayNull()) return;
-            if (!CheckSelected(action)) return;
             if (!CheckOutOfBound()) return;
-            if (_textChanged)
+            if (CheckSelectedEdits())
+            {
+                if (CheckTextChangedEdits())
+                {
+                    if (ConfirmationMessage(action))
+                    {
+                        if (_nameChangedText != null)
+                        {
+                            _wikiArray.EditItem(_selectedIndex, 0, _nameChangedText);
+                        }
+
+                        if (_categoryChangedText != null)
+                        {
+                            _wikiArray.EditItem(_selectedIndex, 1, _categoryChangedText);
+                        }
+
+                        if (_structureChangedText != null)
+                        {
+                            _wikiArray.EditItem(_selectedIndex, 2, _structureChangedText);
+                        }
+
+                        if (_definitionChangedText != null)
+                        {
+                            _wikiArray.EditItem(_selectedIndex, 3, _definitionChangedText);
+                        }
+
+                        UpdateStatusStrip($"Item {actioned}");
+                        _wikiArray.SortArray();
+                        DisplayListView();
+                        _textChanged = false;
+                    }
+
+                    else
+                    {
+                        UpdateStatusStrip($"Item not {actioned}");
+                        _textChanged = false;
+                    }
+                }
+                else
+                {
+                    UpdateStatusStrip($"No changes to {action}");
+                    _textChanged = false;
+                }
+            }
+            else
+            {
+                UpdateStatusStrip($"Nothing selected to {action}");
+                _textChanged = false;
+            }
+        }
+
+        // 9.4 Create a DELETE button that removes all the information from a single entry of the array; the user must be prompted before the final deletion occurs
+        private void ButtonDelete_MouseClick(object sender, MouseEventArgs e)
+        {
+            const string action = "delete";
+            const string actioned = "deleted";
+            //var array = _wikiArray.Array;
+
+            //if (CheckArrayFull(array)) return;
+            if (!CheckArrayNull()) return;
+            if (!CheckOutOfBound()) return;
+            if (CheckSelectedEdits())
             {
                 if (ConfirmationMessage(action))
                 {
-                    if (_nameChangedText != null)
-                    {
-                        _wikiArray.EditItem(_selectedIndex, 0, _nameChangedText);
-                    }
-
-                    if (_categoryChangedText != null)
-                    {
-                        _wikiArray.EditItem(_selectedIndex, 1, _categoryChangedText);
-                    }
-
-                    if (_structureChangedText != null)
-                    {
-                        _wikiArray.EditItem(_selectedIndex, 2, _structureChangedText);
-                    }
-
-                    if (_definitionChangedText != null)
-                    {
-                        _wikiArray.EditItem(_selectedIndex, 3, _definitionChangedText);
-                    }
-
+                    _wikiArray.DeleteItem(_selectedIndex);
                     UpdateStatusStrip($"Item {actioned}");
+                    ClearTextBoxes();
+                    TextBoxSearch.Clear();
                     _wikiArray.SortArray();
                     DisplayListView();
                     _textChanged = false;
@@ -82,60 +127,43 @@ namespace WikiApp
             }
             else
             {
-                UpdateStatusStrip($"No changes to {action}");
+                UpdateStatusStrip($"Nothing selected to {action}");
+                _textChanged = false;
             }
+
         }
 
-        // 9.4 Create a DELETE button that removes all the information from a single entry of the array; the user must be prompted before the final deletion occurs
-        private void ButtonDelete_MouseClick(object sender, MouseEventArgs e)
+        private void ButtonSearch_MouseClick(object sender, MouseEventArgs e)
         {
-            const string action = "delete";
-            const string actioned = "deleted";
-            var array = _wikiArray.Array;
-
-            if (CheckArrayFull(array)) return;
             if (!CheckArrayNull()) return;
-            if (!CheckSelected(action)) return;
-            if (!CheckOutOfBound()) return;
-            if (ConfirmationMessage(action))
+            var searchResult = _wikiArray.BinarySearch(TextBoxSearch.Text);
+            if (CheckTextChangedSearch())
             {
-                _wikiArray.DeleteItem(_selectedIndex);
-                UpdateStatusStrip($"Item {actioned}");
-                ClearTextBoxes();
-                TextBoxSearch.Clear();
-                _wikiArray.SortArray();
-                DisplayListView();
+                switch (searchResult)
+                {
+                    case -1:
+                        UpdateStatusStrip("No data in the array");
+                        _textChangedSearch = false;
+                        return;
+                    case -2:
+                        UpdateStatusStrip("Item not found");
+                        TextBoxSearch.Focus();
+                        ClearTextBoxes();
+                        DeselectItem(_selectedIndex);
+                        _textChangedSearch = false;
+                        break;
+                    default:
+                        UpdateStatusStrip("Item found");
+                        SelectItem(searchResult);
+                        TextBoxSearch.Focus();
+                        TextBoxSearch.Clear();
+                        _textChangedSearch = false;
+                        break;
+                }
             }
-
             else
             {
-                UpdateStatusStrip($"Item not {actioned}");
-            }
-        }
-
-        private void ButtonBinarySearch_MouseClick(object sender, MouseEventArgs e)
-        {
-
-            if (!CheckArrayNull()) return;
-            if (!CheckTextBox()) return;
-            var searchResult = _wikiArray.BinarySearch(TextBoxSearch.Text);
-            switch (searchResult)
-            {
-                case -1:
-                    UpdateStatusStrip("No data in the array");
-                    return;
-                case -2:
-                    UpdateStatusStrip("Item not found");
-                    TextBoxSearch.Focus();
-                    ClearTextBoxes();
-                    DeselectItem(_selectedIndex);
-                    break;
-                default:
-                    UpdateStatusStrip("Item found");
-                    SelectItem(searchResult);
-                    TextBoxSearch.Focus();
-                    TextBoxSearch.Clear();
-                    break;
+                UpdateStatusStrip("Please enter search");
             }
         }
 
@@ -154,46 +182,68 @@ namespace WikiApp
             SelectItem(_selectedIndex);
         }
 
-        #region Events for TextChanged in TextBoxes for Edit Button
+        //CHECK - NEED TO FIX
+        #region Events for TextChanged in TextBoxes for Edit and Search
+
+        private void TextBoxSearch_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            _textChangedSearch = true;
+            CheckTextChangedSearch();
+        }
 
         private void TextBoxNam_KeyPress(object sender, KeyPressEventArgs e)
         {
             _textChanged = true;
+            CheckTextChangedEdits();
+            
         }
 
         private void TextBoxCat_KeyPress(object sender, KeyPressEventArgs e)
         {
             _textChanged = true;
+            CheckTextChangedEdits();
         }
 
         private void TextBoxStr_KeyPress(object sender, KeyPressEventArgs e)
         {
             _textChanged = true;
+            CheckTextChangedEdits();
         }
 
         private void TextBoxDef_KeyPress(object sender, KeyPressEventArgs e)
         {
             _textChanged = true;
+            CheckTextChangedEdits();
+        }
+
+        private void TextBoxSearch_TextChanged(object sender, EventArgs e)
+        {
+            _searchChangedText = TextBoxSearch.Text;
+            CheckSelectedEdits();
         }
 
         private void TextBoxNam_TextChanged(object sender, EventArgs e)
         {
             _nameChangedText = TextBoxNam.Text;
+            CheckSelectedEdits();
         }
 
         private void TextBoxCat_TextChanged(object sender, EventArgs e)
         {
             _categoryChangedText = TextBoxCat.Text;
+            CheckSelectedEdits();
         }
 
         private void TextBoxStr_TextChanged(object sender, EventArgs e)
         {
             _structureChangedText = TextBoxStr.Text;
+            CheckSelectedEdits();
         }
 
         private void TextBoxDef_TextChanged(object sender, EventArgs e)
         {
             _definitionChangedText = TextBoxDef.Text;
+            CheckSelectedEdits();
         }
 
         #endregion
@@ -277,15 +327,24 @@ namespace WikiApp
 
             if (CheckArrayFull(array)) return;
             if (!CheckArrayNull()) return;
-            if (!CheckSelected(action)) return;
             if (!CheckOutOfBound()) return;
-            if (ConfirmationMessage(action))
+            if (CheckSelectedEdits())
             {
-                _wikiArray.AddItem();
+                if (ConfirmationMessage(action))
+                {
+                    _wikiArray.AddItem();
+                    _textChanged = false;
+                }
+                else
+                {
+                    UpdateStatusStrip($"Item not {actioned}");
+                    _textChanged = false;
+                }
             }
             else
             {
-                UpdateStatusStrip($"Item not {actioned}");
+                UpdateStatusStrip($"Nothing selected to {action}");
+                _textChanged = false;
             }
         }
 
@@ -406,22 +465,23 @@ namespace WikiApp
         #endregion
 
         #region Error trapping
-        private bool CheckTextBox()
+        
+        private bool CheckSelectedEdits()
         {
-            if (string.IsNullOrEmpty(TextBoxSearch.Text))
+            if (_selectedIndex != -1)
             {
-                UpdateStatusStrip("Search box is empty");
-                return false;
+                ButtonEdit.Enabled = true;
+                ButtonDelete.Enabled = true;
+                ButtonAdd.Enabled = true;
+                ButtonClear.Enabled = true;
+                return true;
             }
-            return true;
-        }
-
-        private bool CheckSelected(string action)
-        {
-            if (_selectedIndex != -1) return true;
-            UpdateStatusStrip($"Nothing selected to {action}");
+            ButtonEdit.Enabled = false;
+            ButtonDelete.Enabled = false;
+            ButtonAdd.Enabled = false;
+            ButtonClear.Enabled = false;
             return false;
-        }
+        } 
 
         private bool CheckOutOfBound()
         {
@@ -462,6 +522,32 @@ namespace WikiApp
                 ButtonEdit.Enabled = true;
                 ButtonClear.Enabled = true;
                 return true;
+            }
+        }
+
+        private bool CheckTextChangedEdits()
+        {
+            if (_textChanged)
+            {
+                ButtonEdit.Enabled = true;
+                return true;
+            }
+            ButtonEdit.Enabled = false;
+            return false;
+        }
+
+        private bool CheckTextChangedSearch()
+        {
+
+            if (_textChangedSearch)
+            {
+                ButtonSearch.Enabled = true;
+                return true;
+            }
+            else
+            {
+                ButtonSearch.Enabled = false;
+                return false;
             }
         }
 
