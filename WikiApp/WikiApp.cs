@@ -31,7 +31,7 @@ namespace WikiApp
 
         #endregion
 
-        #region Events & Buttons
+        #region Events
 
         #region Working
 
@@ -40,16 +40,14 @@ namespace WikiApp
         {
             const string action = "edit";
             const string actioned = "edited";
-            //var array = _wikiArray.Array;
-
-            // if (CheckArrayFull(array)) return;
+           
             if (!CheckArrayNull()) return;
             if (!CheckOutOfBound()) return;
             if (CheckSelectedEdits())
             {
                 if (CheckTextChangedEdits())
                 {
-                    if (ConfirmationMessage(action))
+                    if (ConfirmationUserRequest(action))
                     {
                         if (_nameChangedText != null)
                         {
@@ -70,10 +68,9 @@ namespace WikiApp
                         {
                             _wikiArray.EditItem(_selectedIndex, 3, _definitionChangedText);
                         }
-
-                        UpdateStatusStrip($"Item {actioned}");
                         _wikiArray.SortArray();
                         DisplayListView();
+                        UpdateStatusStrip($"Item {actioned}");
                         _textChanged = false;
                     }
 
@@ -101,21 +98,19 @@ namespace WikiApp
         {
             const string action = "delete";
             const string actioned = "deleted";
-            //var array = _wikiArray.Array;
-
-            //if (CheckArrayFull(array)) return;
+            
             if (!CheckArrayNull()) return;
             if (!CheckOutOfBound()) return;
             if (CheckSelectedEdits())
             {
-                if (ConfirmationMessage(action))
+                if (ConfirmationUserRequest(action))
                 {
                     _wikiArray.DeleteItem(_selectedIndex);
-                    UpdateStatusStrip($"Item {actioned}");
-                    ClearTextBoxes();
-                    TextBoxSearch.Clear();
                     _wikiArray.SortArray();
                     DisplayListView();
+                    ClearTextBoxes();
+                    TextBoxSearch.Clear();
+                    UpdateStatusStrip($"Item {actioned}");
                     _textChanged = false;
                 }
 
@@ -135,8 +130,9 @@ namespace WikiApp
 
         private void ButtonSearch_MouseClick(object sender, MouseEventArgs e)
         {
-            if (!CheckArrayNull()) return;
             var searchResult = _wikiArray.BinarySearch(TextBoxSearch.Text);
+
+            if (!CheckArrayNull()) return;
             if (CheckTextChangedSearch())
             {
                 switch (searchResult)
@@ -147,9 +143,9 @@ namespace WikiApp
                         return;
                     case -2:
                         UpdateStatusStrip("Item not found");
-                        TextBoxSearch.Focus();
-                        ClearTextBoxes();
                         DeselectItem(_selectedIndex);
+                        ClearTextBoxes();
+                        TextBoxSearch.Focus();
                         _textChangedSearch = false;
                         break;
                     default:
@@ -167,7 +163,6 @@ namespace WikiApp
             }
         }
 
-        // 9.5 Create a CLEAR method to clear the four text boxes so a new definition can be added
         private void ButtonClear_MouseClick(object sender, MouseEventArgs e)
         {
             ClearTextBoxes();
@@ -182,7 +177,7 @@ namespace WikiApp
             SelectItem(_selectedIndex);
         }
 
-        //CHECK - NEED TO FIX
+        //CHECK - NEED TO FIX 
         #region Events for TextChanged in TextBoxes for Edit and Search
 
         private void TextBoxSearch_KeyPress(object sender, KeyPressEventArgs e)
@@ -219,7 +214,7 @@ namespace WikiApp
         private void TextBoxSearch_TextChanged(object sender, EventArgs e)
         {
             _searchChangedText = TextBoxSearch.Text;
-            CheckSelectedEdits();
+           CheckSelectedEdits();
         }
 
         private void TextBoxNam_TextChanged(object sender, EventArgs e)
@@ -330,7 +325,7 @@ namespace WikiApp
             if (!CheckOutOfBound()) return;
             if (CheckSelectedEdits())
             {
-                if (ConfirmationMessage(action))
+                if (ConfirmationUserRequest(action))
                 {
                     _wikiArray.AddItem();
                     _textChanged = false;
@@ -351,18 +346,42 @@ namespace WikiApp
         // 9.10 Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat which is _sorted by Name, ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter to create the file
         private void ButtonSave_MouseClick(object sender, MouseEventArgs e)
         {
-            var array = _wikiArray.Array;
-
-            if (CheckArrayFull(array)) return;
-            SaveFile();
-            //add
+            //var result = OpenFileDialogue();
+            //if (result.result != DialogResult.OK) return;
+            //SaveFile();
+            UpdateStatusStrip("File successfully saved");
+            _wikiArray.ClearArray();
+            DisplayListView();
+            CheckArrayNull();
         }
 
         // 9.11 Create a LOAD button that will read the information from a binary file called definitions.dat into the 2D array, ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task
         // CHECK NEED TO LOAD BINARY FILE USING BINARY READER
         // CREATE FUNCTION TO OPEN FILE DIALOGUE BOX
-        // FIX FILTER LIMITS
+        
         private void ButtonLoad_MouseClick(object sender, MouseEventArgs e)
+        {
+            var result = OpenFileDialogue();
+            if (result.result != DialogResult.OK) return;
+            _wikiArray = new WikiSortedArray();
+            _wikiArray.LoadData(result.fileName);
+            _wikiArray.SortArray();
+            DisplayListView();
+            CheckArrayNull();
+            UpdateStatusStrip("Data successfully loaded");
+        }
+
+        #endregion
+
+        #region Methods
+        // CHECK NEED TO CREATE
+        private void SaveFile()
+        {
+            // ADD CODE
+        }
+
+        // FIX FILTER LIMITS
+        private (DialogResult result, string fileName) OpenFileDialogue()
         {
             const string filterLimits = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
             var openFileDialog1 = new OpenFileDialog
@@ -373,29 +392,12 @@ namespace WikiApp
                 RestoreDirectory = true
             };
             var result = openFileDialog1.ShowDialog();
-
-            if (result != DialogResult.OK) return;
-            _wikiArray = new WikiSortedArray();
-            _wikiArray.LoadData(openFileDialog1.FileName);
-            UpdateStatusStrip("Data successfully loaded");
-            _wikiArray.SortArray();
-            DisplayListView();
-            CheckArrayNull();
+            return (result, openFileDialog1.FileName);
         }
-
-        #endregion
-
-        #region Functions
-        // CHECK NEED TO CREATE FUNCTION
-        private void SaveFile()
-        {
-            // ADD CODE
-        }
-
         #region Working
 
-        #region Select and deselect items in the list view
         // 9.9 Create a method so the user can select a definition (Name) from the ListView and all the information is displayed in the appropriate Textboxes
+        #region Select and deselect items in the list view
         private void SelectItem(int index)
         {
             ListViewDataStructure.HideSelection = false;
@@ -414,8 +416,9 @@ namespace WikiApp
         }
         #endregion
 
-        #region Display and clear items - listview and textboxes
+        // 9.5 Create a CLEAR method to clear the four text boxes so a new definition can be added
         // 9.8 Create a display method that will show the following information in a ListView: Name and Category
+        #region Display and clear items - listview and textboxes
         private void DisplayListView()
         {
             ListViewDataStructure.Items.Clear();
@@ -455,7 +458,7 @@ namespace WikiApp
             StatusLabel.Text = message;
         }
 
-        private static bool ConfirmationMessage(string action)
+        private static bool ConfirmationUserRequest(string action)
         {
             var message = $"Are you sure you want to {action} this item?";
             var caption = $"Please confirm {action}";
@@ -465,24 +468,6 @@ namespace WikiApp
         #endregion
 
         #region Error trapping
-        
-        private bool CheckSelectedEdits()
-        {
-            if (_selectedIndex != -1)
-            {
-                ButtonEdit.Enabled = true;
-                ButtonDelete.Enabled = true;
-                ButtonAdd.Enabled = true;
-                ButtonClear.Enabled = true;
-                return true;
-            }
-            ButtonEdit.Enabled = false;
-            ButtonDelete.Enabled = false;
-            ButtonAdd.Enabled = false;
-            ButtonClear.Enabled = false;
-            return false;
-        } 
-
         private bool CheckOutOfBound()
         {
             if (_selectedIndex <= _wikiArray.Array.Length) return true;
@@ -490,9 +475,22 @@ namespace WikiApp
             return false;
         }
 
+        private bool CheckSelectedEdits()
+        {
+            if (_selectedIndex != -1)
+            {
+                ButtonEdit.Enabled = true;
+                ButtonDelete.Enabled = true;
+                return true;
+            }
+            ButtonEdit.Enabled = false;
+            ButtonDelete.Enabled = false;
+            return false;
+        } 
+
         private bool CheckArrayNull()
         {
-            if (_wikiArray == null)
+            if (_wikiArray == null || _wikiArray.Empty)
             {
                 UpdateStatusStrip("No data in the array");
                 ClearTextBoxes();
@@ -502,27 +500,23 @@ namespace WikiApp
                 TextBoxStr.Enabled = false;
                 TextBoxDef.Enabled = false;
                 TextBoxSearch.Enabled = false;
-                ButtonAdd.Enabled = false;
-                ButtonDelete.Enabled = false;
-                ButtonSearch.Enabled = false;
-                ButtonEdit.Enabled = false;
                 ButtonClear.Enabled = false;
+                if (_wikiArray != null) CheckArrayFull(_wikiArray.Array);
+                CheckSelectedEdits();
+                CheckTextChangedEdits();
+                CheckTextChangedSearch();
                 return false;
             }
-            else
-            {
-                TextBoxCat.Enabled = true;
-                TextBoxNam.Enabled = true;
-                TextBoxStr.Enabled = true;
-                TextBoxDef.Enabled = true;
-                TextBoxSearch.Enabled = true;
-                ButtonAdd.Enabled = true;
-                ButtonDelete.Enabled = true;
-                ButtonSearch.Enabled = true;
-                ButtonEdit.Enabled = true;
-                ButtonClear.Enabled = true;
-                return true;
-            }
+            TextBoxCat.Enabled = true;
+            TextBoxNam.Enabled = true;
+            TextBoxStr.Enabled = true;
+            TextBoxDef.Enabled = true;
+            TextBoxSearch.Enabled = true;
+            ButtonClear.Enabled = true;
+            CheckSelectedEdits();
+            CheckTextChangedEdits();
+            CheckTextChangedSearch();
+            return true;
         }
 
         private bool CheckTextChangedEdits()
@@ -544,11 +538,8 @@ namespace WikiApp
                 ButtonSearch.Enabled = true;
                 return true;
             }
-            else
-            {
-                ButtonSearch.Enabled = false;
-                return false;
-            }
+            ButtonSearch.Enabled = false;
+            return false;
         }
 
         private bool CheckArrayFull(Array array)

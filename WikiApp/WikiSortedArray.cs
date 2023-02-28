@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 
 namespace WikiApp
 {
@@ -10,6 +11,7 @@ namespace WikiApp
         private const int Col = 4;
         // 9.1 Create a global 2D string array, use static variables for the dimensions (row = 4, column = 12),
         public string[,] Array = new string[Row, Col];
+        public bool Empty { get; private set; } 
         #endregion
 
         // CHECK THIS NEEDS TO BE UPDATED TO LOAD BINARY FILE
@@ -28,6 +30,8 @@ namespace WikiApp
                 }
                 i++;
             }
+
+            Empty = false;
         }
 
         // CHECK HAVEN'T STARTED
@@ -112,12 +116,18 @@ namespace WikiApp
 
         #endregion
 
-        //private void ClearArray()
-        //{
-        //    UpdateStatusStrip("Data cleared");
-        //    ListViewDataStructure.Items.Clear();
-        //    Array.Clear(_wikiArray.Array, 0, _wikiArray.Array.GetLength(0) * _wikiArray.Array.GetLength(1));
-        //}
+        public void ClearArray()
+        {
+            
+            for (var i = 0; i < Row; i++)
+            {
+                for (var j = 0; j < Col; j++)
+                {
+                    Array[i, j] = null;
+                }
+            }
+            Empty = true;
+        }
 
     } //class
 } //namespace
