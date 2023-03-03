@@ -34,6 +34,7 @@ namespace WikiApp
         #region Events
 
         #region Working
+        // TEXTBOX FOCUS IN APPROPRIATE PLACES
 
         // 9.3 Create and EDIT button that will allow the user to modify any information from the 4 text boxes into the 2D array
         private void ButtonEdit_MouseClick(object sender, MouseEventArgs e)
