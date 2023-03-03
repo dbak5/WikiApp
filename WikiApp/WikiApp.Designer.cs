@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem29 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem30 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem31 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem32 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("");
             this.TextBoxSearch = new System.Windows.Forms.TextBox();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -54,8 +54,7 @@
             this.TextBoxNam = new System.Windows.Forms.TextBox();
             this.GroupChangeData = new System.Windows.Forms.GroupBox();
             this.GroupSearch = new System.Windows.Forms.GroupBox();
-            this.ToolTipButtons = new System.Windows.Forms.ToolTip(this.components);
-            this.ToolTipTextBox = new System.Windows.Forms.ToolTip(this.components);
+            this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.StatusStrip.SuspendLayout();
             this.GroupChangeData.SuspendLayout();
             this.GroupSearch.SuspendLayout();
@@ -67,9 +66,9 @@
             this.TextBoxSearch.Name = "TextBoxSearch";
             this.TextBoxSearch.Size = new System.Drawing.Size(130, 20);
             this.TextBoxSearch.TabIndex = 0;
+            this.ToolTip.SetToolTip(this.TextBoxSearch, "Enter text to search for");
             this.TextBoxSearch.TextChanged += new System.EventHandler(this.TextBoxSearch_TextChanged);
             this.TextBoxSearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxSearch_KeyPress);
-            this.TextBoxSearch.MouseHover += new System.EventHandler(this.TextBoxSearch_MouseHover);
             // 
             // StatusStrip
             // 
@@ -95,18 +94,18 @@
             this.ColumnDef});
             this.ListViewDataStructure.HideSelection = false;
             this.ListViewDataStructure.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem29,
-            listViewItem30,
-            listViewItem31,
-            listViewItem32});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4});
             this.ListViewDataStructure.Location = new System.Drawing.Point(31, 74);
             this.ListViewDataStructure.Name = "ListViewDataStructure";
             this.ListViewDataStructure.Size = new System.Drawing.Size(243, 202);
             this.ListViewDataStructure.TabIndex = 2;
+            this.ToolTip.SetToolTip(this.ListViewDataStructure, "View list of data structures");
             this.ListViewDataStructure.UseCompatibleStateImageBehavior = false;
             this.ListViewDataStructure.View = System.Windows.Forms.View.Details;
             this.ListViewDataStructure.SelectedIndexChanged += new System.EventHandler(this.ListViewSelect_MouseClick);
-            this.ListViewDataStructure.MouseHover += new System.EventHandler(this.ListViewDataStructure_MouseHover);
             // 
             // ColumnNam
             // 
@@ -133,9 +132,9 @@
             this.ButtonAdd.Size = new System.Drawing.Size(75, 23);
             this.ButtonAdd.TabIndex = 3;
             this.ButtonAdd.Text = "Add New Record";
+            this.ToolTip.SetToolTip(this.ButtonAdd, "Add item to data");
             this.ButtonAdd.UseVisualStyleBackColor = true;
             this.ButtonAdd.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonAdd_MouseClick);
-            this.ButtonAdd.MouseHover += new System.EventHandler(this.ButtonAdd_MouseHover);
             // 
             // ButtonLoad
             // 
@@ -144,9 +143,9 @@
             this.ButtonLoad.Size = new System.Drawing.Size(75, 23);
             this.ButtonLoad.TabIndex = 5;
             this.ButtonLoad.Text = "Load Data";
+            this.ToolTip.SetToolTip(this.ButtonLoad, "Load data into the tables");
             this.ButtonLoad.UseVisualStyleBackColor = true;
             this.ButtonLoad.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonLoad_MouseClick);
-            this.ButtonLoad.MouseHover += new System.EventHandler(this.ButtonLoad_MouseHover);
             // 
             // ButtonClear
             // 
@@ -155,9 +154,9 @@
             this.ButtonClear.Size = new System.Drawing.Size(75, 23);
             this.ButtonClear.TabIndex = 6;
             this.ButtonClear.Text = "ClearTextBoxes";
+            this.ToolTip.SetToolTip(this.ButtonClear, "Clear items from text boxes");
             this.ButtonClear.UseVisualStyleBackColor = true;
             this.ButtonClear.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonClear_MouseClick);
-            this.ButtonClear.MouseHover += new System.EventHandler(this.ButtonClear_MouseHover);
             // 
             // ButtonSearch
             // 
@@ -166,9 +165,9 @@
             this.ButtonSearch.Size = new System.Drawing.Size(75, 23);
             this.ButtonSearch.TabIndex = 9;
             this.ButtonSearch.Text = "Search";
+            this.ToolTip.SetToolTip(this.ButtonSearch, "Click to search for an item in the data");
             this.ButtonSearch.UseVisualStyleBackColor = true;
             this.ButtonSearch.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonSearch_MouseClick);
-            this.ButtonSearch.MouseHover += new System.EventHandler(this.ButtonSearch_MouseHover);
             // 
             // ButtonDelete
             // 
@@ -177,9 +176,9 @@
             this.ButtonDelete.Size = new System.Drawing.Size(75, 23);
             this.ButtonDelete.TabIndex = 10;
             this.ButtonDelete.Text = "Delete Item";
+            this.ToolTip.SetToolTip(this.ButtonDelete, "Delete item from data");
             this.ButtonDelete.UseVisualStyleBackColor = true;
             this.ButtonDelete.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonDelete_MouseClick);
-            this.ButtonDelete.MouseHover += new System.EventHandler(this.ButtonDelete_MouseHover);
             // 
             // ButtonSave
             // 
@@ -188,9 +187,9 @@
             this.ButtonSave.Size = new System.Drawing.Size(75, 23);
             this.ButtonSave.TabIndex = 11;
             this.ButtonSave.Text = "Save File";
+            this.ToolTip.SetToolTip(this.ButtonSave, "Save data from tables into a file");
             this.ButtonSave.UseVisualStyleBackColor = true;
             this.ButtonSave.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonSave_MouseClick);
-            this.ButtonSave.MouseHover += new System.EventHandler(this.ButtonSave_MouseHover);
             // 
             // TextBoxCat
             // 
@@ -198,9 +197,9 @@
             this.TextBoxCat.Name = "TextBoxCat";
             this.TextBoxCat.Size = new System.Drawing.Size(100, 20);
             this.TextBoxCat.TabIndex = 12;
+            this.ToolTip.SetToolTip(this.TextBoxCat, "Data category, update to edit item");
             this.TextBoxCat.TextChanged += new System.EventHandler(this.TextBoxCat_TextChanged);
             this.TextBoxCat.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxCat_KeyPress);
-            this.TextBoxCat.MouseHover += new System.EventHandler(this.TextBoxCat_MouseHover);
             // 
             // TextBoxStr
             // 
@@ -208,9 +207,9 @@
             this.TextBoxStr.Name = "TextBoxStr";
             this.TextBoxStr.Size = new System.Drawing.Size(100, 20);
             this.TextBoxStr.TabIndex = 13;
+            this.ToolTip.SetToolTip(this.TextBoxStr, "Data structure, update to edit item");
             this.TextBoxStr.TextChanged += new System.EventHandler(this.TextBoxStr_TextChanged);
             this.TextBoxStr.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxStr_KeyPress);
-            this.TextBoxStr.MouseHover += new System.EventHandler(this.TextBoxStr_MouseHover);
             // 
             // TextBoxDef
             // 
@@ -219,9 +218,9 @@
             this.TextBoxDef.Name = "TextBoxDef";
             this.TextBoxDef.Size = new System.Drawing.Size(226, 189);
             this.TextBoxDef.TabIndex = 14;
+            this.ToolTip.SetToolTip(this.TextBoxDef, "Data description, update to edit item");
             this.TextBoxDef.TextChanged += new System.EventHandler(this.TextBoxDef_TextChanged);
             this.TextBoxDef.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxDef_KeyPress);
-            this.TextBoxDef.MouseHover += new System.EventHandler(this.TextBoxDef_MouseHover);
             // 
             // ButtonEdit
             // 
@@ -230,9 +229,9 @@
             this.ButtonEdit.Size = new System.Drawing.Size(75, 23);
             this.ButtonEdit.TabIndex = 15;
             this.ButtonEdit.Text = "Edit Item";
+            this.ToolTip.SetToolTip(this.ButtonEdit, "Edit item in data");
             this.ButtonEdit.UseVisualStyleBackColor = true;
             this.ButtonEdit.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonEdit_MouseClick);
-            this.ButtonEdit.MouseHover += new System.EventHandler(this.ButtonEdit_MouseHover);
             // 
             // TextBoxNam
             // 
@@ -240,9 +239,9 @@
             this.TextBoxNam.Name = "TextBoxNam";
             this.TextBoxNam.Size = new System.Drawing.Size(100, 20);
             this.TextBoxNam.TabIndex = 16;
+            this.ToolTip.SetToolTip(this.TextBoxNam, "Data name, update to edit item");
             this.TextBoxNam.TextChanged += new System.EventHandler(this.TextBoxNam_TextChanged);
             this.TextBoxNam.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxNam_KeyPress);
-            this.TextBoxNam.MouseHover += new System.EventHandler(this.TextBoxNam_MouseHover);
             // 
             // GroupChangeData
             // 
@@ -272,14 +271,6 @@
             this.GroupSearch.TabIndex = 18;
             this.GroupSearch.TabStop = false;
             this.GroupSearch.Text = "Search";
-            // 
-            // ToolTipButtons
-            // 
-            this.ToolTipButtons.ToolTipTitle = "Button";
-            // 
-            // ToolTipTextBox
-            // 
-            this.ToolTipTextBox.ToolTipTitle = "Text box";
             // 
             // WikiApp
             // 
@@ -327,8 +318,7 @@
         private System.Windows.Forms.TextBox TextBoxNam;
         private System.Windows.Forms.GroupBox GroupChangeData;
         private System.Windows.Forms.GroupBox GroupSearch;
-        private System.Windows.Forms.ToolTip ToolTipButtons;
-        private System.Windows.Forms.ToolTip ToolTipTextBox;
+        private System.Windows.Forms.ToolTip ToolTip;
     }
 }
 

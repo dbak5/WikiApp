@@ -251,75 +251,6 @@ namespace WikiApp
 
         #endregion
 
-        // CHECK FIX TOOL TIPS TO BE IN THE DESIGNER
-        #region Tooltips
-        private void ButtonSearch_MouseHover(object sender, EventArgs e)
-        {
-            ToolTipButtons.SetToolTip(ButtonSearch, "Search for an item in the data");
-        }
-
-        private void ButtonAdd_MouseHover(object sender, EventArgs e)
-        {
-            ToolTipButtons.SetToolTip(ButtonAdd, "Add item to data");
-        }
-
-        private void ButtonEdit_MouseHover(object sender, EventArgs e)
-        {
-            ToolTipButtons.SetToolTip(ButtonEdit, "Edit item in data");
-        }
-
-        private void ButtonDelete_MouseHover(object sender, EventArgs e)
-        {
-            ToolTipButtons.SetToolTip(ButtonDelete, "Delete item from data");
-        }
-
-        private void ButtonClear_MouseHover(object sender, EventArgs e)
-        {
-            ToolTipButtons.SetToolTip(ButtonClear, "Clear items from text boxes");
-        }
-
-        private void ButtonLoad_MouseHover(object sender, EventArgs e)
-        {
-            ToolTipButtons.SetToolTip(ButtonLoad, "Load data into the tables");
-        }
-
-        private void ButtonSave_MouseHover(object sender, EventArgs e)
-        {
-            ToolTipButtons.SetToolTip(ButtonSave, "Save data from tables into a file");
-        }
-
-        private void TextBoxSearch_MouseHover(object sender, EventArgs e)
-        {
-            ToolTipTextBox.SetToolTip(TextBoxSearch, "Enter text to search for");
-        }
-
-        private void TextBoxNam_MouseHover(object sender, EventArgs e)
-        {
-            ToolTipTextBox.SetToolTip(TextBoxNam, "Data name, update to edit item");
-        }
-
-        private void TextBoxCat_MouseHover(object sender, EventArgs e)
-        {
-            ToolTipTextBox.SetToolTip(TextBoxCat, "Data category, update to edit item");
-        }
-
-        private void TextBoxStr_MouseHover(object sender, EventArgs e)
-        {
-            ToolTipTextBox.SetToolTip(TextBoxStr, "Data structure, update to edit item");
-        }
-
-        private void TextBoxDef_MouseHover(object sender, EventArgs e)
-        {
-            ToolTipTextBox.SetToolTip(TextBoxDef, "Data description, update to edit item");
-        }
-
-        private void ListViewDataStructure_MouseHover(object sender, EventArgs e)
-        {
-            ToolTipTextBox.SetToolTip(TextBoxDef, "Data description, update to edit item");
-        }
-
-        #endregion
-
         #endregion
 
         // 9.2 Create an ADD button that will store the information from the 4 text boxes into the 2D array
@@ -423,9 +354,10 @@ namespace WikiApp
         }
         #endregion
 
-        // 9.5 Create a CLEAR method to clear the four text boxes so a new definition can be added
-        // 9.8 Create a display method that will show the following information in a ListView: Name and Category
         #region Display and clear items - listview and textboxes
+
+        // 9.8 Create a display method that will show the following information in a ListView: Name and Category
+        // CHECK - JUST NAME AND CATEGORY
         private void DisplayListView()
         {
             ListViewDataStructure.Items.Clear();
@@ -448,6 +380,7 @@ namespace WikiApp
             TextBoxNam.Text = _wikiArray.Array[index, 0];
         }
 
+        // 9.5 Create a CLEAR method to clear the four text boxes so a new definition can be added
         // CHECK DOUBLE CLICK TEXTBOX TO CLEAR??
         private void ClearTextBoxes()
         {
@@ -564,5 +497,6 @@ namespace WikiApp
 
         #endregion
 
+      
     } //class
 } //namespace
