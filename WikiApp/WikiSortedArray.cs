@@ -1,12 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.InteropServices.ComTypes;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace WikiApp
 {
@@ -41,40 +35,40 @@ namespace WikiApp
         // CHECK THIS NEEDS TO BE UPDATED TO LOAD BINARY FILE
         public void LoadData(string fileName)
         {
-            try
-            {
-                using (var stream = File.Open(fileName, FileMode.Create))
-                {
-                    using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
-                    {
-                        for (var k = 0; k < Row; k++)
-                        {
-                            for (var j = 0; j < Col; j++)
-                            {
-                                Array[k, j] = reader.ReadString();
-                            }
-                        }
-                    }
-                }
-            }
-            catch (IOException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            //var fileText = File.ReadAllLines(fileName);
-            //var i = 0;
-
-            //foreach (var line in fileText)
+            //try
             //{
-            //    var parts = line.Split('|');
-            //    for (var x = 0; x < parts.Length; x++)
+            //    using (var stream = File.Open(fileName, FileMode.Create))
             //    {
-            //        Array[i, x] = parts[x];
-
+            //        using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
+            //        {
+            //            for (var k = 0; k < Row; k++)
+            //            {
+            //                for (var j = 0; j < Col; j++)
+            //                {
+            //                    Array[k, j] = reader.ReadString();
+            //                }
+            //            }
+            //        }
             //    }
-            //    i++;
             //}
+            //catch (IOException e)
+            //{
+            //    Console.WriteLine(e.Message);
+            //}
+
+            var fileText = File.ReadAllLines(fileName);
+            var i = 0;
+
+            foreach (var line in fileText)
+            {
+                var parts = line.Split('|');
+                for (var x = 0; x < parts.Length; x++)
+                {
+                    Array[i, x] = parts[x];
+
+                }
+                i++;
+            }
 
             //for (var i = 0; i < Row; i++)
             //{
@@ -116,12 +110,12 @@ namespace WikiApp
 
                 if (searchArrayItem == null) continue;
                 searchResult = -2;
-                if (string.Compare(searchTextBoxItem, searchArrayItem, StringComparison.Ordinal) == 0)
+                if (string.Compare(searchTextBoxItem.ToUpper(), searchArrayItem.ToUpper(), StringComparison.Ordinal) == 0)
                 {
                     searchResult = mid;
                     break;
                 }
-                if (string.Compare(searchTextBoxItem, searchArrayItem, StringComparison.Ordinal) < 0)
+                if (string.Compare(searchTextBoxItem.ToUpper(), searchArrayItem.ToUpper(), StringComparison.Ordinal) < 0)
                 {
                     max = mid - 1;
                 }
@@ -184,7 +178,5 @@ namespace WikiApp
             Empty = true;
         }
         #endregion
-
-
     } //class
 } //namespace

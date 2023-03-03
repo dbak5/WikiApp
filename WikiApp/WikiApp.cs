@@ -17,6 +17,7 @@ namespace WikiApp
             InitializeComponent();
         }
 
+        // CHECK PREVENT USING GLOBAL VARIABLES
         #region Variables
 
         private WikiSortedArray _wikiArray;
@@ -41,7 +42,7 @@ namespace WikiApp
         {
             const string action = "edit";
             const string actioned = "edited";
-           
+
             if (!CheckArrayNull()) return;
             if (!CheckOutOfBound()) return;
             if (CheckSelected())
@@ -96,6 +97,7 @@ namespace WikiApp
                 UpdateStatusStrip($"Nothing selected to {action}");
                 _textChanged = false;
             }
+
         }
 
         // 9.4 Create a DELETE button that removes all the information from a single entry of the array; the user must be prompted before the final deletion occurs
@@ -158,6 +160,7 @@ namespace WikiApp
                         break;
                     default:
                         UpdateStatusStrip("Item found");
+                        DeselectItem(_selectedIndex);
                         SelectItem(searchResult);
                         TextBoxSearch.Focus();
                         TextBoxSearch.Clear();
@@ -175,6 +178,7 @@ namespace WikiApp
         {
             ClearTextBoxes();
             TextBoxSearch.Clear();
+            TextBoxSearch.Focus();
             DeselectItem(_selectedIndex);
         }
 
@@ -185,64 +189,67 @@ namespace WikiApp
             SelectItem(_selectedIndex);
         }
 
-        //CHECK - NEED TO FIX 
-        #region Events for TextChanged in TextBoxes for Edit and Search
+        // 9.11 Create a LOAD button that will read the information from a binary file called definitions.dat into the 2D array, ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task
+        private void ButtonLoad_MouseClick(object sender, MouseEventArgs e)
+        {
+            var result = OpenFileDialogue();
+            if (result.result != DialogResult.OK) return;
+            _wikiArray = new WikiSortedArray();
+            _wikiArray.LoadData(result.fileName);
+            _wikiArray.SortArray();
+            DisplayListView();
+            CheckArrayNull();
+            UpdateStatusStrip("Data successfully loaded");
+            TextBoxSearch.Focus();
+        }
 
+        #region Events for TextChanged in TextBoxes for Edit and Search
         private void TextBoxSearch_KeyPress(object sender, KeyPressEventArgs e)
         {
             _textChangedSearch = true;
             CheckTextChangedSearch();
         }
-
         private void TextBoxNam_KeyPress(object sender, KeyPressEventArgs e)
         {
             _textChanged = true;
             CheckTextChangedEdits();
             
         }
-
         private void TextBoxCat_KeyPress(object sender, KeyPressEventArgs e)
         {
             _textChanged = true;
             CheckTextChangedEdits();
         }
-
         private void TextBoxStr_KeyPress(object sender, KeyPressEventArgs e)
         {
             _textChanged = true;
             CheckTextChangedEdits();
         }
-
         private void TextBoxDef_KeyPress(object sender, KeyPressEventArgs e)
         {
             _textChanged = true;
             CheckTextChangedEdits();
         }
-
         private void TextBoxSearch_TextChanged(object sender, EventArgs e)
         {
             _searchChangedText = TextBoxSearch.Text;
            CheckSelected();
         }
-
         private void TextBoxNam_TextChanged(object sender, EventArgs e)
         {
             _nameChangedText = TextBoxNam.Text;
             CheckSelected();
         }
-
         private void TextBoxCat_TextChanged(object sender, EventArgs e)
         {
             _categoryChangedText = TextBoxCat.Text;
             CheckSelected();
         }
-
         private void TextBoxStr_TextChanged(object sender, EventArgs e)
         {
             _structureChangedText = TextBoxStr.Text;
             CheckSelected();
         }
-
         private void TextBoxDef_TextChanged(object sender, EventArgs e)
         {
             _definitionChangedText = TextBoxDef.Text;
@@ -288,36 +295,38 @@ namespace WikiApp
         {
             // CHECK IF WE SHOULD HAVE SOMETHING AUTOMATICALLY OR CHANGE IT
             string fileName = "definitions2.bin";
-        
-            _wikiArray.SaveFile(fileName);
-            //var result = OpenFileDialogue();
-            //if (result.result != DialogResult.OK) return;
-            
-            UpdateStatusStrip("File successfully saved");
-           //_wikiArray.ClearArray();
-            DisplayListView();
-           // CheckArrayNull();
-        }
 
-        // 9.11 Create a LOAD button that will read the information from a binary file called definitions.dat into the 2D array, ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task
-        // CHECK NEED TO LOAD BINARY FILE USING BINARY READER
-        // CREATE FUNCTION TO OPEN FILE DIALOGUE BOX
-        private void ButtonLoad_MouseClick(object sender, MouseEventArgs e)
-        {
-            var result = OpenFileDialogue();
+            // CHECK UNCOMMENT THESE WHEN WORKING
+            //if (!CheckArrayNull()) return;
+            var result = FileDialogue();
             if (result.result != DialogResult.OK) return;
-            _wikiArray = new WikiSortedArray();
-            _wikiArray.LoadData(result.fileName);
-            _wikiArray.SortArray();
+
+            _wikiArray.SaveFile(fileName);
+            UpdateStatusStrip("File successfully saved");
+            _wikiArray.ClearArray();
             DisplayListView();
-            CheckArrayNull();
-            UpdateStatusStrip("Data successfully loaded");
         }
 
         #endregion
 
         #region Methods
-      
+        // CHECK CREATE 1 METHOD FOR BOTH SAVE AND OPEN DIALOGUE BOXES
+        // Save dialogue box
+        private (DialogResult result, string fileName) FileDialogue()
+        {
+            const string filterLimits = "bin files (*.*)|*.bin|All files (*.*)|*.*";
+            var saveFileDialog1 = new SaveFileDialog
+            {
+                InitialDirectory = Directory.GetCurrentDirectory(),
+                Filter = filterLimits,
+                FilterIndex = 2,
+                RestoreDirectory = true
+            };
+            var result = saveFileDialog1.ShowDialog();
+            return (result, saveFileDialog1.FileName);
+        }
+
+        // Open dialogue box
         private (DialogResult result, string fileName) OpenFileDialogue()
         {
             const string filterLimits = "bin files (*.*)|*.bin|All files (*.*)|*.*";
@@ -483,7 +492,7 @@ namespace WikiApp
             return false;
         }
 
-        // CHECK PASS THE ROW AND COLUMSN # THROUGH, NOT HARD CODE NUMBERS
+        // CHECK PASS THE ROW AND COLUMN # THROUGH, NOT HARD CODE NUMBERS
         private bool CheckArrayFull(Array array)
         {
             if (array.Length != (4 * 12)) return false;
@@ -496,7 +505,5 @@ namespace WikiApp
         #endregion
 
         #endregion
-
-      
     } //class
 } //namespace
