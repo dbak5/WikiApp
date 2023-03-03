@@ -37,7 +37,10 @@ namespace WikiApp
         // CHECK HAVEN'T STARTED
         public void AddItem()
         {
-            //add
+            // BINARY FILE WRITER - WRITE BINARY FILE NOTEPAD++
+            // MUST HAVE ALL TEXTBOXES FILLED TO ADD
+            //Pointer TO SEE IF ARRAY IS FULL
+            // FOCUS BACK TO THE SEARCH TEXT BOX
             SortArray();
         }
         
@@ -114,11 +117,9 @@ namespace WikiApp
             Array[row, col] = changedText;
         }
 
-        #endregion
-
         public void ClearArray()
         {
-            
+
             for (var i = 0; i < Row; i++)
             {
                 for (var j = 0; j < Col; j++)
@@ -128,6 +129,8 @@ namespace WikiApp
             }
             Empty = true;
         }
+        #endregion
+
 
     } //class
 } //namespace

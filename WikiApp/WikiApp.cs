@@ -43,7 +43,7 @@ namespace WikiApp
            
             if (!CheckArrayNull()) return;
             if (!CheckOutOfBound()) return;
-            if (CheckSelectedEdits())
+            if (CheckSelected())
             {
                 if (CheckTextChangedEdits())
                 {
@@ -70,24 +70,28 @@ namespace WikiApp
                         }
                         _wikiArray.SortArray();
                         DisplayListView();
+                        TextBoxSearch.Focus();
                         UpdateStatusStrip($"Item {actioned}");
                         _textChanged = false;
                     }
 
                     else
                     {
+                        TextBoxSearch.Focus();
                         UpdateStatusStrip($"Item not {actioned}");
                         _textChanged = false;
                     }
                 }
                 else
                 {
+                    TextBoxSearch.Focus();
                     UpdateStatusStrip($"No changes to {action}");
                     _textChanged = false;
                 }
             }
             else
             {
+                TextBoxSearch.Focus();
                 UpdateStatusStrip($"Nothing selected to {action}");
                 _textChanged = false;
             }
@@ -101,7 +105,7 @@ namespace WikiApp
             
             if (!CheckArrayNull()) return;
             if (!CheckOutOfBound()) return;
-            if (CheckSelectedEdits())
+            if (CheckSelected())
             {
                 if (ConfirmationUserRequest(action))
                 {
@@ -110,18 +114,21 @@ namespace WikiApp
                     DisplayListView();
                     ClearTextBoxes();
                     TextBoxSearch.Clear();
+                    TextBoxSearch.Focus();
                     UpdateStatusStrip($"Item {actioned}");
                     _textChanged = false;
                 }
 
                 else
                 {
+                    TextBoxSearch.Focus();
                     UpdateStatusStrip($"Item not {actioned}");
                     _textChanged = false;
                 }
             }
             else
             {
+                TextBoxSearch.Focus();
                 UpdateStatusStrip($"Nothing selected to {action}");
                 _textChanged = false;
             }
@@ -214,35 +221,37 @@ namespace WikiApp
         private void TextBoxSearch_TextChanged(object sender, EventArgs e)
         {
             _searchChangedText = TextBoxSearch.Text;
-           CheckSelectedEdits();
+           CheckSelected();
         }
 
         private void TextBoxNam_TextChanged(object sender, EventArgs e)
         {
             _nameChangedText = TextBoxNam.Text;
-            CheckSelectedEdits();
+            CheckSelected();
         }
 
         private void TextBoxCat_TextChanged(object sender, EventArgs e)
         {
             _categoryChangedText = TextBoxCat.Text;
-            CheckSelectedEdits();
+            CheckSelected();
         }
 
         private void TextBoxStr_TextChanged(object sender, EventArgs e)
         {
             _structureChangedText = TextBoxStr.Text;
-            CheckSelectedEdits();
+            CheckSelected();
         }
 
         private void TextBoxDef_TextChanged(object sender, EventArgs e)
         {
             _definitionChangedText = TextBoxDef.Text;
-            CheckSelectedEdits();
+            CheckSelected();
         }
 
         #endregion
 
+
+        // CHECK FIX TOOL TIPS TO BE IN THE DESIGNER
         #region Tooltips
         private void ButtonSearch_MouseHover(object sender, EventArgs e)
         {
@@ -323,7 +332,7 @@ namespace WikiApp
             if (CheckArrayFull(array)) return;
             if (!CheckArrayNull()) return;
             if (!CheckOutOfBound()) return;
-            if (CheckSelectedEdits())
+            if (CheckSelected())
             {
                 if (ConfirmationUserRequest(action))
                 {
@@ -358,7 +367,6 @@ namespace WikiApp
         // 9.11 Create a LOAD button that will read the information from a binary file called definitions.dat into the 2D array, ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task
         // CHECK NEED TO LOAD BINARY FILE USING BINARY READER
         // CREATE FUNCTION TO OPEN FILE DIALOGUE BOX
-        
         private void ButtonLoad_MouseClick(object sender, MouseEventArgs e)
         {
             var result = OpenFileDialogue();
@@ -380,7 +388,6 @@ namespace WikiApp
             // ADD CODE
         }
 
-        // FIX FILTER LIMITS
         private (DialogResult result, string fileName) OpenFileDialogue()
         {
             const string filterLimits = "bin files (*.*)|*.bin|All files (*.*)|*.*";
@@ -394,6 +401,7 @@ namespace WikiApp
             var result = openFileDialog1.ShowDialog();
             return (result, openFileDialog1.FileName);
         }
+
         #region Working
 
         // 9.9 Create a method so the user can select a definition (Name) from the ListView and all the information is displayed in the appropriate Textboxes
@@ -441,6 +449,7 @@ namespace WikiApp
             TextBoxNam.Text = _wikiArray.Array[index, 0];
         }
 
+        // CHECK DOUBLE CLICK TEXTBOX TO CLEAR??
         private void ClearTextBoxes()
         {
             TextBoxNam.Clear();
@@ -462,7 +471,7 @@ namespace WikiApp
         {
             var message = $"Are you sure you want to {action} this item?";
             var caption = $"Please confirm {action}";
-            return MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Information)
+            return MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
                    == DialogResult.Yes;
         }
         #endregion
@@ -475,7 +484,7 @@ namespace WikiApp
             return false;
         }
 
-        private bool CheckSelectedEdits()
+        private bool CheckSelected()
         {
             if (_selectedIndex != -1)
             {
@@ -502,7 +511,7 @@ namespace WikiApp
                 TextBoxSearch.Enabled = false;
                 ButtonClear.Enabled = false;
                 if (_wikiArray != null) CheckArrayFull(_wikiArray.Array);
-                CheckSelectedEdits();
+                CheckSelected();
                 CheckTextChangedEdits();
                 CheckTextChangedSearch();
                 return false;
@@ -513,7 +522,7 @@ namespace WikiApp
             TextBoxDef.Enabled = true;
             TextBoxSearch.Enabled = true;
             ButtonClear.Enabled = true;
-            CheckSelectedEdits();
+            CheckSelected();
             CheckTextChangedEdits();
             CheckTextChangedSearch();
             return true;
@@ -542,6 +551,7 @@ namespace WikiApp
             return false;
         }
 
+        // CHECK PASS THE ROW AND COLUMSN # THROUGH, NOT HARD CODE NUMBERS
         private bool CheckArrayFull(Array array)
         {
             if (array.Length != (4 * 12)) return false;
