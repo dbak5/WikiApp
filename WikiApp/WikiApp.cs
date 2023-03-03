@@ -383,7 +383,7 @@ namespace WikiApp
         // FIX FILTER LIMITS
         private (DialogResult result, string fileName) OpenFileDialogue()
         {
-            const string filterLimits = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            const string filterLimits = "bin files (*.*)|*.bin|All files (*.*)|*.*";
             var openFileDialog1 = new OpenFileDialog
             {
                 InitialDirectory = Directory.GetCurrentDirectory(),
