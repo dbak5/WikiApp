@@ -251,7 +251,6 @@ namespace WikiApp
 
         #endregion
 
-
         // CHECK FIX TOOL TIPS TO BE IN THE DESIGNER
         #region Tooltips
         private void ButtonSearch_MouseHover(object sender, EventArgs e)
