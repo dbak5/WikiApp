@@ -355,13 +355,17 @@ namespace WikiApp
         // 9.10 Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat which is _sorted by Name, ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter to create the file
         private void ButtonSave_MouseClick(object sender, MouseEventArgs e)
         {
+            // CHECK IF WE SHOULD HAVE SOMETHING AUTOMATICALLY OR CHANGE IT
+            string fileName = "definitions2.bin";
+        
+            _wikiArray.SaveFile(fileName);
             //var result = OpenFileDialogue();
             //if (result.result != DialogResult.OK) return;
-            //SaveFile();
+            
             UpdateStatusStrip("File successfully saved");
-            _wikiArray.ClearArray();
+           //_wikiArray.ClearArray();
             DisplayListView();
-            CheckArrayNull();
+           // CheckArrayNull();
         }
 
         // 9.11 Create a LOAD button that will read the information from a binary file called definitions.dat into the 2D array, ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task
@@ -382,12 +386,7 @@ namespace WikiApp
         #endregion
 
         #region Methods
-        // CHECK NEED TO CREATE
-        private void SaveFile()
-        {
-            // ADD CODE
-        }
-
+      
         private (DialogResult result, string fileName) OpenFileDialogue()
         {
             const string filterLimits = "bin files (*.*)|*.bin|All files (*.*)|*.*";

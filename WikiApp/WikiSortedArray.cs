@@ -1,6 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.InteropServices.ComTypes;
+using System.Runtime.Remoting.Messaging;
+using System.Text;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace WikiApp
 {
@@ -11,25 +17,73 @@ namespace WikiApp
         private const int Col = 4;
         // 9.1 Create a global 2D string array, use static variables for the dimensions (row = 4, column = 12),
         public string[,] Array = new string[Row, Col];
-        public bool Empty { get; private set; } 
+        public bool Empty { get; private set; }
         #endregion
+
+        public void SaveFile(string fileName)
+        {
+            using (var stream = File.Open(fileName, FileMode.Append))
+            {
+                using (var writer = new BinaryWriter(stream, Encoding.UTF8, false))
+                {
+
+                    for (var i = 0; i < Row; i++)
+                    {
+                        for (var j = 0; j < Col; j++)
+                        {
+                            writer.Write(Array[i, j]);
+                        }
+                    }
+                }
+            }
+        }
 
         // CHECK THIS NEEDS TO BE UPDATED TO LOAD BINARY FILE
         public void LoadData(string fileName)
         {
-            var fileText = File.ReadAllLines(fileName);
-            var i = 0;
-
-            foreach (var line in fileText)
+            try
             {
-                var parts = line.Split('|');
-                for (var x = 0; x < parts.Length; x++)
+                using (var stream = File.Open(fileName, FileMode.Create))
                 {
-                    Array[i, x] = parts[x];
-
+                    using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
+                    {
+                        for (var k = 0; k < Row; k++)
+                        {
+                            for (var j = 0; j < Col; j++)
+                            {
+                                Array[k, j] = reader.ReadString();
+                            }
+                        }
+                    }
                 }
-                i++;
             }
+            catch (IOException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            //var fileText = File.ReadAllLines(fileName);
+            //var i = 0;
+
+            //foreach (var line in fileText)
+            //{
+            //    var parts = line.Split('|');
+            //    for (var x = 0; x < parts.Length; x++)
+            //    {
+            //        Array[i, x] = parts[x];
+
+            //    }
+            //    i++;
+            //}
+
+            //for (var i = 0; i < Row; i++)
+            //{
+            //    for (var j = 0; j < Col; j++)
+            //    {
+            //        Array[i, j] = reader.ReadString();
+
+            //    }
+            //}
 
             Empty = false;
         }
@@ -37,7 +91,7 @@ namespace WikiApp
         // CHECK HAVEN'T STARTED
         public void AddItem()
         {
-            // BINARY FILE WRITER - WRITE BINARY FILE NOTEPAD++
+            // BINARY FILE WRITER - WRITE BINARY FILE 
             // MUST HAVE ALL TEXTBOXES FILLED TO ADD
             //Pointer TO SEE IF ARRAY IS FULL
             // FOCUS BACK TO THE SEARCH TEXT BOX
