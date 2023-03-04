@@ -21,12 +21,11 @@ namespace WikiApp
 
         #endregion
 
-      
         /// <summary>
         /// 9.7 Write the code for a Binary Search for the Name in the 2D array and display the information in the other textboxes when found, add suitable feedback if the search in not successful and clear the search textbox (do not use any built-in array methods)
         /// </summary>
         /// <param name="searchTextBoxItem"></param>
-        /// <returns> -1 = search item not found, anything other INT = index number of search item</returns>
+        /// <returns> -1 = search item not found, other INT = index number of search item</returns>
         public int BinarySearch(string searchTextBoxItem)
         {
             var searchResult = -1;
@@ -115,7 +114,7 @@ namespace WikiApp
         }
 
         /// <summary>
-        /// Method to sort array using the bubble sort
+        /// Method to sort array using the bubble sort, comparing ordinals
         /// </summary>
         public void SortArray()
         {

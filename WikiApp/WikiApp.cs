@@ -17,13 +17,8 @@ namespace WikiApp
             InitializeComponent();
         }
 
-        // CHECK PREVENT USING GLOBAL VARIABLES
-        #region Variables
-
         private WikiSortedArray _wikiArray;
         private int _selectedIndexRow = -1;
-
-        #endregion
 
         #region Events
         //CHECK NEED FEEDBACK ON GREY OUT BUTTONS
@@ -39,41 +34,24 @@ namespace WikiApp
         {
             const string action = "add";
             const string actioned = "added";
-   
+
             if (!CheckArrayNull()) return;
             if (!CheckOutOfBound()) return;
-            if (!CheckIfTextBoxEmpty())
+            if (_wikiArray.Array[0, 0] == "")
             {
-                if (_wikiArray.Array[0, 0] == "")
+                if (CheckIfTextBoxEmpty())
                 {
-                    var newName = TextBoxNam.Text;
-                    var newCat = TextBoxCat.Text;
-                    var newStr = TextBoxStr.Text;
-                    var newDef = TextBoxDef.Text;
-                    if (ConfirmationUserRequest(action))
-                    {
-                        _wikiArray.EditItem(0, 0, newName);
-                        _wikiArray.EditItem(0, 1, newCat);
-                        _wikiArray.EditItem(0, 2, newStr);
-                        _wikiArray.EditItem(0, 3, newDef);
-                        _wikiArray.SortArray();
-                        DisplayListView();
-                        SelectItem(_wikiArray.BinarySearch(newName));
-                        UpdateStatusStrip($"Item {actioned}");
-                    }
-                    else
-                    {
-                        UpdateStatusStrip($"Item not {actioned}");
-                    }
+                    UpdateStatusStrip("Please input data to add and ensure all fields are full");
                 }
                 else
                 {
-                    UpdateStatusStrip($"Array is full, not {actioned}");
+                        UpdateItems(action, actioned);
                 }
             }
             else
             {
-                UpdateStatusStrip("Please input data to add");
+                UpdateStatusStrip($"Array is full, not {actioned}");
+                ButtonAdd.Enabled = false;
             }
             TextBoxSearch.Focus();
         }
@@ -90,25 +68,7 @@ namespace WikiApp
             {
                 if (CheckIfTextBoxChanged())
                 {
-                    var newName = TextBoxNam.Text;
-                    var newCat = TextBoxCat.Text;
-                    var newStr = TextBoxStr.Text;
-                    var newDef = TextBoxDef.Text;
-                    if (ConfirmationUserRequest(action))
-                    {
-                        _wikiArray.EditItem(_selectedIndexRow, 0, newName);
-                        _wikiArray.EditItem(_selectedIndexRow, 1, newCat);
-                        _wikiArray.EditItem(_selectedIndexRow, 2, newStr);
-                        _wikiArray.EditItem(_selectedIndexRow, 3, newDef);
-                        _wikiArray.SortArray();
-                        DisplayListView();
-                        SelectItem(_wikiArray.BinarySearch(newName));
-                        UpdateStatusStrip($"Item {actioned}");
-                    }
-                    else
-                    {
-                        UpdateStatusStrip($"Item not {actioned}");
-                    }
+                        UpdateItems(action, actioned);
                 }
                 else
                 {
@@ -139,6 +99,7 @@ namespace WikiApp
                     DisplayListView();
                     ClearTextBoxes();
                     UpdateStatusStrip($"Item {actioned}");
+                    ButtonAdd.Enabled = true;
                 }
                 else
                 {
@@ -250,8 +211,6 @@ namespace WikiApp
             _selectedIndexRow = ListViewDataStructure.SelectedIndices[0];
             SelectItem(_selectedIndexRow);
         }
-      
-
         #endregion
 
         #region Methods
@@ -288,10 +247,8 @@ namespace WikiApp
 
         /// <summary>
         /// 9.9 Create a method so the user can select a definition (Name) from the ListView 
-        /// and all the information is displayed in the appropriate Textboxes
         /// </summary>
         /// <param name="index"></param>
-        #region
         private void SelectItem(int index)
         {
             ListViewDataStructure.HideSelection = false;
@@ -300,9 +257,12 @@ namespace WikiApp
             DisplayTextBoxes(index);
             ButtonEdit.Enabled = true;
             ButtonDelete.Enabled = true;
-            ButtonAdd.Enabled = true;
         }
 
+        /// <summary>
+        /// 9.9 All  information is displayed in the appropriate Textboxes
+        /// </summary>
+        /// <param name="index"></param>
         private void DisplayTextBoxes(int index)
         {
             TextBoxDef.Text = _wikiArray.Array[index, 3];
@@ -310,7 +270,6 @@ namespace WikiApp
             TextBoxCat.Text = _wikiArray.Array[index, 1];
             TextBoxNam.Text = _wikiArray.Array[index, 0];
         }
-        #endregion
 
         /// <summary>
         /// Method to deselect item if something else is searched for
@@ -326,15 +285,19 @@ namespace WikiApp
         }
 
         /// <summary>
-        /// Update the status strip and confirm action request box
+        /// Update the status strip
         /// </summary>
         /// <param name="message"></param>
-        #region
         private void UpdateStatusStrip(string message)
         {
             StatusLabel.Text = message;
         }
 
+        /// <summary>
+        /// Request confirmation from user for action
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
         private static bool ConfirmationUserRequest(string action)
         {
             var message = $"Are you sure you want to {action} this item?";
@@ -342,9 +305,31 @@ namespace WikiApp
             return MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
                    == DialogResult.Yes;
         }
-        #endregion
 
-     #region Error trapping
+        private void UpdateItems(string action, string actioned)
+        {
+            var newName = TextBoxNam.Text;
+            var newCat = TextBoxCat.Text;
+            var newStr = TextBoxStr.Text;
+            var newDef = TextBoxDef.Text;
+            if (ConfirmationUserRequest(action))
+            {
+                _wikiArray.EditItem(0, 0, newName);
+                _wikiArray.EditItem(0, 1, newCat);
+                _wikiArray.EditItem(0, 2, newStr);
+                _wikiArray.EditItem(0, 3, newDef);
+                _wikiArray.SortArray();
+                DisplayListView();
+                SelectItem(_wikiArray.BinarySearch(newName));
+                UpdateStatusStrip($"Item {actioned}");
+            }
+            else
+            {
+                UpdateStatusStrip($"Item not {actioned}");
+            }
+        }
+
+        #region Error trapping
         /// <summary>
         /// Method to check if the index is out of bounds of the array
         /// </summary>
@@ -387,10 +372,7 @@ namespace WikiApp
             TextBoxDef.Enabled = true;
             TextBoxSearch.Enabled = true;
             ButtonClear.Enabled = true;
-            ButtonAdd.Enabled = true;
             ButtonSearch.Enabled = true;
-            ButtonEdit.Enabled = true;
-            ButtonDelete.Enabled = true;
             return true;
         }
 
@@ -413,6 +395,10 @@ namespace WikiApp
             return false;
         }
 
+        /// <summary>
+        /// Parameters for checking if textbox has changed by checking textboxes against wiki array
+        /// </summary>
+        /// <returns></returns>
         private bool CheckIfTextBoxChanged()
         {
             return _wikiArray.Array[_selectedIndexRow, 0] != TextBoxNam.Text ||
@@ -421,6 +407,10 @@ namespace WikiApp
                    _wikiArray.Array[_selectedIndexRow, 3] != TextBoxDef.Text;
         }
 
+        /// <summary>
+        /// Checking to see if textboxes contain empty or null string
+        /// </summary>
+        /// <returns></returns>
         private bool CheckIfTextBoxEmpty()
         {
             return string.IsNullOrEmpty(TextBoxNam.Text) || string.IsNullOrEmpty(TextBoxCat.Text) ||
