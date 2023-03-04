@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 
@@ -20,21 +21,12 @@ namespace WikiApp
 
         #endregion
 
-        // CHECK HAVEN'T STARTED
-        public void AddItem()
-        {
-            // BINARY FILE WRITER - WRITE BINARY FILE 
-            // MUST HAVE ALL TEXTBOXES FILLED TO ADD
-            //Pointer TO SEE IF ARRAY IS FULL
-            // FOCUS BACK TO THE SEARCH TEXT BOX
-            SortArray();
-        }
-
+      
         /// <summary>
         /// 9.7 Write the code for a Binary Search for the Name in the 2D array and display the information in the other textboxes when found, add suitable feedback if the search in not successful and clear the search textbox (do not use any built-in array methods)
         /// </summary>
         /// <param name="searchTextBoxItem"></param>
-        /// <returns> -1 = no data, -2 = search item not found, anything other INT = index number of search item</returns>
+        /// <returns> -1 = search item not found, anything other INT = index number of search item</returns>
         public int BinarySearch(string searchTextBoxItem)
         {
             var searchResult = -1;
@@ -185,7 +177,7 @@ namespace WikiApp
         {
             for (var z = 0; z < Col; z++)
             {
-                var temp = Array[index, z];
+                string temp = Array[index, z];
                 Array[index, z] = Array[index + 1, z];
                 Array[index + 1, z] = temp;
             }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using Button = System.Windows.Forms.Button;
 
 // Author: DaHye Baker
 // Student ID: 30063368
@@ -24,15 +22,11 @@ namespace WikiApp
 
         private WikiSortedArray _wikiArray;
         private int _selectedIndexRow = -1;
-        private int _selectedIndexColumn = -2;
-        private string _changedText;
-        private bool _textChanged;
 
         #endregion
 
-        // TEXTBOX FOCUS IN APPROPRIATE PLACES
         #region Events
-
+        //CHECK NEED FEEDBACK ON GREY OUT BUTTONS
         //CHECK NOT WORKING
         private void ButtonClearAll_MouseClick(object sender, MouseEventArgs e)
         {
@@ -40,7 +34,6 @@ namespace WikiApp
             _wikiArray.ClearArray();
         }
 
-        // CHECK - NEED TO FIX "ARRAY IS FULL"
         // 9.2 Create an ADD button that will store the information from the 4 text boxes into the 2D array
         private void ButtonAdd_MouseClick(object sender, MouseEventArgs e)
         {
@@ -49,24 +42,40 @@ namespace WikiApp
    
             if (!CheckArrayNull()) return;
             if (!CheckOutOfBound()) return;
-
-            // CHECK GET RID OF HARD CODED NUMBERS
-            if (_wikiArray.Array.Length != (WikiSortedArray.Col * WikiSortedArray.Row))
+            if (!CheckIfTextBoxEmpty())
             {
-                if (ConfirmationUserRequest(action))
+                if (_wikiArray.Array[0, 0] == "")
                 {
-                    _wikiArray.AddItem();
+                    var newName = TextBoxNam.Text;
+                    var newCat = TextBoxCat.Text;
+                    var newStr = TextBoxStr.Text;
+                    var newDef = TextBoxDef.Text;
+                    if (ConfirmationUserRequest(action))
+                    {
+                        _wikiArray.EditItem(0, 0, newName);
+                        _wikiArray.EditItem(0, 1, newCat);
+                        _wikiArray.EditItem(0, 2, newStr);
+                        _wikiArray.EditItem(0, 3, newDef);
+                        _wikiArray.SortArray();
+                        DisplayListView();
+                        SelectItem(_wikiArray.BinarySearch(newName));
+                        UpdateStatusStrip($"Item {actioned}");
+                    }
+                    else
+                    {
+                        UpdateStatusStrip($"Item not {actioned}");
+                    }
                 }
                 else
                 {
-                    UpdateStatusStrip($"Item not {actioned}");
+                    UpdateStatusStrip($"Array is full, not {actioned}");
                 }
             }
             else
             {
-                UpdateStatusStrip($"Array is full, not {actioned}");
+                UpdateStatusStrip("Please input data to add");
             }
-            _selectedIndexColumn = -2;
+            TextBoxSearch.Focus();
         }
 
         // 9.3 Create and EDIT button that will allow the user to modify any information from the 4 text boxes into the 2D array
@@ -79,28 +88,21 @@ namespace WikiApp
             if (!CheckOutOfBound()) return;
             if (CheckSelected())
             {
-                if (_textChanged)
+                if (CheckIfTextBoxChanged())
                 {
+                    var newName = TextBoxNam.Text;
+                    var newCat = TextBoxCat.Text;
+                    var newStr = TextBoxStr.Text;
+                    var newDef = TextBoxDef.Text;
                     if (ConfirmationUserRequest(action))
                     {
-                        switch (_selectedIndexColumn)
-                        {
-                            case 0:
-                                _wikiArray.EditItem(_selectedIndexRow, _selectedIndexColumn, _changedText);
-                                break;
-                            case 1:
-                                _wikiArray.EditItem(_selectedIndexRow, _selectedIndexColumn, _changedText);
-                                break;
-                            case 2:
-                                _wikiArray.EditItem(_selectedIndexRow, _selectedIndexColumn, _changedText);
-                              
-                                break;
-                            case 3:
-                                _wikiArray.EditItem(_selectedIndexRow, _selectedIndexColumn, _changedText);
-                                break;
-                        }
+                        _wikiArray.EditItem(_selectedIndexRow, 0, newName);
+                        _wikiArray.EditItem(_selectedIndexRow, 1, newCat);
+                        _wikiArray.EditItem(_selectedIndexRow, 2, newStr);
+                        _wikiArray.EditItem(_selectedIndexRow, 3, newDef);
                         _wikiArray.SortArray();
                         DisplayListView();
+                        SelectItem(_wikiArray.BinarySearch(newName));
                         UpdateStatusStrip($"Item {actioned}");
                     }
                     else
@@ -110,7 +112,7 @@ namespace WikiApp
                 }
                 else
                 {
-                    UpdateStatusStrip($"No changes to {action}");
+                    UpdateStatusStrip($"No changes made, item not {actioned}");
                 }
             }
             else
@@ -118,8 +120,6 @@ namespace WikiApp
                 UpdateStatusStrip($"Nothing selected to {action}");
             }
             TextBoxSearch.Focus();
-            _selectedIndexColumn = -2;
-            _textChanged = false;
         }
 
         // 9.4 Create a DELETE button that removes all the information from a single entry of the array; the user must be prompted before the final deletion occurs
@@ -151,14 +151,11 @@ namespace WikiApp
             }
             TextBoxSearch.Clear();
             TextBoxSearch.Focus();
-            _selectedIndexColumn = -2;
         }
 
         // 9.10 Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat which is _sorted by Name, ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter to create the file
         private void ButtonSave_MouseClick(object sender, MouseEventArgs e)
         {
-           
-
             // CHECK IF WE SHOULD HAVE SOMETHING AUTOMATICALLY OR CHANGE IT
             string fileName = "definitions2.bin";
 
@@ -201,8 +198,6 @@ namespace WikiApp
             // CHECK UNCOMMENT THESE WHEN WORKING
             //if (!CheckArrayNull()) return;
 
-            
-
             // CHECK REMOVE THIS AFTER EVERYTHING IS WORKING
             var fileName = "C:\\Users\\Bananus\\Downloads\\definitions.bin";
 
@@ -222,43 +217,31 @@ namespace WikiApp
             var searchResult = _wikiArray.BinarySearch(TextBoxSearch.Text);
             if (!string.IsNullOrEmpty(TextBoxSearch.Text))
             {
-                if (_textChanged && _selectedIndexColumn == -1)
-                {
-                    switch (searchResult)
+                    if (searchResult == -1)
                     {
-                        //CHECK ALREADY BEING CHECKED IN ANOTHER METHOD
-                        case -1:
-                            UpdateStatusStrip("No data in the array");
-                            return;
-                        case -2:
-                            UpdateStatusStrip("Item not found");
-                            DeselectItem(_selectedIndexRow);
-                            ClearTextBoxes();
-                            break;
-                        default:
-                            UpdateStatusStrip("Item found");
-                            DeselectItem(_selectedIndexRow);
-                            TextBoxSearch.Clear();
-                            SelectItem(searchResult);
-                            break;
+                        UpdateStatusStrip("Item not found");
+                        DeselectItem(_selectedIndexRow);
+                        ClearTextBoxes();
+                        return;
                     }
-                }
+                    UpdateStatusStrip("Item found");
+                    DeselectItem(_selectedIndexRow);
+                    TextBoxSearch.Clear();
+                    SelectItem(searchResult);
             }
             else
             {
                 UpdateStatusStrip("Please enter search");
             }
             TextBoxSearch.Focus();
-            _selectedIndexColumn = -2;
-            _textChanged = false;
         }
 
         private void ButtonClear_MouseClick(object sender, MouseEventArgs e)
         {
             ClearTextBoxes();
             TextBoxSearch.Clear();
-            TextBoxSearch.Focus();
             DeselectItem(_selectedIndexRow);
+            TextBoxSearch.Focus();
         }
 
         private void ListViewSelect_MouseClick(object sender, EventArgs e)
@@ -268,64 +251,6 @@ namespace WikiApp
             SelectItem(_selectedIndexRow);
         }
       
-
-        #region Events for TextChanged in TextBoxes for Edit and Search
-        private void TextBoxNam_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            CheckTextChangedEdits();
-            _textChanged = true;
-        }
-        private void TextBoxCat_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            CheckTextChangedEdits();
-            _textChanged = true;
-        }
-        private void TextBoxStr_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            CheckTextChangedEdits();
-            _textChanged = true;
-        }
-        private void TextBoxDef_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            CheckTextChangedEdits();
-            _textChanged = true;
-        }
-        private void TextBoxSearch_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            _textChanged = true;
-        }
-        private void TextBoxNam_TextChanged(object sender, EventArgs e)
-        {
-            CheckSelected();
-            _changedText = TextBoxNam.Text;
-            _selectedIndexColumn = 0;
-        }
-        private void TextBoxCat_TextChanged(object sender, EventArgs e)
-        {
-            CheckSelected();
-            _changedText = TextBoxCat.Text;
-            _selectedIndexColumn = 1;
-        }
-        private void TextBoxStr_TextChanged(object sender, EventArgs e)
-        {
-            CheckSelected();
-            _changedText = TextBoxStr.Text;
-            _selectedIndexColumn = 2;
-        }
-        private void TextBoxDef_TextChanged(object sender, EventArgs e)
-        {
-            CheckSelected();
-            _changedText = TextBoxDef.Text;
-            _selectedIndexColumn = 3;
-        }
-        private void TextBoxSearch_TextChanged(object sender, EventArgs e)
-        {
-            CheckSelected();
-            _changedText = TextBoxSearch.Text;
-            _selectedIndexColumn = -1;
-        }
-
-        #endregion
 
         #endregion
 
@@ -373,7 +298,11 @@ namespace WikiApp
             ListViewDataStructure.FullRowSelect = true;
             ListViewDataStructure.Items[index].Selected = true;
             DisplayTextBoxes(index);
+            ButtonEdit.Enabled = true;
+            ButtonDelete.Enabled = true;
+            ButtonAdd.Enabled = true;
         }
+
         private void DisplayTextBoxes(int index)
         {
             TextBoxDef.Text = _wikiArray.Array[index, 3];
@@ -415,8 +344,7 @@ namespace WikiApp
         }
         #endregion
 
-
-        #region Error trapping
+     #region Error trapping
         /// <summary>
         /// Method to check if the index is out of bounds of the array
         /// </summary>
@@ -449,8 +377,8 @@ namespace WikiApp
                 ButtonClear.Enabled = false;
                 ButtonAdd.Enabled = false;
                 ButtonSearch.Enabled = false;
-                CheckSelected();
-                CheckTextChangedEdits();
+                ButtonEdit.Enabled = false;
+                ButtonDelete.Enabled = false;
                 return false;
             }
             TextBoxCat.Enabled = true;
@@ -461,8 +389,8 @@ namespace WikiApp
             ButtonClear.Enabled = true;
             ButtonAdd.Enabled = true;
             ButtonSearch.Enabled = true;
-            CheckSelected();
-            CheckTextChangedEdits();
+            ButtonEdit.Enabled = true;
+            ButtonDelete.Enabled = true;
             return true;
         }
 
@@ -484,22 +412,20 @@ namespace WikiApp
             ButtonDelete.Enabled = false;
             return false;
         }
-        /// <summary>
-        /// Method to check if edits have been made in the text boxes
-        /// If no edits made, return false, disable edit button
-        /// If edits made, return true, enable edit button
-        /// </summary>
-        /// <returns></returns>
-        /// 
-        private void CheckTextChangedEdits()
+
+        private bool CheckIfTextBoxChanged()
         {
-            if (_selectedIndexColumn != -2)
-            {
-                ButtonEdit.Enabled = true;
-            }
-            ButtonEdit.Enabled = false;
+            return _wikiArray.Array[_selectedIndexRow, 0] != TextBoxNam.Text ||
+                   _wikiArray.Array[_selectedIndexRow, 1] != TextBoxCat.Text ||
+                   _wikiArray.Array[_selectedIndexRow, 2] != TextBoxStr.Text ||
+                   _wikiArray.Array[_selectedIndexRow, 3] != TextBoxDef.Text;
         }
 
+        private bool CheckIfTextBoxEmpty()
+        {
+            return string.IsNullOrEmpty(TextBoxNam.Text) || string.IsNullOrEmpty(TextBoxCat.Text) ||
+                   string.IsNullOrEmpty(TextBoxStr.Text) || string.IsNullOrEmpty(TextBoxDef.Text);
+        }
         #endregion
 
         #endregion
