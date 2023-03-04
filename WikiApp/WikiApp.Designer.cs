@@ -55,6 +55,7 @@
             this.GroupChangeData = new System.Windows.Forms.GroupBox();
             this.GroupSearch = new System.Windows.Forms.GroupBox();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.ButtonClearAll = new System.Windows.Forms.Button();
             this.StatusStrip.SuspendLayout();
             this.GroupChangeData.SuspendLayout();
             this.GroupSearch.SuspendLayout();
@@ -272,11 +273,22 @@
             this.GroupSearch.TabStop = false;
             this.GroupSearch.Text = "Search";
             // 
+            // ButtonClearAll
+            // 
+            this.ButtonClearAll.Location = new System.Drawing.Point(354, 344);
+            this.ButtonClearAll.Name = "ButtonClearAll";
+            this.ButtonClearAll.Size = new System.Drawing.Size(75, 23);
+            this.ButtonClearAll.TabIndex = 19;
+            this.ButtonClearAll.Text = "Clear All Data";
+            this.ButtonClearAll.UseVisualStyleBackColor = true;
+            this.ButtonClearAll.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonClearAll_MouseClick);
+            // 
             // WikiApp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(789, 404);
+            this.Controls.Add(this.ButtonClearAll);
             this.Controls.Add(this.GroupSearch);
             this.Controls.Add(this.GroupChangeData);
             this.Controls.Add(this.ButtonSave);
@@ -319,6 +331,7 @@
         private System.Windows.Forms.GroupBox GroupChangeData;
         private System.Windows.Forms.GroupBox GroupSearch;
         private System.Windows.Forms.ToolTip ToolTip;
+        private System.Windows.Forms.Button ButtonClearAll;
     }
 }
 
