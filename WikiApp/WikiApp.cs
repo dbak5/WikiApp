@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 // Author: DaHye Baker
@@ -26,6 +29,7 @@ namespace WikiApp
         private void ButtonAdd_MouseClick(object sender, MouseEventArgs e)
         {
             const string action = "add";
+            const string item = "item";
             const string actioned = "added";
 
             //if (!GreyBoxArrayNull()) return;
@@ -43,7 +47,7 @@ namespace WikiApp
                 {
                     if (CheckIfExists())
                     {
-                        UpdateItems(action, actioned);
+                        UpdateItems(action, actioned, item);
                     }
                     else
                     {
@@ -69,13 +73,14 @@ namespace WikiApp
         private void ButtonEdit_MouseClick(object sender, MouseEventArgs e)
         {
             const string action = "edit";
+            const string item = "item";
             const string actioned = "edited";
+
             if (!GreyBoxArrayNull()) return;
             if (!CheckOutOfBound()) return;
-
             if (ButtonEdit.Enabled == false)
             {
-                UpdateStatusStrip("Please select an item to edit");
+                UpdateStatusStrip($"Please select an {item} to {action}");
             }
             else
             {
@@ -85,7 +90,7 @@ namespace WikiApp
                     {
                         if (CheckIfExists())
                         {
-                            UpdateItems(action, actioned);
+                            UpdateItems(action, actioned, item);
                         }
                         else
                         {
@@ -113,6 +118,7 @@ namespace WikiApp
         private void ButtonDelete_MouseClick(object sender, MouseEventArgs e)
         {
             const string action = "delete";
+            const string item = "item";
             const string actioned = "deleted";
 
             //  UpdateStatusStrip("");
@@ -123,7 +129,7 @@ namespace WikiApp
                 var selectedItem = _wikiArray.Array[_selectedIndexRow, 0];
                 if (selectedItem != "")
                 {
-                    if (ConfirmationUserRequest(action))
+                    if (ConfirmationUserRequest(action, item))
                     {
                         _wikiArray.DeleteItem(_selectedIndexRow);
                         _wikiArray.BubbleSort();
@@ -156,27 +162,70 @@ namespace WikiApp
         // to create the file
         private void ButtonSave_MouseClick(object sender, MouseEventArgs e)
         {
-            // CHECK IF WE SHOULD HAVE SOMETHING AUTOMATICALLY OR CHANGE IT
-            string fileName = "definitions2.bin";
+            string fileName = null;
+            var fileList = new List<string>();
+            var place = new DirectoryInfo(Directory.GetCurrentDirectory());
+            var files = place.GetFiles("*.dat");
 
-            const string filterLimits = "bin files (*.*)|*.bin|All files (*.*)|*.*";
+            // Remove file extensions and add each file name to the list and sort list
+            foreach (var file in files)
+            {
+                var fileContent = Path.GetFileNameWithoutExtension(file.Name);
+                fileList.Add(fileContent);
+                fileList.Sort();
+            }
+
+            // Look for existing files with the same name
+            if (fileList.Any(l => l.Contains("definitions")))
+            {
+                if (fileList.Count > 0)
+                {
+                    // Get the last item in the list, remove spaces, letters and underscores and convert to integer.
+                    var lastItem = fileList.LastOrDefault();
+                    if (lastItem != null)
+                    {
+                        var numberOnly = Regex.Replace(lastItem, "[A-Za-z, _ ]", "").Trim();
+                        if (int.TryParse(numberOnly, out var x))
+                        {
+                            // Increment file number
+                            var fileNameIncrement = x + 1;
+
+                            // Create default file names using an increment
+                            var fileNameIncrementWhole = "";
+                            if (x < 10)
+                            {
+                                fileNameIncrementWhole = $"0{fileNameIncrement}";
+                            }
+                            else
+                            {
+                                fileNameIncrementWhole = fileNameIncrement.ToString();
+                            }
+                            fileName = Path.Combine($"definitions_{fileNameIncrementWhole}");
+                        }
+                    }
+                }
+            }
+
+            // Default file name if no file name already exists
+            else
+            {
+                fileName = Path.Combine($"definitions_01.dat");
+            }
+
+            const string filterLimits = "All files (*.*)|*.*|dat files (*.*)|*.dat";
             var saveFileDialog1 = new SaveFileDialog
             {
+                Title = "Save data to file",
+                FileName = fileName,
                 InitialDirectory = Directory.GetCurrentDirectory(),
+                CheckPathExists = true,
                 Filter = filterLimits,
                 FilterIndex = 2,
                 RestoreDirectory = true
             };
-            var result = saveFileDialog1.ShowDialog();
-            if (result != DialogResult.OK) return;
-
-            // CHECK UNCOMMENT THESE WHEN WORKING
-            //if (!GreyBoxArrayNull()) return;
-
-            _wikiArray.SaveFile(fileName);
-            _wikiArray.ClearArray();
+            if (saveFileDialog1.ShowDialog() != DialogResult.OK) return;
+            _wikiArray.SaveFile(saveFileDialog1.FileName);
             TextBoxSearch.Focus();
-            DisplayListView();
             UpdateStatusStrip("File successfully saved");
         }
 
@@ -184,33 +233,30 @@ namespace WikiApp
         // ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task
         private void ButtonLoad_MouseClick(object sender, MouseEventArgs e)
         {
-            // CHECK UNCOMMENT BELOW ONCE EVERYTHING IS WORKING
-            //const string filterLimits = "bin files (*.*)|*.bin|All files (*.*)|*.*";
-            //    var openFileDialog1 = new OpenFileDialog
-            //    {
-            //        InitialDirectory = Directory.GetCurrentDirectory(),
-            //        Filter = filterLimits,
-            //        FilterIndex = 2,
-            //        RestoreDirectory = true
-            //    };
-            //    var result = openFileDialog1.ShowDialog();
-            //if (result.result != DialogResult.OK) return;
+            if (!CheckArrayNull() && !ConfirmationUserRequest("clear", "data")) return;
+         
+            var (result, fileName) = OpenFileDialogue();
+            if (result != DialogResult.OK) return;
 
-            // CHECK UNCOMMENT THESE WHEN WORKING
-            //if (!GreyBoxArrayNull()) return;
-
-            // CHECK REMOVE THIS AFTER EVERYTHING IS WORKING
-            var fileName = "C:\\Users\\Bananus\\Downloads\\definitions.bin";
-            if (CheckArrayNull())
+            if (new FileInfo(fileName).Length == 0)
             {
-                _wikiArray = new WikiSortedArray();
-                _wikiArray.LoadData(fileName);
-                _wikiArray.BubbleSort();
-                DisplayListView();
-                UpdateStatusStrip("Data successfully loaded");
-                GreyBoxArrayNull();
-                TextBoxSearch.Focus();
+                UpdateStatusStrip("File is empty, no data to load, please select a different file");
+                return;
             }
+
+            if (new FileInfo(fileName).Extension != ".bin")
+            {
+                UpdateStatusStrip("Incorrect file format selected, please select a bin file");
+                return;
+            }
+
+            _wikiArray = new WikiSortedArray();
+            _wikiArray.LoadData(fileName);
+            _wikiArray.BubbleSort();
+            DisplayListView();
+            UpdateStatusStrip("Data successfully loaded");
+            GreyBoxArrayNull();
+            TextBoxSearch.Focus();
         }
 
         // Search button which uses a binary search from the wiki array class
@@ -275,7 +321,6 @@ namespace WikiApp
         {
             ClearTextBoxes();
         }
-
 
         #endregion
 
@@ -378,9 +423,9 @@ namespace WikiApp
         /// </summary>
         /// <param name="action"></param>
         /// <returns></returns>
-        private static bool ConfirmationUserRequest(string action)
+        private static bool ConfirmationUserRequest(string action, string item)
         {
-            var message = $"Are you sure you want to {action} this item?";
+            var message = $"Are you sure you want to {action} the current {item}?";
             var caption = $"Please confirm {action}";
             return MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
                    == DialogResult.Yes;
@@ -391,13 +436,13 @@ namespace WikiApp
         /// </summary>
         /// <param name="action"></param>
         /// <param name="actioned"></param>
-        private void UpdateItems(string action, string actioned)
+        private void UpdateItems(string action, string actioned, string item)
         {
             var newName = TextBoxNam.Text;
             var newCat = TextBoxCat.Text;
             var newStr = TextBoxStr.Text;
             var newDef = TextBoxDef.Text;
-            if (ConfirmationUserRequest(action))
+            if (ConfirmationUserRequest(action, item))
             {
                 if (action == "add")
                 {
@@ -427,6 +472,25 @@ namespace WikiApp
                 UpdateStatusStrip($"Item not {actioned}");
             }
         }
+
+        /// <summary>
+        /// Dialogue box to open a file
+        /// </summary>
+        /// <returns></returns>
+        private static (DialogResult result, string fileName) OpenFileDialogue()
+        {
+            const string filterLimits = "All files (*.*)|*.*|bin files (*.*)|*.bin";
+            var openFileDialog1 = new OpenFileDialog
+            {
+                InitialDirectory = Directory.GetCurrentDirectory(),
+                Filter = filterLimits,
+                FilterIndex = 2,
+                RestoreDirectory = true
+            };
+            var result = openFileDialog1.ShowDialog();
+            return (result, openFileDialog1.FileName);
+        }
+        #endregion
 
         #region Booleans for error trapping
         /// <summary>
@@ -471,7 +535,7 @@ namespace WikiApp
                 TextBoxNam.Focus();
                 return false;
             }
-       
+
             TextBoxSearch.Enabled = true;
             ListViewDataStructure.Enabled = true;
             ButtonSearch.Enabled = true;
@@ -511,7 +575,7 @@ namespace WikiApp
             var searchResult = _wikiArray.BinarySearch(TextBoxNam.Text);
             return searchResult == -1;
         }
-       
+
         /// <summary>
         /// Parameters for checking if textbox has changed by checking textboxes against wiki array
         /// </summary>
@@ -533,8 +597,6 @@ namespace WikiApp
             return string.IsNullOrEmpty(TextBoxNam.Text) || string.IsNullOrEmpty(TextBoxCat.Text) ||
                    string.IsNullOrEmpty(TextBoxStr.Text) || string.IsNullOrEmpty(TextBoxDef.Text);
         }
-
-        #endregion
 
         #endregion
 
