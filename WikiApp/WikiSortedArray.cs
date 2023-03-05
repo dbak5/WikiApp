@@ -62,6 +62,7 @@ namespace WikiApp
             return searchResult;
         }
 
+        // CHECK FILE CLOSE??
         /// <summary>
         /// Takes values from the array and saves to a binary file
         /// </summary>
@@ -83,6 +84,7 @@ namespace WikiApp
             }
         }
 
+        // CHECK FILE CLOSE??
         /// <summary>
         /// Reads a binary file and adds them to the wiki array
         /// </summary>
@@ -102,20 +104,6 @@ namespace WikiApp
                     }
                 }
             }
-            // CHECK OLD CODE FOR READING TXT FILE - KEEP UNTIL FINISHED
-            //var fileText = File.ReadAllLines(fileName);
-            //var i = 0;
-
-            //foreach (var line in fileText)
-            //{
-            //    var parts = line.Split('|');
-            //    for (var x = 0; x < parts.Length; x++)
-            //    {
-            //        Array[i, x] = parts[x];
-
-            //    }
-            //    i++;
-            //}
             Empty = false;
         }
 

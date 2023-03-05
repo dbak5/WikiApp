@@ -25,7 +25,8 @@ namespace WikiApp
 
         #region Events
        
-        // 9.2 Create an ADD button that will store the information from the 4 text boxes into the 2D array
+        // 9.2 Create an ADD button that will store the information from the 4 text boxes into the 2D
+        // array
         private void ButtonAdd_MouseClick(object sender, MouseEventArgs e)
         {
             const string action = "add";
@@ -69,7 +70,8 @@ namespace WikiApp
             }
         }
 
-        // 9.3 Create and EDIT button that will allow the user to modify any information from the 4 text boxes into the 2D array
+        // 9.3 Create and EDIT button that will allow the user to modify any information from the 4 text boxes
+        // into the 2D array
         private void ButtonEdit_MouseClick(object sender, MouseEventArgs e)
         {
             const string action = "edit";
@@ -191,15 +193,7 @@ namespace WikiApp
                             var fileNameIncrement = x + 1;
 
                             // Create default file names using an increment
-                            var fileNameIncrementWhole = "";
-                            if (x < 10)
-                            {
-                                fileNameIncrementWhole = $"0{fileNameIncrement}";
-                            }
-                            else
-                            {
-                                fileNameIncrementWhole = fileNameIncrement.ToString();
-                            }
+                            var fileNameIncrementWhole = x < 10 ? $"0{fileNameIncrement}" : fileNameIncrement.ToString();
                             fileName = Path.Combine($"definitions_{fileNameIncrementWhole}");
                         }
                     }
@@ -212,10 +206,11 @@ namespace WikiApp
                 fileName = Path.Combine($"definitions_01.dat");
             }
 
+            // Open save file dialog and Save file
             const string filterLimits = "All files (*.*)|*.*|dat files (*.*)|*.dat";
             var saveFileDialog1 = new SaveFileDialog
             {
-                Title = "Save data to file",
+                Title = @"Save data to file",
                 FileName = fileName,
                 InitialDirectory = Directory.GetCurrentDirectory(),
                 CheckPathExists = true,
@@ -233,23 +228,27 @@ namespace WikiApp
         // ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task
         private void ButtonLoad_MouseClick(object sender, MouseEventArgs e)
         {
+            // Check if array is null or if user cancels the request
             if (!CheckArrayNull() && !ConfirmationUserRequest("clear", "data")) return;
          
             var (result, fileName) = OpenFileDialogue();
             if (result != DialogResult.OK) return;
 
+            // Error catch if file is empty, do not load data
             if (new FileInfo(fileName).Length == 0)
             {
                 UpdateStatusStrip("File is empty, no data to load, please select a different file");
                 return;
             }
 
+            // Error catch if extension is not a a bin file, do not load data
             if (new FileInfo(fileName).Extension != ".bin")
             {
                 UpdateStatusStrip("Incorrect file format selected, please select a bin file");
                 return;
             }
 
+            // Initialise array and load data into list view
             _wikiArray = new WikiSortedArray();
             _wikiArray.LoadData(fileName);
             _wikiArray.BubbleSort();
@@ -422,6 +421,7 @@ namespace WikiApp
         /// Request confirmation from user for action
         /// </summary>
         /// <param name="action"></param>
+        /// <param name="item"></param>
         /// <returns></returns>
         private static bool ConfirmationUserRequest(string action, string item)
         {
@@ -436,6 +436,7 @@ namespace WikiApp
         /// </summary>
         /// <param name="action"></param>
         /// <param name="actioned"></param>
+        /// <param name="item"></param>
         private void UpdateItems(string action, string actioned, string item)
         {
             var newName = TextBoxNam.Text;
