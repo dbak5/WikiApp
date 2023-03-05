@@ -22,11 +22,13 @@ namespace WikiApp
 
         #region Events
         //CHECK NEED FEEDBACK ON GREY OUT BUTTONS
-        //CHECK NOT WORKING
         private void ButtonClearAll_MouseClick(object sender, MouseEventArgs e)
         {
-            if (!CheckArrayNull()) return;
+            if (!GreyBoxArrayNull()) return;
             _wikiArray.ClearArray();
+            DisplayListView();
+            UpdateStatusStrip("Data cleared");
+            GreyBoxArrayNull();
         }
 
         // 9.2 Create an ADD button that will store the information from the 4 text boxes into the 2D array
@@ -35,25 +37,42 @@ namespace WikiApp
             const string action = "add";
             const string actioned = "added";
 
-            if (!CheckArrayNull()) return;
-            if (!CheckOutOfBound()) return;
-            if (_wikiArray.Array[0, 0] == "")
+            //if (!GreyBoxArrayNull()) return;
+            //if (!CheckOutOfBound()) return;
+            if (CheckArrayNull())
             {
-                if (CheckIfTextBoxEmpty())
+                _wikiArray = new WikiSortedArray();
+                TextBoxNam.Focus();
+            }
+
+            if (_wikiArray.Array[0, 0] == null)
+            {
+                if (!CheckIfTextBoxEmpty())
+                   
                 {
-                    UpdateStatusStrip("Please input data to add and ensure all fields are full");
+                    if (CheckIfExists())
+                    {
+                        UpdateItems(action, actioned);
+                        TextBoxSearch.Focus();
+                    }
+                    else
+                    {
+                        UpdateStatusStrip($"Duplicate entry, cannot {action}");
+                        TextBoxNam.Focus();
+                    }
                 }
                 else
                 {
-                        UpdateItems(action, actioned);
+                    UpdateStatusStrip("Please input data to add and ensure all fields are full");
+                    TextBoxNam.Focus();
                 }
             }
             else
             {
                 UpdateStatusStrip($"Array is full, not {actioned}");
                 ButtonAdd.Enabled = false;
+                TextBoxSearch.Focus();
             }
-            TextBoxSearch.Focus();
         }
 
         // 9.3 Create and EDIT button that will allow the user to modify any information from the 4 text boxes into the 2D array
@@ -61,25 +80,34 @@ namespace WikiApp
         {
             const string action = "edit";
             const string actioned = "edited";
-
-            if (!CheckArrayNull()) return;
+            if (!GreyBoxArrayNull()) return;
             if (!CheckOutOfBound()) return;
-            if (CheckSelected())
+            if (CheckIfSelected() && !CheckIfTextBoxEmpty())
             {
                 if (CheckIfTextBoxChanged())
                 {
+                    if (CheckIfExists())
+                    {
                         UpdateItems(action, actioned);
+                        TextBoxSearch.Focus();
+                    }
+                    else
+                    {
+                        UpdateStatusStrip($"Duplicate entry, cannot {action}");
+                        TextBoxNam.Focus();
+                    }
                 }
                 else
                 {
                     UpdateStatusStrip($"No changes made, item not {actioned}");
+                    TextBoxNam.Focus();
                 }
             }
             else
             {
                 UpdateStatusStrip($"Nothing selected to {action}");
+                TextBoxSearch.Focus();
             }
-            TextBoxSearch.Focus();
         }
 
         // 9.4 Create a DELETE button that removes all the information from a single entry of the array; the user must be prompted before the final deletion occurs
@@ -88,30 +116,41 @@ namespace WikiApp
             const string action = "delete";
             const string actioned = "deleted";
 
-            if (!CheckArrayNull()) return;
+            //  UpdateStatusStrip("");
+            if (!GreyBoxArrayNull()) return;
             if (!CheckOutOfBound()) return;
-            if (CheckSelected())
+            if (CheckIfSelected() && !CheckIfTextBoxEmpty())
             {
-                if (ConfirmationUserRequest(action))
+                var selectedItem = _wikiArray.Array[_selectedIndexRow, 0];
+                if (selectedItem != "")
                 {
-                    _wikiArray.DeleteItem(_selectedIndexRow);
-                    _wikiArray.SortArray();
-                    DisplayListView();
-                    ClearTextBoxes();
-                    UpdateStatusStrip($"Item {actioned}");
-                    ButtonAdd.Enabled = true;
+                    if (ConfirmationUserRequest(action))
+                    {
+                        _wikiArray.DeleteItem(_selectedIndexRow);
+                        _wikiArray.BubbleSort();
+                        DisplayListView();
+                        ClearTextBoxes();
+                        UpdateStatusStrip($"Item {actioned}");
+                        ButtonAdd.Enabled = true;
+                        TextBoxSearch.Focus();
+                    }
+                    else
+                    {
+                        UpdateStatusStrip($"Item not {actioned}");
+                        TextBoxSearch.Focus();
+                    }
                 }
                 else
                 {
-                    UpdateStatusStrip($"Item not {actioned}");
+                    UpdateStatusStrip($"Nothing selected to {action}");
+                    TextBoxSearch.Focus();
                 }
             }
             else
             {
                 UpdateStatusStrip($"Nothing selected to {action}");
+                TextBoxSearch.Focus();
             }
-            TextBoxSearch.Clear();
-            TextBoxSearch.Focus();
         }
 
         // 9.10 Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat which is _sorted by Name, ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter to create the file
@@ -132,7 +171,7 @@ namespace WikiApp
             if (result != DialogResult.OK) return;
 
             // CHECK UNCOMMENT THESE WHEN WORKING
-            //if (!CheckArrayNull()) return;
+            //if (!GreyBoxArrayNull()) return;
 
             _wikiArray.SaveFile(fileName);
             _wikiArray.ClearArray();
@@ -157,25 +196,29 @@ namespace WikiApp
             //if (result.result != DialogResult.OK) return;
 
             // CHECK UNCOMMENT THESE WHEN WORKING
-            //if (!CheckArrayNull()) return;
+            //if (!GreyBoxArrayNull()) return;
 
             // CHECK REMOVE THIS AFTER EVERYTHING IS WORKING
             var fileName = "C:\\Users\\Bananus\\Downloads\\definitions.bin";
-
-            _wikiArray = new WikiSortedArray();
-            _wikiArray.LoadData(fileName);
-            _wikiArray.SortArray();
-            TextBoxSearch.Focus();
-            DisplayListView();
-            UpdateStatusStrip("Data successfully loaded");
-            CheckArrayNull();
+            if (CheckArrayNull())
+            {
+                _wikiArray = new WikiSortedArray();
+                _wikiArray.LoadData(fileName);
+                _wikiArray.BubbleSort();
+                TextBoxSearch.Focus();
+                DisplayListView();
+                UpdateStatusStrip("Data successfully loaded");
+                GreyBoxArrayNull();
+            }
         }
 
         private void ButtonSearch_MouseClick(object sender, MouseEventArgs e)
         {
-            if (!CheckArrayNull()) return;
+            if (!GreyBoxArrayNull()) return;
 
+            // integer variable which is a row index number, or -1 if not found
             var searchResult = _wikiArray.BinarySearch(TextBoxSearch.Text);
+
             if (!string.IsNullOrEmpty(TextBoxSearch.Text))
             {
                     if (searchResult == -1)
@@ -183,18 +226,20 @@ namespace WikiApp
                         UpdateStatusStrip("Item not found");
                         DeselectItem(_selectedIndexRow);
                         ClearTextBoxes();
-                        return;
+                        TextBoxSearch.Focus();
+                    return;
                     }
                     UpdateStatusStrip("Item found");
                     DeselectItem(_selectedIndexRow);
                     TextBoxSearch.Clear();
+                    TextBoxNam.Focus();
                     SelectItem(searchResult);
             }
             else
             {
                 UpdateStatusStrip("Please enter search");
+                TextBoxSearch.Focus();
             }
-            TextBoxSearch.Focus();
         }
 
         private void ButtonClear_MouseClick(object sender, MouseEventArgs e)
@@ -207,6 +252,8 @@ namespace WikiApp
 
         private void ListViewSelect_MouseClick(object sender, EventArgs e)
         {
+
+            if (!GreyBoxArrayNull()) return;
             if (ListViewDataStructure.SelectedItems.Count <= 0) return;
             _selectedIndexRow = ListViewDataStructure.SelectedIndices[0];
             SelectItem(_selectedIndexRow);
@@ -220,14 +267,22 @@ namespace WikiApp
         /// </summary>
         private void ClearTextBoxes()
         {
-            TextBoxNam.Clear();
-            TextBoxDef.Clear();
-            TextBoxStr.Clear();
-            TextBoxCat.Clear();
-            DeselectItem(_selectedIndexRow);
+            if (CheckIfTextBoxEmpty())
+            {
+                ButtonClearTextBoxes.Enabled = false;
+            }
+            else
+            {
+                TextBoxNam.Clear();
+                TextBoxDef.Clear();
+                TextBoxStr.Clear();
+                TextBoxCat.Clear();
+                DeselectItem(_selectedIndexRow);
+            }
+
+          
         }
 
-        // CHECK - JUST NAME AND CATEGORY IN TEXTBOXES
         /// <summary>
         /// 9.8 Create a display method that will show the following information in a ListView: Name and Category.
         /// </summary>
@@ -240,13 +295,15 @@ namespace WikiApp
                 item.SubItems.Add(_wikiArray.Array[x, 1]);
                 item.SubItems.Add(_wikiArray.Array[x, 2]);
                 item.SubItems.Add(_wikiArray.Array[x, 3]);
-                // item.SubItems.Add(Array[x, 4]);
                 ListViewDataStructure.Items.Add(item);
+                ListViewDataStructure.AutoResizeColumn(0, ColumnHeaderAutoResizeStyle.ColumnContent);
+                ListViewDataStructure.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.ColumnContent);
             }
         }
 
         /// <summary>
-        /// 9.9 Create a method so the user can select a definition (Name) from the ListView 
+        /// 9.9 Create a method so the user can select a definition (Name) from the ListView
+        /// Uses an integer "index" to find value to select
         /// </summary>
         /// <param name="index"></param>
         private void SelectItem(int index)
@@ -257,6 +314,11 @@ namespace WikiApp
             DisplayTextBoxes(index);
             ButtonEdit.Enabled = true;
             ButtonDelete.Enabled = true;
+            ButtonClearTextBoxes.Enabled = true;
+            TextBoxCat.Enabled = true;
+            TextBoxNam.Enabled = true;
+            TextBoxStr.Enabled = true;
+            TextBoxDef.Enabled = true;
         }
 
         /// <summary>
@@ -306,6 +368,11 @@ namespace WikiApp
                    == DialogResult.Yes;
         }
 
+        /// <summary>
+        /// Update items in the array for edit or add
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="actioned"></param>
         private void UpdateItems(string action, string actioned)
         {
             var newName = TextBoxNam.Text;
@@ -314,13 +381,27 @@ namespace WikiApp
             var newDef = TextBoxDef.Text;
             if (ConfirmationUserRequest(action))
             {
-                _wikiArray.EditItem(0, 0, newName);
-                _wikiArray.EditItem(0, 1, newCat);
-                _wikiArray.EditItem(0, 2, newStr);
-                _wikiArray.EditItem(0, 3, newDef);
-                _wikiArray.SortArray();
+                if (action == "add")
+                {
+                    _wikiArray.EditItem(0, 0, newName);
+                    _wikiArray.EditItem(0, 1, newCat);
+                    _wikiArray.EditItem(0, 2, newStr);
+                    _wikiArray.EditItem(0, 3, newDef);
+                   ClearTextBoxes();
+                   TextBoxSearch.Enabled = true;
+                   ButtonSearch.Enabled = true;
+                }
+                else
+                {
+                    _wikiArray.EditItem(_selectedIndexRow, 0, newName);
+                    _wikiArray.EditItem(_selectedIndexRow, 1, newCat);
+                    _wikiArray.EditItem(_selectedIndexRow, 2, newStr);
+                    _wikiArray.EditItem(_selectedIndexRow, 3, newDef);
+                    ClearTextBoxes();
+                }
+                _wikiArray.BubbleSort();
                 DisplayListView();
-                SelectItem(_wikiArray.BinarySearch(newName));
+                ListViewDataStructure.Enabled = true;
                 UpdateStatusStrip($"Item {actioned}");
             }
             else
@@ -331,7 +412,7 @@ namespace WikiApp
 
         #region Error trapping
         /// <summary>
-        /// Method to check if the index is out of bounds of the array
+        /// Check if the index is out of bounds of the array
         /// </summary>
         /// <returns></returns>
         private bool CheckOutOfBound()
@@ -342,52 +423,59 @@ namespace WikiApp
         }
 
         /// <summary>
-        /// Method to check if the array contains values
-        /// If no values in the array, return false and disable buttons
-        /// If values in the array, return true and enable buttons
+        /// Check if the array is empty or null
         /// </summary>
         /// <returns></returns>
         private bool CheckArrayNull()
         {
-            if (_wikiArray == null || _wikiArray.Empty)
+            return _wikiArray == null || _wikiArray.Empty;
+        }
+
+        /// <summary>
+        /// Check if the array contains values
+        /// If no values in the array, return false and disable buttons
+        /// If values in the array, return true and enable buttons
+        /// </summary>
+        /// <returns></returns>
+        private bool GreyBoxArrayNull()
+        {
+            if (CheckArrayNull())
             {
                 UpdateStatusStrip("No data in the array");
                 ClearTextBoxes();
                 TextBoxSearch.Clear();
-                TextBoxCat.Enabled = false;
-                TextBoxNam.Enabled = false;
-                TextBoxStr.Enabled = false;
-                TextBoxDef.Enabled = false;
                 TextBoxSearch.Enabled = false;
-                ButtonClear.Enabled = false;
-                ButtonAdd.Enabled = false;
+                ButtonClearTextBoxes.Enabled = false;
                 ButtonSearch.Enabled = false;
                 ButtonEdit.Enabled = false;
                 ButtonDelete.Enabled = false;
+                ListViewDataStructure.Enabled = false;
+                TextBoxNam.Focus();
                 return false;
             }
-            TextBoxCat.Enabled = true;
-            TextBoxNam.Enabled = true;
-            TextBoxStr.Enabled = true;
-            TextBoxDef.Enabled = true;
+       
             TextBoxSearch.Enabled = true;
-            ButtonClear.Enabled = true;
+            ListViewDataStructure.Enabled = true;
             ButtonSearch.Enabled = true;
             return true;
         }
 
         /// <summary>
-        /// Method to check if something has been selected before carrying out an action.
+        /// Check if something has been selected before carrying out an action.
         /// If something selected, return true, enable buttons
         /// If nothing selected, return false, disable buttons
         /// </summary>
         /// <returns></returns>
-        private bool CheckSelected()
+        private bool CheckIfSelected()
         {
             if (_selectedIndexRow != -1)
             {
                 ButtonEdit.Enabled = true;
                 ButtonDelete.Enabled = true;
+                TextBoxCat.Enabled = true;
+                TextBoxNam.Enabled = true;
+                TextBoxStr.Enabled = true;
+                TextBoxDef.Enabled = true;
                 return true;
             }
             ButtonEdit.Enabled = false;
@@ -395,6 +483,17 @@ namespace WikiApp
             return false;
         }
 
+        /// <summary>
+        /// Check if an item already exists within the array
+        /// If doesn't exist, returns -1
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckIfExists()
+        {
+            var searchResult = _wikiArray.BinarySearch(TextBoxNam.Text);
+            return searchResult == -1;
+        }
+       
         /// <summary>
         /// Parameters for checking if textbox has changed by checking textboxes against wiki array
         /// </summary>
@@ -416,9 +515,9 @@ namespace WikiApp
             return string.IsNullOrEmpty(TextBoxNam.Text) || string.IsNullOrEmpty(TextBoxCat.Text) ||
                    string.IsNullOrEmpty(TextBoxStr.Text) || string.IsNullOrEmpty(TextBoxDef.Text);
         }
-        #endregion
 
         #endregion
 
+        #endregion
     } //class
 } //namespace

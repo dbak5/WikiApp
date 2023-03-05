@@ -29,21 +29,19 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("");
             this.TextBoxSearch = new System.Windows.Forms.TextBox();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.ListViewDataStructure = new System.Windows.Forms.ListView();
             this.ColumnNam = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnCat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ColumnStr = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ColumnDef = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ButtonAdd = new System.Windows.Forms.Button();
             this.ButtonLoad = new System.Windows.Forms.Button();
-            this.ButtonClear = new System.Windows.Forms.Button();
+            this.ButtonClearTextBoxes = new System.Windows.Forms.Button();
             this.ButtonSearch = new System.Windows.Forms.Button();
             this.ButtonDelete = new System.Windows.Forms.Button();
             this.ButtonSave = new System.Windows.Forms.Button();
@@ -73,9 +71,9 @@
             // 
             this.StatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.StatusLabel});
-            this.StatusStrip.Location = new System.Drawing.Point(0, 382);
+            this.StatusStrip.Location = new System.Drawing.Point(0, 405);
             this.StatusStrip.Name = "StatusStrip";
-            this.StatusStrip.Size = new System.Drawing.Size(789, 22);
+            this.StatusStrip.Size = new System.Drawing.Size(787, 22);
             this.StatusStrip.TabIndex = 1;
             this.StatusStrip.Text = "Status";
             // 
@@ -88,18 +86,16 @@
             // 
             this.ListViewDataStructure.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ColumnNam,
-            this.ColumnCat,
-            this.ColumnStr,
-            this.ColumnDef});
+            this.ColumnCat});
             this.ListViewDataStructure.HideSelection = false;
             this.ListViewDataStructure.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem13,
-            listViewItem14,
-            listViewItem15,
-            listViewItem16});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4});
             this.ListViewDataStructure.Location = new System.Drawing.Point(31, 74);
             this.ListViewDataStructure.Name = "ListViewDataStructure";
-            this.ListViewDataStructure.Size = new System.Drawing.Size(243, 202);
+            this.ListViewDataStructure.Size = new System.Drawing.Size(235, 264);
             this.ListViewDataStructure.TabIndex = 2;
             this.ToolTip.SetToolTip(this.ListViewDataStructure, "View list of data structures");
             this.ListViewDataStructure.UseCompatibleStateImageBehavior = false;
@@ -108,21 +104,15 @@
             // 
             // ColumnNam
             // 
+            this.ColumnNam.Tag = "1";
             this.ColumnNam.Text = "Name";
-            this.ColumnNam.Width = 48;
+            this.ColumnNam.Width = 27;
             // 
             // ColumnCat
             // 
+            this.ColumnCat.Tag = "1";
             this.ColumnCat.Text = "Category";
-            // 
-            // ColumnStr
-            // 
-            this.ColumnStr.Text = "Structure";
-            // 
-            // ColumnDef
-            // 
-            this.ColumnDef.Text = "Definition";
-            this.ColumnDef.Width = 101;
+            this.ColumnCat.Width = 25;
             // 
             // ButtonAdd
             // 
@@ -137,32 +127,32 @@
             // 
             // ButtonLoad
             // 
-            this.ButtonLoad.Location = new System.Drawing.Point(544, 344);
+            this.ButtonLoad.Location = new System.Drawing.Point(544, 343);
             this.ButtonLoad.Name = "ButtonLoad";
             this.ButtonLoad.Size = new System.Drawing.Size(75, 23);
-            this.ButtonLoad.TabIndex = 5;
+            this.ButtonLoad.TabIndex = 12;
             this.ButtonLoad.Text = "Load Data";
             this.ToolTip.SetToolTip(this.ButtonLoad, "Load data into the tables");
             this.ButtonLoad.UseVisualStyleBackColor = true;
             this.ButtonLoad.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonLoad_MouseClick);
             // 
-            // ButtonClear
+            // ButtonClearTextBoxes
             // 
-            this.ButtonClear.Location = new System.Drawing.Point(307, 27);
-            this.ButtonClear.Name = "ButtonClear";
-            this.ButtonClear.Size = new System.Drawing.Size(75, 23);
-            this.ButtonClear.TabIndex = 6;
-            this.ButtonClear.Text = "ClearTextBoxes";
-            this.ToolTip.SetToolTip(this.ButtonClear, "Clear items from text boxes");
-            this.ButtonClear.UseVisualStyleBackColor = true;
-            this.ButtonClear.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonClear_MouseClick);
+            this.ButtonClearTextBoxes.Location = new System.Drawing.Point(307, 27);
+            this.ButtonClearTextBoxes.Name = "ButtonClearTextBoxes";
+            this.ButtonClearTextBoxes.Size = new System.Drawing.Size(75, 23);
+            this.ButtonClearTextBoxes.TabIndex = 6;
+            this.ButtonClearTextBoxes.Text = "Clear Text";
+            this.ToolTip.SetToolTip(this.ButtonClearTextBoxes, "Clear items from text boxes");
+            this.ButtonClearTextBoxes.UseVisualStyleBackColor = true;
+            this.ButtonClearTextBoxes.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonClear_MouseClick);
             // 
             // ButtonSearch
             // 
-            this.ButtonSearch.Location = new System.Drawing.Point(199, 27);
+            this.ButtonSearch.Location = new System.Drawing.Point(191, 25);
             this.ButtonSearch.Name = "ButtonSearch";
             this.ButtonSearch.Size = new System.Drawing.Size(75, 23);
-            this.ButtonSearch.TabIndex = 9;
+            this.ButtonSearch.TabIndex = 1;
             this.ButtonSearch.Text = "Search";
             this.ToolTip.SetToolTip(this.ButtonSearch, "Click to search for an item in the data");
             this.ButtonSearch.UseVisualStyleBackColor = true;
@@ -173,7 +163,7 @@
             this.ButtonDelete.Location = new System.Drawing.Point(214, 27);
             this.ButtonDelete.Name = "ButtonDelete";
             this.ButtonDelete.Size = new System.Drawing.Size(75, 23);
-            this.ButtonDelete.TabIndex = 10;
+            this.ButtonDelete.TabIndex = 5;
             this.ButtonDelete.Text = "Delete Item";
             this.ToolTip.SetToolTip(this.ButtonDelete, "Delete item from data");
             this.ButtonDelete.UseVisualStyleBackColor = true;
@@ -181,10 +171,10 @@
             // 
             // ButtonSave
             // 
-            this.ButtonSave.Location = new System.Drawing.Point(661, 344);
+            this.ButtonSave.Location = new System.Drawing.Point(661, 343);
             this.ButtonSave.Name = "ButtonSave";
             this.ButtonSave.Size = new System.Drawing.Size(75, 23);
-            this.ButtonSave.TabIndex = 11;
+            this.ButtonSave.TabIndex = 13;
             this.ButtonSave.Text = "Save File";
             this.ToolTip.SetToolTip(this.ButtonSave, "Save data from tables into a file");
             this.ButtonSave.UseVisualStyleBackColor = true;
@@ -195,7 +185,7 @@
             this.TextBoxCat.Location = new System.Drawing.Point(27, 131);
             this.TextBoxCat.Name = "TextBoxCat";
             this.TextBoxCat.Size = new System.Drawing.Size(100, 20);
-            this.TextBoxCat.TabIndex = 12;
+            this.TextBoxCat.TabIndex = 8;
             this.ToolTip.SetToolTip(this.TextBoxCat, "Data category, update to edit item");
             // 
             // TextBoxStr
@@ -203,7 +193,7 @@
             this.TextBoxStr.Location = new System.Drawing.Point(27, 173);
             this.TextBoxStr.Name = "TextBoxStr";
             this.TextBoxStr.Size = new System.Drawing.Size(100, 20);
-            this.TextBoxStr.TabIndex = 13;
+            this.TextBoxStr.TabIndex = 9;
             this.ToolTip.SetToolTip(this.TextBoxStr, "Data structure, update to edit item");
             // 
             // TextBoxDef
@@ -211,8 +201,8 @@
             this.TextBoxDef.Location = new System.Drawing.Point(156, 87);
             this.TextBoxDef.Multiline = true;
             this.TextBoxDef.Name = "TextBoxDef";
-            this.TextBoxDef.Size = new System.Drawing.Size(226, 189);
-            this.TextBoxDef.TabIndex = 14;
+            this.TextBoxDef.Size = new System.Drawing.Size(226, 177);
+            this.TextBoxDef.TabIndex = 10;
             this.ToolTip.SetToolTip(this.TextBoxDef, "Data description, update to edit item");
             // 
             // ButtonEdit
@@ -220,7 +210,7 @@
             this.ButtonEdit.Location = new System.Drawing.Point(116, 27);
             this.ButtonEdit.Name = "ButtonEdit";
             this.ButtonEdit.Size = new System.Drawing.Size(75, 23);
-            this.ButtonEdit.TabIndex = 15;
+            this.ButtonEdit.TabIndex = 4;
             this.ButtonEdit.Text = "Edit Item";
             this.ToolTip.SetToolTip(this.ButtonEdit, "Edit item in data");
             this.ButtonEdit.UseVisualStyleBackColor = true;
@@ -231,7 +221,7 @@
             this.TextBoxNam.Location = new System.Drawing.Point(27, 87);
             this.TextBoxNam.Name = "TextBoxNam";
             this.TextBoxNam.Size = new System.Drawing.Size(100, 20);
-            this.TextBoxNam.TabIndex = 16;
+            this.TextBoxNam.TabIndex = 7;
             this.ToolTip.SetToolTip(this.TextBoxNam, "Data name, update to edit item");
             // 
             // GroupChangeData
@@ -243,10 +233,10 @@
             this.GroupChangeData.Controls.Add(this.ButtonEdit);
             this.GroupChangeData.Controls.Add(this.TextBoxCat);
             this.GroupChangeData.Controls.Add(this.ButtonDelete);
-            this.GroupChangeData.Controls.Add(this.ButtonClear);
+            this.GroupChangeData.Controls.Add(this.ButtonClearTextBoxes);
             this.GroupChangeData.Location = new System.Drawing.Point(354, 28);
             this.GroupChangeData.Name = "GroupChangeData";
-            this.GroupChangeData.Size = new System.Drawing.Size(411, 301);
+            this.GroupChangeData.Size = new System.Drawing.Size(411, 287);
             this.GroupChangeData.TabIndex = 17;
             this.GroupChangeData.TabStop = false;
             this.GroupChangeData.Text = "Change the data";
@@ -258,17 +248,17 @@
             this.GroupSearch.Controls.Add(this.ListViewDataStructure);
             this.GroupSearch.Location = new System.Drawing.Point(25, 28);
             this.GroupSearch.Name = "GroupSearch";
-            this.GroupSearch.Size = new System.Drawing.Size(301, 301);
+            this.GroupSearch.Size = new System.Drawing.Size(301, 361);
             this.GroupSearch.TabIndex = 18;
             this.GroupSearch.TabStop = false;
             this.GroupSearch.Text = "Search";
             // 
             // ButtonClearAll
             // 
-            this.ButtonClearAll.Location = new System.Drawing.Point(354, 344);
+            this.ButtonClearAll.Location = new System.Drawing.Point(354, 343);
             this.ButtonClearAll.Name = "ButtonClearAll";
             this.ButtonClearAll.Size = new System.Drawing.Size(75, 23);
-            this.ButtonClearAll.TabIndex = 19;
+            this.ButtonClearAll.TabIndex = 11;
             this.ButtonClearAll.Text = "Clear All Data";
             this.ButtonClearAll.UseVisualStyleBackColor = true;
             this.ButtonClearAll.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonClearAll_MouseClick);
@@ -277,7 +267,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(789, 404);
+            this.ClientSize = new System.Drawing.Size(787, 427);
             this.Controls.Add(this.ButtonClearAll);
             this.Controls.Add(this.GroupSearch);
             this.Controls.Add(this.GroupChangeData);
@@ -306,9 +296,7 @@
         private System.Windows.Forms.Button ButtonLoad;
         private System.Windows.Forms.ColumnHeader ColumnNam;
         private System.Windows.Forms.ColumnHeader ColumnCat;
-        private System.Windows.Forms.ColumnHeader ColumnStr;
-        private System.Windows.Forms.ColumnHeader ColumnDef;
-        private System.Windows.Forms.Button ButtonClear;
+        private System.Windows.Forms.Button ButtonClearTextBoxes;
         private System.Windows.Forms.Button ButtonSearch;
         private System.Windows.Forms.ToolStripStatusLabel StatusLabel;
         private System.Windows.Forms.Button ButtonDelete;

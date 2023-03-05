@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace WikiApp
@@ -21,7 +22,8 @@ namespace WikiApp
         #endregion
 
         /// <summary>
-        /// 9.7 Write the code for a Binary Search for the Name in the 2D array and display the information in the other textboxes when found, add suitable feedback if the search in not successful and clear the search textbox (do not use any built-in array methods)
+        /// 9.7 Write the code for a Binary Search for the Name in the 2D array and display the information in the other textboxes when
+        /// found, add suitable feedback if the search in not successful and clear the search textbox (do not use any built-in array methods)
         /// </summary>
         /// <param name="searchTextBoxItem"></param>
         /// <returns> -1 = search item not found, other INT = index number of search item</returns>
@@ -30,26 +32,32 @@ namespace WikiApp
             var searchResult = -1;
             var min = 0;
             var max = Row-1;
-
+            
             while (min <= max)
             {
                 var mid = ((min + max) / 2);
                 var searchArrayItem = Array[mid, 0];
 
-                if (searchArrayItem == null) continue;
-                searchResult = -2;
-                if (string.Compare(searchTextBoxItem.ToUpper(), searchArrayItem.ToUpper(), StringComparison.Ordinal) == 0)
+                // If there are null values at the middle, search the last part of the array
+                if (searchArrayItem == null)
                 {
-                    searchResult = mid;
-                    break;
-                }
-                if (string.Compare(searchTextBoxItem.ToUpper(), searchArrayItem.ToUpper(), StringComparison.Ordinal) < 0)
-                {
-                    max = mid - 1;
+                    min = mid + 1;
                 }
                 else
                 {
-                    min = mid + 1;
+                    if (string.Compare(searchTextBoxItem.ToUpper(), searchArrayItem.ToUpper(), StringComparison.Ordinal) == 0)
+                    {
+                        searchResult = mid;
+                        break;
+                    }
+                    if (string.Compare(searchTextBoxItem.ToUpper(), searchArrayItem.ToUpper(), StringComparison.Ordinal) < 0)
+                    {
+                        max = mid - 1;
+                    }
+                    else
+                    {
+                        min = mid + 1;
+                    }
                 }
             }
             return searchResult;
@@ -115,7 +123,7 @@ namespace WikiApp
         /// <summary>
         /// Method to sort array using the bubble sort, comparing ordinals
         /// </summary>
-        public void SortArray()
+        public void BubbleSort()
         {
             for (var x = 0; x < Row; x++)
             {
@@ -123,21 +131,21 @@ namespace WikiApp
                 {
                     if (string.Compare(Array[i, 0], Array[i + 1, 0], StringComparison.OrdinalIgnoreCase) > 0)
                     {
-                        BubbleSort(i);
+                        BubbleSwap(i);
                     }
                 }
             }
         }
 
         /// <summary>
-        /// Method to "delete" item from array (replaces a value with empty string "")
+        /// Method to "delete" item from array (replaces a value with null)
         /// </summary>
         /// <param name="index"></param>
         public void DeleteItem(int index)
         {
             for (var i = 0; i < Col; i++)
             {
-                Array[index, i] = "";
+                Array[index, i] = null;
             }
         }
 
@@ -171,12 +179,12 @@ namespace WikiApp
         /// 9.6 Write the code for a Bubble Sort method to sort the 2D array by Name ascending, ensure you use a separate swap method that passes the array element to be swapped (do not use any built-in array methods)
         /// </summary>
         /// <param name="index"></param>
-        private void BubbleSort(int index)
+        private void BubbleSwap(int index)
         {
             for (var z = 0; z < Col; z++)
             {
                 string temp = Array[index, z];
-                Array[index, z] = Array[index + 1, z];
+                Array[index, z] = Array[index + 1, z]; 
                 Array[index + 1, z] = temp;
             }
         }
