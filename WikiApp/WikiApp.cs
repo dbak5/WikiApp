@@ -21,16 +21,7 @@ namespace WikiApp
         private int _selectedIndexRow = -1;
 
         #region Events
-        //CHECK NEED FEEDBACK ON GREY OUT BUTTONS
-        private void ButtonClearAll_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (!GreyBoxArrayNull()) return;
-            _wikiArray.ClearArray();
-            DisplayListView();
-            UpdateStatusStrip("Data cleared");
-            GreyBoxArrayNull();
-        }
-
+       
         // 9.2 Create an ADD button that will store the information from the 4 text boxes into the 2D array
         private void ButtonAdd_MouseClick(object sender, MouseEventArgs e)
         {
@@ -53,7 +44,6 @@ namespace WikiApp
                     if (CheckIfExists())
                     {
                         UpdateItems(action, actioned);
-                        TextBoxSearch.Focus();
                     }
                     else
                     {
@@ -82,35 +72,44 @@ namespace WikiApp
             const string actioned = "edited";
             if (!GreyBoxArrayNull()) return;
             if (!CheckOutOfBound()) return;
-            if (CheckIfSelected() && !CheckIfTextBoxEmpty())
+
+            if (ButtonEdit.Enabled == false)
             {
-                if (CheckIfTextBoxChanged())
+                UpdateStatusStrip("Please select an item to edit");
+            }
+            else
+            {
+                if (CheckIfSelected() && !CheckIfTextBoxEmpty())
                 {
-                    if (CheckIfExists())
+                    if (CheckIfTextBoxChanged())
                     {
-                        UpdateItems(action, actioned);
-                        TextBoxSearch.Focus();
+                        if (CheckIfExists())
+                        {
+                            UpdateItems(action, actioned);
+                        }
+                        else
+                        {
+                            UpdateStatusStrip($"Duplicate entry, cannot {action}");
+                            TextBoxNam.Focus();
+                        }
                     }
                     else
                     {
-                        UpdateStatusStrip($"Duplicate entry, cannot {action}");
+                        UpdateStatusStrip($"No changes made, item not {actioned}");
                         TextBoxNam.Focus();
                     }
                 }
                 else
                 {
-                    UpdateStatusStrip($"No changes made, item not {actioned}");
-                    TextBoxNam.Focus();
+                    UpdateStatusStrip($"Nothing selected to {action}");
+                    TextBoxSearch.Focus();
                 }
             }
-            else
-            {
-                UpdateStatusStrip($"Nothing selected to {action}");
-                TextBoxSearch.Focus();
-            }
+           
         }
 
-        // 9.4 Create a DELETE button that removes all the information from a single entry of the array; the user must be prompted before the final deletion occurs
+        // 9.4 Create a DELETE button that removes all the information from a single entry of the array; the user must be prompted
+        // before the final deletion occurs
         private void ButtonDelete_MouseClick(object sender, MouseEventArgs e)
         {
             const string action = "delete";
@@ -132,7 +131,6 @@ namespace WikiApp
                         ClearTextBoxes();
                         UpdateStatusStrip($"Item {actioned}");
                         ButtonAdd.Enabled = true;
-                        TextBoxSearch.Focus();
                     }
                     else
                     {
@@ -153,7 +151,9 @@ namespace WikiApp
             }
         }
 
-        // 9.10 Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat which is _sorted by Name, ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter to create the file
+        // 9.10 Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat
+        // which is _sorted by Name, ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter
+        // to create the file
         private void ButtonSave_MouseClick(object sender, MouseEventArgs e)
         {
             // CHECK IF WE SHOULD HAVE SOMETHING AUTOMATICALLY OR CHANGE IT
@@ -180,7 +180,8 @@ namespace WikiApp
             UpdateStatusStrip("File successfully saved");
         }
 
-        // 9.11 Create a LOAD button that will read the information from a binary file called definitions.dat into the 2D array, ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task
+        // 9.11 Create a LOAD button that will read the information from a binary file called definitions.dat into the 2D array,
+        // ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task
         private void ButtonLoad_MouseClick(object sender, MouseEventArgs e)
         {
             // CHECK UNCOMMENT BELOW ONCE EVERYTHING IS WORKING
@@ -205,13 +206,14 @@ namespace WikiApp
                 _wikiArray = new WikiSortedArray();
                 _wikiArray.LoadData(fileName);
                 _wikiArray.BubbleSort();
-                TextBoxSearch.Focus();
                 DisplayListView();
                 UpdateStatusStrip("Data successfully loaded");
                 GreyBoxArrayNull();
+                TextBoxSearch.Focus();
             }
         }
 
+        // Search button which uses a binary search from the wiki array class
         private void ButtonSearch_MouseClick(object sender, MouseEventArgs e)
         {
             if (!GreyBoxArrayNull()) return;
@@ -226,7 +228,6 @@ namespace WikiApp
                         UpdateStatusStrip("Item not found");
                         DeselectItem(_selectedIndexRow);
                         ClearTextBoxes();
-                        TextBoxSearch.Focus();
                     return;
                     }
                     UpdateStatusStrip("Item found");
@@ -242,14 +243,7 @@ namespace WikiApp
             }
         }
 
-        private void ButtonClear_MouseClick(object sender, MouseEventArgs e)
-        {
-            ClearTextBoxes();
-            TextBoxSearch.Clear();
-            DeselectItem(_selectedIndexRow);
-            TextBoxSearch.Focus();
-        }
-
+        // Select something in the list view
         private void ListViewSelect_MouseClick(object sender, EventArgs e)
         {
 
@@ -258,10 +252,34 @@ namespace WikiApp
             _selectedIndexRow = ListViewDataStructure.SelectedIndices[0];
             SelectItem(_selectedIndexRow);
         }
+
+        // Double mouse click on the "Name" text box to clear all text boxes
+        private void TextBoxNam_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            ClearTextBoxes();
+        }
+
+        // Button to clear all the data from the array and list view
+        private void ButtonClearAll_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (!GreyBoxArrayNull()) return;
+            _wikiArray.ClearArray();
+            ClearTextBoxes();
+            DisplayListView();
+            UpdateStatusStrip("Data cleared");
+            GreyBoxArrayNull();
+        }
+
+        // Button to clear the text boxes only
+        private void ButtonClear_MouseClick(object sender, MouseEventArgs e)
+        {
+            ClearTextBoxes();
+        }
+
+
         #endregion
 
         #region Methods
-        // CHECK DOUBLE CLICK TEXTBOX TO CLEAR??
         /// <summary>
         /// 9.5 Create a CLEAR method to clear the four text boxes so a new definition can be added
         /// </summary>
@@ -278,9 +296,9 @@ namespace WikiApp
                 TextBoxStr.Clear();
                 TextBoxCat.Clear();
                 DeselectItem(_selectedIndexRow);
+                TextBoxSearch.Clear();
+                TextBoxSearch.Focus();
             }
-
-          
         }
 
         /// <summary>
@@ -410,7 +428,7 @@ namespace WikiApp
             }
         }
 
-        #region Error trapping
+        #region Booleans for error trapping
         /// <summary>
         /// Check if the index is out of bounds of the array
         /// </summary>
@@ -519,5 +537,6 @@ namespace WikiApp
         #endregion
 
         #endregion
+
     } //class
 } //namespace

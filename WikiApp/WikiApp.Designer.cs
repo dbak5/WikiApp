@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem("");
             this.TextBoxSearch = new System.Windows.Forms.TextBox();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -89,10 +89,10 @@
             this.ColumnCat});
             this.ListViewDataStructure.HideSelection = false;
             this.ListViewDataStructure.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4});
+            listViewItem13,
+            listViewItem14,
+            listViewItem15,
+            listViewItem16});
             this.ListViewDataStructure.Location = new System.Drawing.Point(31, 74);
             this.ListViewDataStructure.Name = "ListViewDataStructure";
             this.ListViewDataStructure.Size = new System.Drawing.Size(235, 264);
@@ -223,6 +223,7 @@
             this.TextBoxNam.Size = new System.Drawing.Size(100, 20);
             this.TextBoxNam.TabIndex = 7;
             this.ToolTip.SetToolTip(this.TextBoxNam, "Data name, update to edit item");
+            this.TextBoxNam.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxNam_MouseDoubleClick);
             // 
             // GroupChangeData
             // 
@@ -251,7 +252,7 @@
             this.GroupSearch.Size = new System.Drawing.Size(301, 361);
             this.GroupSearch.TabIndex = 18;
             this.GroupSearch.TabStop = false;
-            this.GroupSearch.Text = "Search";
+            this.GroupSearch.Text = "Search the data";
             // 
             // ButtonClearAll
             // 
@@ -260,6 +261,7 @@
             this.ButtonClearAll.Size = new System.Drawing.Size(75, 23);
             this.ButtonClearAll.TabIndex = 11;
             this.ButtonClearAll.Text = "Clear All Data";
+            this.ToolTip.SetToolTip(this.ButtonClearAll, "Clear all data from the table");
             this.ButtonClearAll.UseVisualStyleBackColor = true;
             this.ButtonClearAll.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonClearAll_MouseClick);
             // 
