@@ -62,7 +62,6 @@ namespace WikiApp
             return searchResult;
         }
 
-        // CHECK FILE CLOSE??
         /// <summary>
         /// Takes values from the array and saves to a binary file
         /// </summary>
@@ -77,6 +76,7 @@ namespace WikiApp
                     {
                         for (var j = 0; j < Col; j++)
                         {
+                            if (Array[i, j] == null) continue;
                             writer.Write(Array[i, j]);
                         }
                     }
@@ -84,7 +84,6 @@ namespace WikiApp
             }
         }
 
-        // CHECK FILE CLOSE??
         /// <summary>
         /// Reads a binary file and adds them to the wiki array
         /// </summary>

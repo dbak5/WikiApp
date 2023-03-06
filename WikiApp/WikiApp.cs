@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 // Author: DaHye Baker
 // Student ID: 30063368
@@ -24,47 +25,59 @@ namespace WikiApp
         private int _selectedIndexRow = -1;
 
         #region Events
-       
         // 9.2 Create an ADD button that will store the information from the 4 text boxes into the 2D
         // array
         private void ButtonAdd_MouseClick(object sender, MouseEventArgs e)
         {
+            Debug.WriteLine("Debug Information: 'Add Data' Starting");
+            Debug.WriteLine("Debug Information: Add new data item if the array is not already full");
+
             const string action = "add";
             const string item = "item";
             const string actioned = "added";
 
-            //if (!GreyBoxArrayNull()) return;
-            //if (!CheckOutOfBound()) return;
+            Debug.WriteLine($"\nChecking if array already exists");
             if (CheckArrayNull())
             {
+                Debug.WriteLine("\nResult: array does not exist");
+                Debug.WriteLine($"Initialising a new array");
                 _wikiArray = new WikiSortedArray();
                 TextBoxNam.Focus();
             }
-
+            Debug.WriteLine($"\nResult: array does exist");
+            Debug.WriteLine($"Now checking array for room");
             if (_wikiArray.Array[0, 0] == null)
             {
+                Debug.WriteLine($"\nResult: {_wikiArray.Array[0, 0] == null}");
+                Debug.WriteLine($"First row is empty, now checking if textboxes are all filled");
                 if (!CheckIfTextBoxEmpty())
-                   
                 {
-                    if (CheckIfExists())
+                    Debug.WriteLine($"\nResult: {!CheckIfTextBoxEmpty()}");
+                    Debug.WriteLine($"All text boxes are all filled, now checking it is a duplicate entry");
+                    if (CheckIfDuplicate())
                     {
+                        Debug.WriteLine($"\nResult: {CheckIfDuplicate()}");
+                        Debug.WriteLine($"No duplicates found, adding the new data to the array");
                         UpdateItems(action, actioned, item);
                     }
                     else
                     {
-                        UpdateStatusStrip($"Duplicate entry, cannot {action}");
+                        UpdateStatusStrip($"Duplicate entry found, cannot {action}");
+                        Debug.WriteLine($"Duplicate entry found, cannot {action}");
                         TextBoxNam.Focus();
                     }
                 }
                 else
                 {
-                    UpdateStatusStrip("Please input data to add and ensure all fields are full");
+                    UpdateStatusStrip("Empty fields found, please input data to add and ensure all fields are full");
+                    Debug.WriteLine("Empty fields found, please input data to add and ensure all fields are full");
                     TextBoxNam.Focus();
                 }
             }
             else
             {
                 UpdateStatusStrip($"Array is full, not {actioned}");
+                Debug.WriteLine($"Array is full, not {actioned}");
                 ButtonAdd.Enabled = false;
                 TextBoxSearch.Focus();
             }
@@ -74,45 +87,51 @@ namespace WikiApp
         // into the 2D array
         private void ButtonEdit_MouseClick(object sender, MouseEventArgs e)
         {
+            Debug.WriteLine("Debug Information: 'Edit Data' Starting");
+            Debug.WriteLine("Debug Information: Edit data item if an item from the array is selected");
+
             const string action = "edit";
             const string item = "item";
             const string actioned = "edited";
 
+            Debug.WriteLine($"\nChecking if array is empty");
             if (!GreyBoxArrayNull()) return;
+            Debug.WriteLine($"\nResult: {!GreyBoxArrayNull()}, array is not empty, continue");
             if (!CheckOutOfBound()) return;
-            if (ButtonEdit.Enabled == false)
+            if (CheckIfSelected() && !CheckIfTextBoxEmpty())
             {
-                UpdateStatusStrip($"Please select an {item} to {action}");
-            }
-            else
-            {
-                if (CheckIfSelected() && !CheckIfTextBoxEmpty())
+                Debug.WriteLine($"\nResult: {CheckIfSelected() && !CheckIfTextBoxEmpty()}, something is selected and text boxes aren't empty");
+                Debug.WriteLine($"\nNow checking if text boxes have been changed");
+                if (CheckIfTextBoxChanged())
                 {
-                    if (CheckIfTextBoxChanged())
+                    Debug.WriteLine($"\nResult: {CheckIfTextBoxChanged()}, text boxes have been changed");
+                    Debug.WriteLine($"All text boxes are all filled, now checking it is a duplicate entry");
+                    if (CheckIfDuplicate())
                     {
-                        if (CheckIfExists())
-                        {
-                            UpdateItems(action, actioned, item);
-                        }
-                        else
-                        {
-                            UpdateStatusStrip($"Duplicate entry, cannot {action}");
-                            TextBoxNam.Focus();
-                        }
+                        Debug.WriteLine($"\nResult: {CheckIfDuplicate()}, no duplicates found");
+                        Debug.WriteLine($"Now updating the data");
+                        UpdateItems(action, actioned, item);
                     }
                     else
                     {
-                        UpdateStatusStrip($"No changes made, item not {actioned}");
+                        UpdateStatusStrip($"Duplicate entry, cannot {action}");
+                        Debug.WriteLine($"Duplicate entry found, cannot {action}");
                         TextBoxNam.Focus();
                     }
                 }
                 else
                 {
-                    UpdateStatusStrip($"Nothing selected to {action}");
-                    TextBoxSearch.Focus();
+                    UpdateStatusStrip($"No changes made, item not {actioned}");
+                    Debug.WriteLine($"No changes made, item not {actioned}");
+                    TextBoxNam.Focus();
                 }
             }
-           
+            else
+            {
+                UpdateStatusStrip($"Nothing selected to {action}");
+                Debug.WriteLine($"Nothing selected to {action}");
+                TextBoxSearch.Focus();
+            }
         }
 
         // 9.4 Create a DELETE button that removes all the information from a single entry of the array; the user must be prompted
@@ -123,32 +142,22 @@ namespace WikiApp
             const string item = "item";
             const string actioned = "deleted";
 
-            //  UpdateStatusStrip("");
             if (!GreyBoxArrayNull()) return;
             if (!CheckOutOfBound()) return;
             if (CheckIfSelected() && !CheckIfTextBoxEmpty())
             {
-                var selectedItem = _wikiArray.Array[_selectedIndexRow, 0];
-                if (selectedItem != "")
+                if (ConfirmationUserRequest(action, item))
                 {
-                    if (ConfirmationUserRequest(action, item))
-                    {
-                        _wikiArray.DeleteItem(_selectedIndexRow);
-                        _wikiArray.BubbleSort();
-                        DisplayListView();
-                        ClearTextBoxes();
-                        UpdateStatusStrip($"Item {actioned}");
-                        ButtonAdd.Enabled = true;
-                    }
-                    else
-                    {
-                        UpdateStatusStrip($"Item not {actioned}");
-                        TextBoxSearch.Focus();
-                    }
+                    _wikiArray.DeleteItem(_selectedIndexRow);
+                    _wikiArray.BubbleSort();
+                    DisplayListView();
+                    ClearTextBoxes();
+                    UpdateStatusStrip($"Item {actioned}");
+                    ButtonAdd.Enabled = true;
                 }
                 else
                 {
-                    UpdateStatusStrip($"Nothing selected to {action}");
+                    UpdateStatusStrip($"Item not {actioned}");
                     TextBoxSearch.Focus();
                 }
             }
@@ -160,7 +169,7 @@ namespace WikiApp
         }
 
         // 9.10 Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat
-        // which is _sorted by Name, ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter
+        // which is sorted by Name, ensure the user has the option to select an alternative file. Use a file stream and BinaryWriter
         // to create the file
         private void ButtonSave_MouseClick(object sender, MouseEventArgs e)
         {
@@ -169,6 +178,9 @@ namespace WikiApp
             var place = new DirectoryInfo(Directory.GetCurrentDirectory());
             var files = place.GetFiles("*.dat");
 
+            if (!GreyBoxArrayNull()) return;
+
+            // Look for files in the folder
             // Remove file extensions and add each file name to the list and sort list
             foreach (var file in files)
             {
@@ -200,7 +212,7 @@ namespace WikiApp
                 }
             }
 
-            // Default file name if no file name already exists
+            // Create default file name if no file name already exists
             else
             {
                 fileName = Path.Combine($"definitions_01.dat");
@@ -220,7 +232,7 @@ namespace WikiApp
             };
             if (saveFileDialog1.ShowDialog() != DialogResult.OK) return;
             _wikiArray.SaveFile(saveFileDialog1.FileName);
-            TextBoxSearch.Focus();
+            TextBoxNam.Focus();
             UpdateStatusStrip("File successfully saved");
         }
 
@@ -228,21 +240,34 @@ namespace WikiApp
         // ensure the user has the option to select an alternative file. Use a file stream and BinaryReader to complete this task
         private void ButtonLoad_MouseClick(object sender, MouseEventArgs e)
         {
+            const string filterLimits = "All files (*.*)|*.*|bin files (*.*)|*.bin";
+            
             // Check if array is null or if user cancels the request
-            if (!CheckArrayNull() && !ConfirmationUserRequest("clear", "data")) return;
-         
-            var (result, fileName) = OpenFileDialogue();
-            if (result != DialogResult.OK) return;
+            if (!CheckArrayNull())
+            {
+                var confirm = ConfirmationUserRequest("clear", "data",
+                    "\nThis action will clear the current data and load new data");
+                if (!confirm) return;
+            }
+
+            var openFileDialog1 = new OpenFileDialog
+            {
+                InitialDirectory = Directory.GetCurrentDirectory(),
+                Filter = filterLimits,
+                FilterIndex = 2,
+                RestoreDirectory = true
+            };
+            if (openFileDialog1.ShowDialog() != DialogResult.OK) return;
 
             // Error catch if file is empty, do not load data
-            if (new FileInfo(fileName).Length == 0)
+            if (new FileInfo(openFileDialog1.FileName).Length == 0)
             {
                 UpdateStatusStrip("File is empty, no data to load, please select a different file");
                 return;
             }
 
             // Error catch if extension is not a a bin file, do not load data
-            if (new FileInfo(fileName).Extension != ".bin")
+            if (new FileInfo(openFileDialog1.FileName).Extension != ".bin")
             {
                 UpdateStatusStrip("Incorrect file format selected, please select a bin file");
                 return;
@@ -250,7 +275,7 @@ namespace WikiApp
 
             // Initialise array and load data into list view
             _wikiArray = new WikiSortedArray();
-            _wikiArray.LoadData(fileName);
+            _wikiArray.LoadData(openFileDialog1.FileName);
             _wikiArray.BubbleSort();
             DisplayListView();
             UpdateStatusStrip("Data successfully loaded");
@@ -261,18 +286,26 @@ namespace WikiApp
         // Search button which uses a binary search from the wiki array class
         private void ButtonSearch_MouseClick(object sender, MouseEventArgs e)
         {
+            Debug.WriteLine("Debug Information: Binary Search Starting");
+            Debug.WriteLine("Debug Information: Returns an integer index, returns -1 if not found");
+
             if (!GreyBoxArrayNull()) return;
 
-            // integer variable which is a row index number, or -1 if not found
+            // Integer variable which is a row index number, or -1 if not found
             var searchResult = _wikiArray.BinarySearch(TextBoxSearch.Text);
+            var emptyString = string.IsNullOrEmpty(TextBoxSearch.Text);
+            
+            Debug.WriteLine($"\nSearch input: {TextBoxSearch.Text}");
+            Debug.WriteLine($"Search result: {searchResult}");
 
-            if (!string.IsNullOrEmpty(TextBoxSearch.Text))
+            if (!emptyString)
             {
                     if (searchResult == -1)
                     {
                         UpdateStatusStrip("Item not found");
                         DeselectItem(_selectedIndexRow);
                         ClearTextBoxes();
+                        Debug.WriteLine("\nItem not found");
                     return;
                     }
                     UpdateStatusStrip("Item found");
@@ -280,18 +313,20 @@ namespace WikiApp
                     TextBoxSearch.Clear();
                     TextBoxNam.Focus();
                     SelectItem(searchResult);
+                    Debug.WriteLine("\nItem found");
             }
             else
             {
                 UpdateStatusStrip("Please enter search");
                 TextBoxSearch.Focus();
             }
+
+            Debug.WriteLine("\nDebug Information: Binary Search Ending");
         }
 
         // Select something in the list view
         private void ListViewSelect_MouseClick(object sender, EventArgs e)
         {
-
             if (!GreyBoxArrayNull()) return;
             if (ListViewDataStructure.SelectedItems.Count <= 0) return;
             _selectedIndexRow = ListViewDataStructure.SelectedIndices[0];
@@ -307,7 +342,12 @@ namespace WikiApp
         // Button to clear all the data from the array and list view
         private void ButtonClearAll_MouseClick(object sender, MouseEventArgs e)
         {
+            var confirm = ConfirmationUserRequest("clear all", "data",
+                "\nThis action will clear all the data in the tables");
+
             if (!GreyBoxArrayNull()) return;
+            if (!confirm) return;
+
             _wikiArray.ClearArray();
             ClearTextBoxes();
             DisplayListView();
@@ -319,6 +359,20 @@ namespace WikiApp
         private void ButtonClear_MouseClick(object sender, MouseEventArgs e)
         {
             ClearTextBoxes();
+        }
+
+        // Button to exit confirm user action
+        private void WikiApp_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            const string action = "close";
+            const string item = "form";
+
+            if (!ConfirmationUserRequest(action, item,
+                    "\nWARNING: you will lose all progress"))
+            {
+                e.Cancel = true;
+            }
+            else { Application.Exit(); }
         }
 
         #endregion
@@ -422,12 +476,14 @@ namespace WikiApp
         /// </summary>
         /// <param name="action"></param>
         /// <param name="item"></param>
+        /// <param name="optionalString"></param>
         /// <returns></returns>
-        private static bool ConfirmationUserRequest(string action, string item)
+        private static bool ConfirmationUserRequest(string action, string item, string optionalString = "")
         {
-            var message = $"Are you sure you want to {action} the current {item}?";
+            var message = $"Are you sure you want to {action} the {item}?";
+            var optionalMsg = $"\n{optionalString}";
             var caption = $"Please confirm {action}";
-            return MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+            return MessageBox.Show(message + optionalMsg, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
                    == DialogResult.Yes;
         }
 
@@ -439,12 +495,21 @@ namespace WikiApp
         /// <param name="item"></param>
         private void UpdateItems(string action, string actioned, string item)
         {
+            Debug.WriteLine("New data:");
+            Debug.WriteLine($"Name: {TextBoxNam.Text}");
+            Debug.WriteLine($"Category: {TextBoxCat.Text}");
+            Debug.WriteLine($"Structure: {TextBoxStr.Text}");
+            Debug.WriteLine($"Definition: {TextBoxDef.Text}");
+
             var newName = TextBoxNam.Text;
             var newCat = TextBoxCat.Text;
             var newStr = TextBoxStr.Text;
             var newDef = TextBoxDef.Text;
+
+            
             if (ConfirmationUserRequest(action, item))
             {
+                Debug.WriteLine($"\nUser confirmation request: confirmed ok");
                 if (action == "add")
                 {
                     _wikiArray.EditItem(0, 0, newName);
@@ -467,30 +532,16 @@ namespace WikiApp
                 DisplayListView();
                 ListViewDataStructure.Enabled = true;
                 UpdateStatusStrip($"Item {actioned}");
+                Debug.WriteLine($"\nItem {actioned} to the array");
             }
             else
             {
+                Debug.WriteLine($"User confirmation request: cancelled");
                 UpdateStatusStrip($"Item not {actioned}");
+                Debug.WriteLine($"\nItem not {actioned}");
             }
         }
 
-        /// <summary>
-        /// Dialogue box to open a file
-        /// </summary>
-        /// <returns></returns>
-        private static (DialogResult result, string fileName) OpenFileDialogue()
-        {
-            const string filterLimits = "All files (*.*)|*.*|bin files (*.*)|*.bin";
-            var openFileDialog1 = new OpenFileDialog
-            {
-                InitialDirectory = Directory.GetCurrentDirectory(),
-                Filter = filterLimits,
-                FilterIndex = 2,
-                RestoreDirectory = true
-            };
-            var result = openFileDialog1.ShowDialog();
-            return (result, openFileDialog1.FileName);
-        }
         #endregion
 
         #region Booleans for error trapping
@@ -532,6 +583,7 @@ namespace WikiApp
                 ButtonSearch.Enabled = false;
                 ButtonEdit.Enabled = false;
                 ButtonDelete.Enabled = false;
+                ButtonSave.Enabled = false;
                 ListViewDataStructure.Enabled = false;
                 TextBoxNam.Focus();
                 return false;
@@ -571,7 +623,7 @@ namespace WikiApp
         /// If doesn't exist, returns -1
         /// </summary>
         /// <returns></returns>
-        private bool CheckIfExists()
+        private bool CheckIfDuplicate()
         {
             var searchResult = _wikiArray.BinarySearch(TextBoxNam.Text);
             return searchResult == -1;
@@ -601,5 +653,6 @@ namespace WikiApp
 
         #endregion
 
+      
     } //class
 } //namespace

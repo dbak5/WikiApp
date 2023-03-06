@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("");
             this.TextBoxSearch = new System.Windows.Forms.TextBox();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -89,10 +89,10 @@
             this.ColumnCat});
             this.ListViewDataStructure.HideSelection = false;
             this.ListViewDataStructure.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem13,
-            listViewItem14,
-            listViewItem15,
-            listViewItem16});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4});
             this.ListViewDataStructure.Location = new System.Drawing.Point(31, 74);
             this.ListViewDataStructure.Name = "ListViewDataStructure";
             this.ListViewDataStructure.Size = new System.Drawing.Size(235, 264);
@@ -106,13 +106,13 @@
             // 
             this.ColumnNam.Tag = "1";
             this.ColumnNam.Text = "Name";
-            this.ColumnNam.Width = 27;
+            this.ColumnNam.Width = 100;
             // 
             // ColumnCat
             // 
             this.ColumnCat.Tag = "1";
             this.ColumnCat.Text = "Category";
-            this.ColumnCat.Width = 25;
+            this.ColumnCat.Width = 100;
             // 
             // ButtonAdd
             // 
@@ -278,6 +278,7 @@
             this.Controls.Add(this.StatusStrip);
             this.Name = "WikiApp";
             this.Text = "Data Structures Wiki";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WikiApp_FormClosing);
             this.StatusStrip.ResumeLayout(false);
             this.StatusStrip.PerformLayout();
             this.GroupChangeData.ResumeLayout(false);
