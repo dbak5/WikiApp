@@ -16,6 +16,7 @@ namespace WikiApp
 {
     public partial class WikiApp : Form
     {
+        // All events and functions relating to the interface are below
         public WikiApp()
         {
             InitializeComponent();
@@ -29,55 +30,38 @@ namespace WikiApp
         // array
         private void ButtonAdd_MouseClick(object sender, MouseEventArgs e)
         {
-            Debug.WriteLine("Debug Information: 'Add Data' Starting");
-            Debug.WriteLine("Debug Information: Add new data item if the array is not already full");
-
             const string action = "add";
             const string item = "item";
             const string actioned = "added";
 
-            Debug.WriteLine($"\nChecking if array already exists");
             if (CheckArrayNull())
             {
-                Debug.WriteLine("\nResult: array does not exist");
-                Debug.WriteLine($"Initialising a new array");
                 _wikiArray = new WikiSortedArray();
                 TextBoxNam.Focus();
             }
-            Debug.WriteLine($"\nResult: array does exist");
-            Debug.WriteLine($"Now checking array for room");
             if (_wikiArray.Array[0, 0] == null)
             {
-                Debug.WriteLine($"\nResult: {_wikiArray.Array[0, 0] == null}");
-                Debug.WriteLine($"First row is empty, now checking if textboxes are all filled");
-                if (!CheckIfTextBoxEmpty())
+                if (!CheckTextBoxEmpty())
                 {
-                    Debug.WriteLine($"\nResult: {!CheckIfTextBoxEmpty()}");
-                    Debug.WriteLine($"All text boxes are all filled, now checking it is a duplicate entry");
                     if (CheckIfDuplicate())
                     {
-                        Debug.WriteLine($"\nResult: {CheckIfDuplicate()}");
-                        Debug.WriteLine($"No duplicates found, adding the new data to the array");
                         UpdateItems(action, actioned, item);
                     }
                     else
                     {
                         UpdateStatusStrip($"Duplicate entry found, cannot {action}");
-                        Debug.WriteLine($"Duplicate entry found, cannot {action}");
                         TextBoxNam.Focus();
                     }
                 }
                 else
                 {
                     UpdateStatusStrip("Empty fields found, please input data to add and ensure all fields are full");
-                    Debug.WriteLine("Empty fields found, please input data to add and ensure all fields are full");
                     TextBoxNam.Focus();
                 }
             }
             else
             {
                 UpdateStatusStrip($"Array is full, not {actioned}");
-                Debug.WriteLine($"Array is full, not {actioned}");
                 ButtonAdd.Enabled = false;
                 TextBoxSearch.Focus();
             }
@@ -87,49 +71,35 @@ namespace WikiApp
         // into the 2D array
         private void ButtonEdit_MouseClick(object sender, MouseEventArgs e)
         {
-            Debug.WriteLine("Debug Information: 'Edit Data' Starting");
-            Debug.WriteLine("Debug Information: Edit data item if an item from the array is selected");
-
             const string action = "edit";
             const string item = "item";
             const string actioned = "edited";
 
-            Debug.WriteLine($"\nChecking if array is empty");
             if (!GreyBoxArrayNull()) return;
-            Debug.WriteLine($"\nResult: {!GreyBoxArrayNull()}, array is not empty, continue");
             if (!CheckOutOfBound()) return;
-            if (CheckIfSelected() && !CheckIfTextBoxEmpty())
+            if (CheckItemSelected() && !CheckTextBoxEmpty())
             {
-                Debug.WriteLine($"\nResult: {CheckIfSelected() && !CheckIfTextBoxEmpty()}, something is selected and text boxes aren't empty");
-                Debug.WriteLine($"\nNow checking if text boxes have been changed");
                 if (CheckIfTextBoxChanged())
                 {
-                    Debug.WriteLine($"\nResult: {CheckIfTextBoxChanged()}, text boxes have been changed");
-                    Debug.WriteLine($"All text boxes are all filled, now checking it is a duplicate entry");
                     if (CheckIfDuplicate())
                     {
-                        Debug.WriteLine($"\nResult: {CheckIfDuplicate()}, no duplicates found");
-                        Debug.WriteLine($"Now updating the data");
                         UpdateItems(action, actioned, item);
                     }
                     else
                     {
                         UpdateStatusStrip($"Duplicate entry, cannot {action}");
-                        Debug.WriteLine($"Duplicate entry found, cannot {action}");
                         TextBoxNam.Focus();
                     }
                 }
                 else
                 {
                     UpdateStatusStrip($"No changes made, item not {actioned}");
-                    Debug.WriteLine($"No changes made, item not {actioned}");
                     TextBoxNam.Focus();
                 }
             }
             else
             {
                 UpdateStatusStrip($"Nothing selected to {action}");
-                Debug.WriteLine($"Nothing selected to {action}");
                 TextBoxSearch.Focus();
             }
         }
@@ -144,7 +114,7 @@ namespace WikiApp
 
             if (!GreyBoxArrayNull()) return;
             if (!CheckOutOfBound()) return;
-            if (CheckIfSelected() && !CheckIfTextBoxEmpty())
+            if (CheckItemSelected() && !CheckTextBoxEmpty())
             {
                 if (ConfirmationUserRequest(action, item))
                 {
@@ -286,42 +256,7 @@ namespace WikiApp
         // Search button which uses a binary search from the wiki array class
         private void ButtonSearch_MouseClick(object sender, MouseEventArgs e)
         {
-            Debug.WriteLine("Debug Information: Binary Search Starting");
-            Debug.WriteLine("Debug Information: Returns an integer index, returns -1 if not found");
-
-            if (!GreyBoxArrayNull()) return;
-
-            // Integer variable which is a row index number, or -1 if not found
-            var searchResult = _wikiArray.BinarySearch(TextBoxSearch.Text);
-            var emptyString = string.IsNullOrEmpty(TextBoxSearch.Text);
-            
-            Debug.WriteLine($"\nSearch input: {TextBoxSearch.Text}");
-            Debug.WriteLine($"Search result: {searchResult}");
-
-            if (!emptyString)
-            {
-                    if (searchResult == -1)
-                    {
-                        UpdateStatusStrip("Item not found");
-                        DeselectItem(_selectedIndexRow);
-                        ClearTextBoxes();
-                        Debug.WriteLine("\nItem not found");
-                    return;
-                    }
-                    UpdateStatusStrip("Item found");
-                    DeselectItem(_selectedIndexRow);
-                    TextBoxSearch.Clear();
-                    TextBoxNam.Focus();
-                    SelectItem(searchResult);
-                    Debug.WriteLine("\nItem found");
-            }
-            else
-            {
-                UpdateStatusStrip("Please enter search");
-                TextBoxSearch.Focus();
-            }
-
-            Debug.WriteLine("\nDebug Information: Binary Search Ending");
+            Search();
         }
 
         // Select something in the list view
@@ -342,23 +277,19 @@ namespace WikiApp
         // Button to clear all the data from the array and list view
         private void ButtonClearAll_MouseClick(object sender, MouseEventArgs e)
         {
-            var confirm = ConfirmationUserRequest("clear all", "data",
-                "\nThis action will clear all the data in the tables");
-
-            if (!GreyBoxArrayNull()) return;
-            if (!confirm) return;
-
-            _wikiArray.ClearArray();
-            ClearTextBoxes();
-            DisplayListView();
-            UpdateStatusStrip("Data cleared");
-            GreyBoxArrayNull();
+            ClearAllData();
         }
 
         // Button to clear the text boxes only
         private void ButtonClear_MouseClick(object sender, MouseEventArgs e)
         {
             ClearTextBoxes();
+        }
+
+        // Double click to clear all data from the list view and array
+        private void ListViewDataStructure_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            ClearAllData();
         }
 
         // Button to exit confirm user action
@@ -375,15 +306,22 @@ namespace WikiApp
             else { Application.Exit(); }
         }
 
+        // Carry out binary search on 'Enter' keydown
+        private void TextBoxSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                Search();
+        }
         #endregion
 
         #region Methods
+
         /// <summary>
         /// 9.5 Create a CLEAR method to clear the four text boxes so a new definition can be added
         /// </summary>
         private void ClearTextBoxes()
         {
-            if (CheckIfTextBoxEmpty())
+            if (CheckTextBoxEmpty())
             {
                 ButtonClearTextBoxes.Enabled = false;
             }
@@ -542,6 +480,67 @@ namespace WikiApp
             }
         }
 
+        /// <summary>
+        /// Clear all the data from the array and list view
+        /// </summary>
+        private void ClearAllData()
+        {
+            if (!GreyBoxArrayNull()) return;
+
+            var confirm = ConfirmationUserRequest("clear all", "data",
+                "\nThis action will clear all the data in the tables");
+
+            if (!confirm) return;
+
+            _wikiArray.ClearArray();
+            ClearTextBoxes();
+            DisplayListView();
+            UpdateStatusStrip("Data cleared");
+            GreyBoxArrayNull();
+        }
+
+        /// <summary>
+        /// Search the data
+        /// </summary>
+        private void Search()
+        {
+            //Debug.WriteLine("Debug Information: Binary Search Starting");
+            //Debug.WriteLine("Debug Information: Returns an integer index, returns -1 if not found");
+
+            if (!GreyBoxArrayNull()) return;
+
+            // Integer variable which is a row index number, or -1 if not found
+            var searchResult = _wikiArray.BinarySearch(TextBoxSearch.Text);
+            var emptyString = string.IsNullOrEmpty(TextBoxSearch.Text);
+
+            //Debug.WriteLine($"\nSearch input: {TextBoxSearch.Text}");
+            //Debug.WriteLine($"Search result: {searchResult}");
+
+            if (!emptyString)
+            {
+                if (searchResult == -1)
+                {
+                    UpdateStatusStrip("Item not found");
+                    DeselectItem(_selectedIndexRow);
+                    ClearTextBoxes();
+                    //Debug.WriteLine("\nItem not found");
+                    return;
+                }
+                UpdateStatusStrip("Item found");
+                DeselectItem(_selectedIndexRow);
+                TextBoxSearch.Clear();
+                TextBoxNam.Focus();
+                SelectItem(searchResult);
+                //Debug.WriteLine("\nItem found");
+            }
+            else
+            {
+                UpdateStatusStrip("Please enter search");
+                TextBoxSearch.Focus();
+            }
+
+            //Debug.WriteLine("\nDebug Information: Binary Search Ending");
+        }
         #endregion
 
         #region Booleans for error trapping
@@ -601,7 +600,7 @@ namespace WikiApp
         /// If nothing selected, return false, disable buttons
         /// </summary>
         /// <returns></returns>
-        private bool CheckIfSelected()
+        private bool CheckItemSelected()
         {
             if (_selectedIndexRow != -1)
             {
@@ -645,7 +644,7 @@ namespace WikiApp
         /// Checking to see if textboxes contain empty or null string
         /// </summary>
         /// <returns></returns>
-        private bool CheckIfTextBoxEmpty()
+        private bool CheckTextBoxEmpty()
         {
             return string.IsNullOrEmpty(TextBoxNam.Text) || string.IsNullOrEmpty(TextBoxCat.Text) ||
                    string.IsNullOrEmpty(TextBoxStr.Text) || string.IsNullOrEmpty(TextBoxDef.Text);
@@ -653,6 +652,5 @@ namespace WikiApp
 
         #endregion
 
-      
     } //class
 } //namespace

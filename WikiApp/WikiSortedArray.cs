@@ -2,6 +2,12 @@
 using System.IO;
 using System.Text;
 
+// Author: DaHye Baker
+// Student ID: 30063368
+// Organisation: South Metropolitan TAFE
+// Description: Wiki Application on Data Structures
+// A program that presents information and definition on data structures
+
 namespace WikiApp
 {
     // Class for the wiki array. All methods and variables for the ARRAY kept here.
