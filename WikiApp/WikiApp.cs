@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Diagnostics;
 
 // Author: DaHye Baker
 // Student ID: 30063368
@@ -34,12 +33,12 @@ namespace WikiApp
             const string item = "item";
             const string actioned = "added";
 
-            if (CheckArrayNull())
+            if (!CheckArrayNull())
             {
                 _wikiArray = new WikiSortedArray();
                 TextBoxNam.Focus();
             }
-            if (_wikiArray.Array[0, 0] == null)
+            if (_wikiArray.Array[WikiSortedArray.Row-1, 0] == "~")
             {
                 if (!CheckTextBoxEmpty())
                 {
@@ -84,6 +83,7 @@ namespace WikiApp
                     if (CheckIfDuplicate())
                     {
                         UpdateItems(action, actioned, item);
+                        ButtonSave.Enabled = true;
                     }
                     else
                     {
@@ -119,11 +119,11 @@ namespace WikiApp
                 if (ConfirmationUserRequest(action, item))
                 {
                     _wikiArray.DeleteItem(_selectedIndexRow);
-                    _wikiArray.BubbleSort();
                     DisplayListView();
                     ClearTextBoxes();
                     UpdateStatusStrip($"Item {actioned}");
                     ButtonAdd.Enabled = true;
+                    ButtonSave.Enabled = true;
                 }
                 else
                 {
@@ -237,7 +237,7 @@ namespace WikiApp
             }
 
             // Error catch if extension is not a a bin file, do not load data
-            if (new FileInfo(openFileDialog1.FileName).Extension != ".bin")
+            if (new FileInfo(openFileDialog1.FileName).Extension != ".bin" && new FileInfo(openFileDialog1.FileName).Extension != ".dat")
             {
                 UpdateStatusStrip("Incorrect file format selected, please select a bin file");
                 return;
@@ -246,7 +246,6 @@ namespace WikiApp
             // Initialise array and load data into list view
             _wikiArray = new WikiSortedArray();
             _wikiArray.LoadData(openFileDialog1.FileName);
-            _wikiArray.BubbleSort();
             DisplayListView();
             UpdateStatusStrip("Data successfully loaded");
             GreyBoxArrayNull();
@@ -342,6 +341,7 @@ namespace WikiApp
         /// </summary>
         private void DisplayListView()
         {
+            _wikiArray.BubbleSort();
             ListViewDataStructure.Items.Clear();
             for (var x = 0; x < _wikiArray.Array.GetLength(0); x++)
             {
@@ -433,27 +433,19 @@ namespace WikiApp
         /// <param name="item"></param>
         private void UpdateItems(string action, string actioned, string item)
         {
-            Debug.WriteLine("New data:");
-            Debug.WriteLine($"Name: {TextBoxNam.Text}");
-            Debug.WriteLine($"Category: {TextBoxCat.Text}");
-            Debug.WriteLine($"Structure: {TextBoxStr.Text}");
-            Debug.WriteLine($"Definition: {TextBoxDef.Text}");
-
             var newName = TextBoxNam.Text;
             var newCat = TextBoxCat.Text;
             var newStr = TextBoxStr.Text;
             var newDef = TextBoxDef.Text;
-
             
             if (ConfirmationUserRequest(action, item))
             {
-                Debug.WriteLine($"\nUser confirmation request: confirmed ok");
                 if (action == "add")
                 {
-                    _wikiArray.EditItem(0, 0, newName);
-                    _wikiArray.EditItem(0, 1, newCat);
-                    _wikiArray.EditItem(0, 2, newStr);
-                    _wikiArray.EditItem(0, 3, newDef);
+                    _wikiArray.EditItem(WikiSortedArray.Row - 1, 0, newName);
+                    _wikiArray.EditItem(WikiSortedArray.Row - 1, 1, newCat);
+                    _wikiArray.EditItem(WikiSortedArray.Row - 1, 2, newStr);
+                    _wikiArray.EditItem(WikiSortedArray.Row - 1, 3, newDef);
                    ClearTextBoxes();
                    TextBoxSearch.Enabled = true;
                    ButtonSearch.Enabled = true;
@@ -466,17 +458,13 @@ namespace WikiApp
                     _wikiArray.EditItem(_selectedIndexRow, 3, newDef);
                     ClearTextBoxes();
                 }
-                _wikiArray.BubbleSort();
                 DisplayListView();
                 ListViewDataStructure.Enabled = true;
                 UpdateStatusStrip($"Item {actioned}");
-                Debug.WriteLine($"\nItem {actioned} to the array");
             }
             else
             {
-                Debug.WriteLine($"User confirmation request: cancelled");
                 UpdateStatusStrip($"Item not {actioned}");
-                Debug.WriteLine($"\nItem not {actioned}");
             }
         }
 
@@ -497,6 +485,7 @@ namespace WikiApp
             DisplayListView();
             UpdateStatusStrip("Data cleared");
             GreyBoxArrayNull();
+            ButtonAdd.Enabled = true;
         }
 
         /// <summary>
@@ -521,6 +510,7 @@ namespace WikiApp
                 if (searchResult == -1)
                 {
                     UpdateStatusStrip("Item not found");
+                    TextBoxSearch.Focus();
                     DeselectItem(_selectedIndexRow);
                     ClearTextBoxes();
                     //Debug.WriteLine("\nItem not found");
@@ -591,6 +581,7 @@ namespace WikiApp
             TextBoxSearch.Enabled = true;
             ListViewDataStructure.Enabled = true;
             ButtonSearch.Enabled = true;
+
             return true;
         }
 
@@ -647,7 +638,7 @@ namespace WikiApp
         private bool CheckTextBoxEmpty()
         {
             return string.IsNullOrEmpty(TextBoxNam.Text) || string.IsNullOrEmpty(TextBoxCat.Text) ||
-                   string.IsNullOrEmpty(TextBoxStr.Text) || string.IsNullOrEmpty(TextBoxDef.Text);
+                   string.IsNullOrEmpty(TextBoxStr.Text) || string.IsNullOrEmpty(TextBoxDef.Text) || TextBoxNam.Text == "~";
         }
 
         #endregion

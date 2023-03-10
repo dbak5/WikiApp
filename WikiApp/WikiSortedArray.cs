@@ -44,9 +44,9 @@ namespace WikiApp
                 var searchArrayItem = Array[mid, 0];
 
                 // If there are null values at the middle, search the last part of the array
-                if (searchArrayItem == null)
+                if (searchArrayItem == "~")
                 {
-                    min = mid + 1;
+                    min = mid - 1;
                 }
                 else
                 {
@@ -137,7 +137,7 @@ namespace WikiApp
         {
             for (var i = 0; i < Col; i++)
             {
-                Array[index, i] = null;
+                Array[index, i] = "~";
             }
         }
 
