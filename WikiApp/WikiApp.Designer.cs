@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("");
             this.TextBoxSearch = new System.Windows.Forms.TextBox();
             this.StatusStrip = new System.Windows.Forms.StatusStrip();
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -90,10 +90,10 @@
             this.ColumnCat});
             this.ListViewDataStructure.HideSelection = false;
             this.ListViewDataStructure.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem9,
-            listViewItem10,
-            listViewItem11,
-            listViewItem12});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4});
             this.ListViewDataStructure.Location = new System.Drawing.Point(31, 74);
             this.ListViewDataStructure.Name = "ListViewDataStructure";
             this.ListViewDataStructure.Size = new System.Drawing.Size(235, 264);
@@ -147,7 +147,7 @@
             this.ButtonClearTextBoxes.Text = "Clear Text";
             this.ToolTip.SetToolTip(this.ButtonClearTextBoxes, "Clear items from text boxes");
             this.ButtonClearTextBoxes.UseVisualStyleBackColor = true;
-            this.ButtonClearTextBoxes.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonClear_MouseClick);
+            this.ButtonClearTextBoxes.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ButtonClearTextBox_MouseClick);
             // 
             // ButtonSearch
             // 

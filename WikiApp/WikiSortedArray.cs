@@ -124,19 +124,7 @@ namespace WikiApp
             }
         }
 
-        /// <summary>
-        /// Method to "delete" item from array (replaces a value with null)
-        /// </summary>
-        /// <param name="index"></param>
-        public void DeleteItem(int index)
-        {
-            for (var i = 0; i < Col; i++)
-            {
-                Array[index, i] = "~";
-            }
-        }
-
-        /// <summary>
+      /// <summary>
         /// Edits an item from the array (replaces an existing value with a new value)
         /// </summary>
         /// <param name="row"></param>
