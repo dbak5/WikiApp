@@ -36,35 +36,30 @@ namespace WikiApp
         {
             var searchResult = -1;
             var min = 0;
-            var max = Row-1;
-            
+            var max = Row - 1;
+
             while (min <= max)
             {
                 var mid = ((min + max) / 2);
                 var searchArrayItem = Array[mid, 0];
-
-                // If there are null values at the middle, search the last part of the array
-                if (searchArrayItem == "~")
+                if (string.Compare(searchTextBoxItem.ToUpper(), searchArrayItem.ToUpper(), StringComparison.Ordinal) ==
+                    0)
                 {
-                    min = mid - 1;
+                    searchResult = mid;
+                    break;
+                }
+
+                if (string.Compare(searchTextBoxItem.ToUpper(), searchArrayItem.ToUpper(), StringComparison.Ordinal) <
+                    0)
+                {
+                    max = mid - 1;
                 }
                 else
                 {
-                    if (string.Compare(searchTextBoxItem.ToUpper(), searchArrayItem.ToUpper(), StringComparison.Ordinal) == 0)
-                    {
-                        searchResult = mid;
-                        break;
-                    }
-                    if (string.Compare(searchTextBoxItem.ToUpper(), searchArrayItem.ToUpper(), StringComparison.Ordinal) < 0)
-                    {
-                        max = mid - 1;
-                    }
-                    else
-                    {
-                        min = mid + 1;
-                    }
+                    min = mid + 1;
                 }
             }
+
             return searchResult;
         }
 
@@ -155,13 +150,13 @@ namespace WikiApp
         /// <summary>
         /// Clears the array after the user is done
         /// </summary>
-        public void ClearArray()
+        public void EmptyArray()
         {
             for (var i = 0; i < Row; i++)
             {
                 for (var j = 0; j < Col; j++)
                 {
-                    Array[i, j] = null;
+                    Array[i, j] = "~";
                 }
             }
             Empty = true;

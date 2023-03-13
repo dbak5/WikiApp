@@ -33,12 +33,30 @@ namespace WikiApp
             const string item = "item";
             const string actioned = "added";
 
-            if (!CheckArrayNull())
+            if (CheckTextBoxEmpty())
+            {
+                UpdateStatusStrip("Empty fields found, please input data to add and ensure all fields are full");
+                TextBoxNam.Focus();
+                return;
+            }
+
+            if (CheckArrayNullOrEmpty())
             {
                 _wikiArray = new WikiSortedArray();
+                for (var i = 0; i < 12; i++)
+                {
+                    for (var j = 0; j < 4; j++)
+                    {
+                        _wikiArray.Array[i, j] = "~";
+                    }
+                }
+
+                UpdateItems(action, actioned, item);
                 TextBoxNam.Focus();
+                return;
             }
-            if (_wikiArray.Array[WikiSortedArray.Row-1, 0] == "~")
+
+            if (!CheckArrayFull())
             {
                 if (!CheckTextBoxEmpty())
                 {
@@ -64,7 +82,10 @@ namespace WikiApp
                 ButtonAdd.Enabled = false;
                 TextBoxSearch.Focus();
             }
+
+
         }
+
 
         // 9.3 Create and EDIT button that will allow the user to modify any information from the 4 text boxes
         // into the 2D array
@@ -102,6 +123,8 @@ namespace WikiApp
                 UpdateStatusStrip($"Nothing selected to {action}");
                 TextBoxSearch.Focus();
             }
+
+
         }
 
         // 9.4 Create a DELETE button that removes all the information from a single entry of the array; the user must be prompted
@@ -114,28 +137,30 @@ namespace WikiApp
 
             if (!GreyBoxArrayNull()) return;
             if (!CheckOutOfBound()) return;
-            if (CheckItemSelected() && !CheckTextBoxEmpty())
-            {
-                if (ConfirmationUserRequest(action, item))
-                {
-                    _wikiArray.DeleteItem(_selectedIndexRow);
-                    DisplayListView();
-                    ClearTextBoxes();
-                    UpdateStatusStrip($"Item {actioned}");
-                    ButtonAdd.Enabled = true;
-                    ButtonSave.Enabled = true;
-                }
-                else
-                {
-                    UpdateStatusStrip($"Item not {actioned}");
-                    TextBoxSearch.Focus();
-                }
-            }
-            else
+
+            if (!CheckItemSelected() && CheckTextBoxEmpty())
             {
                 UpdateStatusStrip($"Nothing selected to {action}");
                 TextBoxSearch.Focus();
+                return;
             }
+
+            if (ConfirmationUserRequest(action, item))
+            {
+                _wikiArray.DeleteItem(_selectedIndexRow);
+                DisplayListView();
+                ClearTextBoxes();
+                UpdateStatusStrip($"Item {actioned}");
+                ButtonAdd.Enabled = true;
+                ButtonSave.Enabled = true;
+            }
+            else
+            {
+                UpdateStatusStrip($"Item not {actioned}");
+                TextBoxSearch.Focus();
+            }
+
+
         }
 
         // 9.10 Create a SAVE button so the information from the 2D array can be written into a binary file called definitions.dat
@@ -213,7 +238,7 @@ namespace WikiApp
             const string filterLimits = "All files (*.*)|*.*|bin files (*.*)|*.bin";
             
             // Check if array is null or if user cancels the request
-            if (!CheckArrayNull())
+            if (!CheckArrayNullOrEmpty())
             {
                 var confirm = ConfirmationUserRequest("clear", "data",
                     "\nThis action will clear the current data and load new data");
@@ -480,7 +505,7 @@ namespace WikiApp
 
             if (!confirm) return;
 
-            _wikiArray.ClearArray();
+            _wikiArray.EmptyArray();
             ClearTextBoxes();
             DisplayListView();
             UpdateStatusStrip("Data cleared");
@@ -549,9 +574,14 @@ namespace WikiApp
         /// Check if the array is empty or null
         /// </summary>
         /// <returns></returns>
-        private bool CheckArrayNull()
+        private bool CheckArrayNullOrEmpty()
         {
             return _wikiArray == null || _wikiArray.Empty;
+        }
+
+        private bool CheckArrayFull()
+        {
+            return  string.Compare(_wikiArray.Array[11, 0], "~", StringComparison.Ordinal) != 0;
         }
 
         /// <summary>
@@ -562,7 +592,7 @@ namespace WikiApp
         /// <returns></returns>
         private bool GreyBoxArrayNull()
         {
-            if (CheckArrayNull())
+            if (CheckArrayNullOrEmpty())
             {
                 UpdateStatusStrip("No data in the array");
                 ClearTextBoxes();
@@ -625,10 +655,10 @@ namespace WikiApp
         /// <returns></returns>
         private bool CheckIfTextBoxChanged()
         {
-            return _wikiArray.Array[_selectedIndexRow, 0] != TextBoxNam.Text ||
-                   _wikiArray.Array[_selectedIndexRow, 1] != TextBoxCat.Text ||
-                   _wikiArray.Array[_selectedIndexRow, 2] != TextBoxStr.Text ||
-                   _wikiArray.Array[_selectedIndexRow, 3] != TextBoxDef.Text;
+           return _wikiArray.Array[_selectedIndexRow, 0] != TextBoxNam.Text ||
+                         _wikiArray.Array[_selectedIndexRow, 1] != TextBoxCat.Text ||
+                         _wikiArray.Array[_selectedIndexRow, 2] != TextBoxStr.Text ||
+                         _wikiArray.Array[_selectedIndexRow, 3] != TextBoxDef.Text;
         }
 
         /// <summary>
