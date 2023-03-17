@@ -44,14 +44,13 @@ namespace WikiApp
             if (CheckArrayNullOrEmpty())
             {
                 _wikiArray = new WikiSortedArray();
-                for (var i = 0; i < 12; i++)
+                for (var i = 0; i < WikiSortedArray.Row; i++)
                 {
-                    for (var j = 0; j < 4; j++)
+                    for (var j = 0; j < WikiSortedArray.Col; j++)
                     {
                         _wikiArray.Array[i, j] = "~";
                     }
                 }
-
                 UpdateItems(action, actioned, item);
                 TextBoxNam.Focus();
                 return;
@@ -68,7 +67,7 @@ namespace WikiApp
                 TextBoxNam.Focus();
                 return;
             }
-            if (string.Compare(_wikiArray.Array[11, 0], "~", StringComparison.Ordinal) != 0)
+            if (string.Compare(_wikiArray.Array[WikiSortedArray.Row-1, 0], "~", StringComparison.Ordinal) != 0)
             {
                 UpdateStatusStrip($"Array is full, not {actioned}");
                 ButtonAdd.Enabled = false;
