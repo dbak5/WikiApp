@@ -51,6 +51,10 @@
             this.ButtonEdit = new System.Windows.Forms.Button();
             this.TextBoxNam = new System.Windows.Forms.TextBox();
             this.GroupChangeData = new System.Windows.Forms.GroupBox();
+            this.labelDescription = new System.Windows.Forms.Label();
+            this.labelDataStructure = new System.Windows.Forms.Label();
+            this.labelDataCategory = new System.Windows.Forms.Label();
+            this.labelDataName = new System.Windows.Forms.Label();
             this.GroupSearch = new System.Windows.Forms.GroupBox();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.ButtonClearAll = new System.Windows.Forms.Button();
@@ -74,7 +78,7 @@
             this.StatusLabel});
             this.StatusStrip.Location = new System.Drawing.Point(0, 405);
             this.StatusStrip.Name = "StatusStrip";
-            this.StatusStrip.Size = new System.Drawing.Size(787, 22);
+            this.StatusStrip.Size = new System.Drawing.Size(771, 22);
             this.StatusStrip.TabIndex = 1;
             this.StatusStrip.Text = "Status";
             // 
@@ -118,7 +122,7 @@
             // 
             // ButtonAdd
             // 
-            this.ButtonAdd.Location = new System.Drawing.Point(17, 27);
+            this.ButtonAdd.Location = new System.Drawing.Point(275, 27);
             this.ButtonAdd.Name = "ButtonAdd";
             this.ButtonAdd.Size = new System.Drawing.Size(75, 23);
             this.ButtonAdd.TabIndex = 3;
@@ -140,7 +144,7 @@
             // 
             // ButtonClearTextBoxes
             // 
-            this.ButtonClearTextBoxes.Location = new System.Drawing.Point(307, 27);
+            this.ButtonClearTextBoxes.Location = new System.Drawing.Point(275, 164);
             this.ButtonClearTextBoxes.Name = "ButtonClearTextBoxes";
             this.ButtonClearTextBoxes.Size = new System.Drawing.Size(75, 23);
             this.ButtonClearTextBoxes.TabIndex = 6;
@@ -162,7 +166,7 @@
             // 
             // ButtonDelete
             // 
-            this.ButtonDelete.Location = new System.Drawing.Point(214, 27);
+            this.ButtonDelete.Location = new System.Drawing.Point(275, 117);
             this.ButtonDelete.Name = "ButtonDelete";
             this.ButtonDelete.Size = new System.Drawing.Size(75, 23);
             this.ButtonDelete.TabIndex = 5;
@@ -184,32 +188,32 @@
             // 
             // TextBoxCat
             // 
-            this.TextBoxCat.Location = new System.Drawing.Point(27, 131);
+            this.TextBoxCat.Location = new System.Drawing.Point(101, 71);
             this.TextBoxCat.Name = "TextBoxCat";
-            this.TextBoxCat.Size = new System.Drawing.Size(100, 20);
+            this.TextBoxCat.Size = new System.Drawing.Size(121, 20);
             this.TextBoxCat.TabIndex = 8;
             this.ToolTip.SetToolTip(this.TextBoxCat, "Data category, update to edit item");
             // 
             // TextBoxStr
             // 
-            this.TextBoxStr.Location = new System.Drawing.Point(27, 173);
+            this.TextBoxStr.Location = new System.Drawing.Point(101, 115);
             this.TextBoxStr.Name = "TextBoxStr";
-            this.TextBoxStr.Size = new System.Drawing.Size(100, 20);
+            this.TextBoxStr.Size = new System.Drawing.Size(121, 20);
             this.TextBoxStr.TabIndex = 9;
             this.ToolTip.SetToolTip(this.TextBoxStr, "Data structure, update to edit item");
             // 
             // TextBoxDef
             // 
-            this.TextBoxDef.Location = new System.Drawing.Point(156, 87);
+            this.TextBoxDef.Location = new System.Drawing.Point(101, 162);
             this.TextBoxDef.Multiline = true;
             this.TextBoxDef.Name = "TextBoxDef";
-            this.TextBoxDef.Size = new System.Drawing.Size(226, 177);
+            this.TextBoxDef.Size = new System.Drawing.Size(121, 100);
             this.TextBoxDef.TabIndex = 10;
             this.ToolTip.SetToolTip(this.TextBoxDef, "Data description, update to edit item");
             // 
             // ButtonEdit
             // 
-            this.ButtonEdit.Location = new System.Drawing.Point(116, 27);
+            this.ButtonEdit.Location = new System.Drawing.Point(275, 73);
             this.ButtonEdit.Name = "ButtonEdit";
             this.ButtonEdit.Size = new System.Drawing.Size(75, 23);
             this.ButtonEdit.TabIndex = 4;
@@ -220,15 +224,19 @@
             // 
             // TextBoxNam
             // 
-            this.TextBoxNam.Location = new System.Drawing.Point(27, 87);
+            this.TextBoxNam.Location = new System.Drawing.Point(101, 28);
             this.TextBoxNam.Name = "TextBoxNam";
-            this.TextBoxNam.Size = new System.Drawing.Size(100, 20);
+            this.TextBoxNam.Size = new System.Drawing.Size(121, 20);
             this.TextBoxNam.TabIndex = 7;
             this.ToolTip.SetToolTip(this.TextBoxNam, "Data name, update to edit item");
             this.TextBoxNam.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxNam_MouseDoubleClick);
             // 
             // GroupChangeData
             // 
+            this.GroupChangeData.Controls.Add(this.labelDescription);
+            this.GroupChangeData.Controls.Add(this.labelDataStructure);
+            this.GroupChangeData.Controls.Add(this.labelDataCategory);
+            this.GroupChangeData.Controls.Add(this.labelDataName);
             this.GroupChangeData.Controls.Add(this.ButtonAdd);
             this.GroupChangeData.Controls.Add(this.TextBoxDef);
             this.GroupChangeData.Controls.Add(this.TextBoxNam);
@@ -239,10 +247,46 @@
             this.GroupChangeData.Controls.Add(this.ButtonClearTextBoxes);
             this.GroupChangeData.Location = new System.Drawing.Point(354, 28);
             this.GroupChangeData.Name = "GroupChangeData";
-            this.GroupChangeData.Size = new System.Drawing.Size(411, 287);
+            this.GroupChangeData.Size = new System.Drawing.Size(382, 287);
             this.GroupChangeData.TabIndex = 17;
             this.GroupChangeData.TabStop = false;
             this.GroupChangeData.Text = "Change the data";
+            // 
+            // labelDescription
+            // 
+            this.labelDescription.AutoSize = true;
+            this.labelDescription.Location = new System.Drawing.Point(16, 165);
+            this.labelDescription.Name = "labelDescription";
+            this.labelDescription.Size = new System.Drawing.Size(66, 13);
+            this.labelDescription.TabIndex = 14;
+            this.labelDescription.Text = "Descrtiption:";
+            // 
+            // labelDataStructure
+            // 
+            this.labelDataStructure.AutoSize = true;
+            this.labelDataStructure.Location = new System.Drawing.Point(16, 118);
+            this.labelDataStructure.Name = "labelDataStructure";
+            this.labelDataStructure.Size = new System.Drawing.Size(77, 13);
+            this.labelDataStructure.TabIndex = 13;
+            this.labelDataStructure.Text = "Data structure:";
+            // 
+            // labelDataCategory
+            // 
+            this.labelDataCategory.AutoSize = true;
+            this.labelDataCategory.Location = new System.Drawing.Point(16, 74);
+            this.labelDataCategory.Name = "labelDataCategory";
+            this.labelDataCategory.Size = new System.Drawing.Size(77, 13);
+            this.labelDataCategory.TabIndex = 12;
+            this.labelDataCategory.Text = "Data category:";
+            // 
+            // labelDataName
+            // 
+            this.labelDataName.AutoSize = true;
+            this.labelDataName.Location = new System.Drawing.Point(16, 31);
+            this.labelDataName.Name = "labelDataName";
+            this.labelDataName.Size = new System.Drawing.Size(62, 13);
+            this.labelDataName.TabIndex = 11;
+            this.labelDataName.Text = "Data name:";
             // 
             // GroupSearch
             // 
@@ -271,7 +315,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(787, 427);
+            this.ClientSize = new System.Drawing.Size(771, 427);
             this.Controls.Add(this.ButtonClearAll);
             this.Controls.Add(this.GroupSearch);
             this.Controls.Add(this.GroupChangeData);
@@ -315,6 +359,10 @@
         private System.Windows.Forms.GroupBox GroupSearch;
         private System.Windows.Forms.ToolTip ToolTip;
         private System.Windows.Forms.Button ButtonClearAll;
+        private System.Windows.Forms.Label labelDataName;
+        private System.Windows.Forms.Label labelDataCategory;
+        private System.Windows.Forms.Label labelDescription;
+        private System.Windows.Forms.Label labelDataStructure;
     }
 }
 
