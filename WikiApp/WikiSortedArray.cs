@@ -21,10 +21,24 @@ namespace WikiApp
         public const int Row = 12;
         public const int Col = 4;
 
-        // "Empty" denotes whether array contains no values. Can be set privately, but can be accessed publicly.
+        // "Empty" denotes whether array contains no values. Can only be SET privately, can be accessed publicly.
         public bool Empty { get; private set; }
 
         #endregion
+
+        /// <summary>
+        /// 9.6 Write the code for a Bubble Sort method to sort the 2D array by Name ascending, ensure you use a separate swap method that passes the array element to be swapped (do not use any built-in array methods)
+        /// </summary>
+        /// <param name="index"></param>
+        private void BubbleSwap(int index)
+        {
+            for (var z = 0; z < Col; z++)
+            {
+                string temp = Array[index, z];
+                Array[index, z] = Array[index + 1, z];
+                Array[index + 1, z] = temp;
+            }
+        }
 
         /// <summary>
         /// 9.7 Write the code for a Binary Search for the Name in the 2D array and display the information in the other textboxes when
@@ -124,7 +138,7 @@ namespace WikiApp
             }
         }
 
-      /// <summary>
+        /// <summary>
         /// Edits an item from the array (replaces an existing value with a new value)
         /// </summary>
         /// <param name="row"></param>
@@ -148,20 +162,6 @@ namespace WikiApp
                 }
             }
             Empty = true;
-        }
-
-        /// <summary>
-        /// 9.6 Write the code for a Bubble Sort method to sort the 2D array by Name ascending, ensure you use a separate swap method that passes the array element to be swapped (do not use any built-in array methods)
-        /// </summary>
-        /// <param name="index"></param>
-        private void BubbleSwap(int index)
-        {
-            for (var z = 0; z < Col; z++)
-            {
-                string temp = Array[index, z];
-                Array[index, z] = Array[index + 1, z]; 
-                Array[index + 1, z] = temp;
-            }
         }
 
     } //class
